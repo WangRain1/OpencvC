@@ -1,0 +1,3 @@
+/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/rebuild_cache.dir
+/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/edit_cache.dir
+/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/native-lib.dir

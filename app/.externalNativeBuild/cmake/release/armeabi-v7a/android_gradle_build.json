@@ -1,0 +1,40 @@
+{
+  "stringTable": {
+    "0": "/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi27 --gcc-toolchain=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_lib_EXPORTS -I../../../../src/main/jniLibs/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mfpu=vfpv3-d16 -fno-addrsig -march=armv7-a -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -fexceptions -Oz -DNDEBUG -fPIC"
+  },
+  "buildFiles": [
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/home/ts/code/parrot/OpencvC/app/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "native-lib-Release-armeabi-v7a": {
+      "buildCommand": "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/armeabi-v7a --target native-lib",
+      "buildType": "release",
+      "toolchain": "2035831670",
+      "abi": "armeabi-v7a",
+      "artifactName": "native-lib",
+      "files": [
+        {
+          "src": "/home/ts/code/parrot/OpencvC/app/src/main/cpp/native-lib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "output": "/home/ts/code/parrot/OpencvC/app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so"
+    }
+  },
+  "toolchains": {
+    "2035831670": {
+      "cppCompilerExecutable": "/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

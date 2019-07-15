@@ -1,0 +1,18 @@
+{
+  "buildFiles": [
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/home/ts/code/parrot/OpencvC/app/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64 --target clean"
+  ],
+  "libraries": {
+    "native-lib-Release-x86_64": {
+      "artifactName": "native-lib",
+      "buildCommand": "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64 --target native-lib",
+      "abi": "x86_64",
+      "output": "/home/ts/code/parrot/OpencvC/app/build/intermediates/cmake/release/obj/x86_64/libnative-lib.so"
+    }
+  }
+}

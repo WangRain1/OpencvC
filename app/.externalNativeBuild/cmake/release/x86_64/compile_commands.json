@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/release/x86_64",
+  "command": "/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=x86_64-none-linux-android27 --gcc-toolchain=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../src/main/jniLibs/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -fexceptions -O2 -DNDEBUG  -fPIC   -o CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o -c /home/ts/code/parrot/OpencvC/app/src/main/cpp/native-lib.cpp",
+  "file": "/home/ts/code/parrot/OpencvC/app/src/main/cpp/native-lib.cpp"
+}
+]

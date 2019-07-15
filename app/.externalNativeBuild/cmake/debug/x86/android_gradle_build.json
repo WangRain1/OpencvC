@@ -1,0 +1,40 @@
+{
+  "stringTable": {
+    "0": "/home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/debug/x86",
+    "1": "--target=i686-none-linux-android27 --gcc-toolchain=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_lib_EXPORTS -I../../../../src/main/jniLibs/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security -stdlib=libc++ -fexceptions -O0 -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/platforms.cmake",
+    "/home/ts/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake",
+    "/home/ts/code/parrot/OpencvC/app/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/debug/x86 --target clean"
+  ],
+  "libraries": {
+    "native-lib-Debug-x86": {
+      "buildCommand": "/home/ts/Android/Sdk/cmake/3.10.2.4988404/bin/cmake --build /home/ts/code/parrot/OpencvC/app/.externalNativeBuild/cmake/debug/x86 --target native-lib",
+      "buildType": "debug",
+      "toolchain": "2035831670",
+      "abi": "x86",
+      "artifactName": "native-lib",
+      "files": [
+        {
+          "src": "/home/ts/code/parrot/OpencvC/app/src/main/cpp/native-lib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "output": "/home/ts/code/parrot/OpencvC/app/build/intermediates/cmake/debug/obj/x86/libnative-lib.so"
+    }
+  },
+  "toolchains": {
+    "2035831670": {
+      "cppCompilerExecutable": "/home/ts/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
