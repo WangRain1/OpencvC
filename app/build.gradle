@@ -11,8 +11,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "-fexceptions"
-                abiFilters 'armeabi-v7a' //控制生成的so架构，有armxx7，armxx64(必须要指定)
+                cppFlags ""
+                abiFilters 'x86_64' //控制生成的so架构，有armxx7，armxx64(必须要指定)
             }
         }
     }
