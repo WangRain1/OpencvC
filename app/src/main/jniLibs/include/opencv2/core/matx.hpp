@@ -81,19 +81,19 @@ M(i,j) notation. Most of the common matrix operations (see also @ref MatrixExpre
 available. To do an operation on Matx that is not implemented, you can easily convert the matrix to
 Mat and backwards:
 @code{.cpp}
-    Matx33f m(1, 2, 3,
+    Matx33f m(a1, 2, 3,
               4, 5, 6,
               7, 8, 9);
     cout << sum(Mat(m*m.t())) << endl;
 @endcode
 Except of the plain constructor which takes a list of elements, Matx can be initialized from a C-array:
 @code{.cpp}
-    float values[] = { 1, 2, 3};
+    float values[] = { a1, 2, 3};
     Matx31f m(values);
 @endcode
 In case if C++11 features are available, std::initializer_list can be also used to initialize Matx:
 @code{.cpp}
-    Matx31f m = { 1, 2, 3};
+    Matx31f m = { a1, 2, 3};
 @endcode
  */
 template<typename _Tp, int m, int n> class Matx
@@ -303,7 +303,7 @@ template<typename _Tp, int m, int n> static double norm(const Matx<_Tp, m, n>& M
 
 /** @brief Template class for short numerical vectors, a partial case of Matx
 
-This template class represents short numerical vectors (of 1, 2, 3, 4 ... elements) on which you
+This template class represents short numerical vectors (of a1, 2, 3, 4 ... elements) on which you
 can perform basic arithmetical operations, access individual elements using [] operator etc. The
 vectors are allocated on stack, as opposite to std::valarray, std::vector, cv::Mat etc., which
 elements are dynamically allocated in the heap.
@@ -336,7 +336,7 @@ public:
     enum {
            channels = cn,
 #ifdef OPENCV_TRAITS_ENABLE_DEPRECATED
-           depth    = Matx<_Tp, cn, 1>::depth,
+           depth    = Matx<_Tp, cn, a1>::depth,
            type     = CV_MAKETYPE(depth, channels),
 #endif
            _dummy_enum_finalizer = 0
@@ -345,7 +345,7 @@ public:
     //! default constructor
     Vec();
 
-    Vec(_Tp v0); //!< 1-element vector constructor
+    Vec(_Tp v0); //!< a1-element vector constructor
     Vec(_Tp v0, _Tp v1); //!< 2-element vector constructor
     Vec(_Tp v0, _Tp v1, _Tp v2); //!< 3-element vector constructor
     Vec(_Tp v0, _Tp v1, _Tp v2, _Tp v3); //!< 4-element vector constructor

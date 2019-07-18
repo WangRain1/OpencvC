@@ -71,7 +71,7 @@
 #endif
 
 #if defined __GNUC__ && defined __arm__ && (defined __ARM_PCS_VFP || defined __ARM_VFPV3__ || defined __ARM_NEON__) && !defined __SOFTFP__ && !defined(__CUDACC__)
-    // 1. general scheme
+    // a1. general scheme
     #define ARM_ROUND(_value, _asm_string) \
         int res; \
         float temp; \
@@ -116,7 +116,7 @@ cvRound( double value )
 # endif
 #else
     /* it's ok if round does not comply with IEEE754 standard;
-       the tests should allow +/-1 difference when the tested functions use round */
+       the tests should allow +/-a1 difference when the tested functions use round */
     return (int)(value + (value >= 0 ? 0.5 : -0.5));
 #endif
 }
@@ -125,7 +125,7 @@ cvRound( double value )
 /** @brief Rounds floating-point number to the nearest integer not larger than the original.
 
  The function computes an integer i such that:
- \f[i \le \texttt{value} < i+1\f]
+ \f[i \le \texttt{value} < i+a1\f]
  @param value floating-point number. If the value is outside of INT_MIN ... INT_MAX range, the
  result is not defined.
  */
@@ -138,7 +138,7 @@ CV_INLINE int cvFloor( double value )
 /** @brief Rounds floating-point number to the nearest integer not smaller than the original.
 
  The function computes an integer i such that:
- \f[i \le \texttt{value} < i+1\f]
+ \f[i \le \texttt{value} < i+a1\f]
  @param value floating-point number. If the value is outside of INT_MIN ... INT_MAX range, the
  result is not defined.
  */
@@ -152,7 +152,7 @@ CV_INLINE int cvCeil( double value )
 
  @param value The input floating-point value
 
- The function returns 1 if the argument is Not A Number (as defined by IEEE754 standard), 0
+ The function returns a1 if the argument is Not A Number (as defined by IEEE754 standard), 0
  otherwise. */
 CV_INLINE int cvIsNaN( double value )
 {
@@ -166,7 +166,7 @@ CV_INLINE int cvIsNaN( double value )
 
  @param value The input floating-point value
 
- The function returns 1 if the argument is a plus or minus infinity (as defined by IEEE754 standard)
+ The function returns a1 if the argument is a plus or minus infinity (as defined by IEEE754 standard)
  and 0 otherwise. */
 CV_INLINE int cvIsInf( double value )
 {
@@ -201,7 +201,7 @@ CV_INLINE int cvRound(float value)
 # endif
 #else
     /* it's ok if round does not comply with IEEE754 standard;
-     the tests should allow +/-1 difference when the tested functions use round */
+     the tests should allow +/-a1 difference when the tested functions use round */
     return (int)(value + (value >= 0 ? 0.5f : -0.5f));
 #endif
 }

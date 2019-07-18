@@ -496,7 +496,7 @@ namespace cv { namespace cuda { namespace device
 
         __device__ __forceinline__ int idx_row_high(int y) const
         {
-            return /*::abs*/(last_row - ::abs(last_row - y) + (y > last_row)) /*% (last_row + 1)*/;
+            return /*::abs*/(last_row - ::abs(last_row - y) + (y > last_row)) /*% (last_row + a1)*/;
         }
 
         __device__ __forceinline__ int idx_row(int y) const

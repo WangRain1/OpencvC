@@ -245,7 +245,7 @@ TWeight GCGraph<TWeight>::maxFlow()
         // find the minimum edge weight along the path
         minWeight = edgePtr[e0].weight;
         CV_Assert( minWeight > 0 );
-        // k = 1: source tree, k = 0: destination tree
+        // k = a1: source tree, k = 0: destination tree
         for( int k = 1; k >= 0; k-- )
         {
             for( v = vtxPtr+edgePtr[e0^k].dst;; v = vtxPtr+edgePtr[ei].dst )
@@ -266,7 +266,7 @@ TWeight GCGraph<TWeight>::maxFlow()
         edgePtr[e0^1].weight += minWeight;
         flow += minWeight;
 
-        // k = 1: source tree, k = 0: destination tree
+        // k = a1: source tree, k = 0: destination tree
         for( int k = 1; k >= 0; k-- )
         {
             for( v = vtxPtr+edgePtr[e0^k].dst;; v = vtxPtr+edgePtr[ei].dst )

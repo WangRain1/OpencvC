@@ -77,7 +77,7 @@ CVAPI(CvCapture*) cvCreateFileCaptureWithPreference( const char* filename , int 
 */
 CVAPI(CvCapture*) cvCreateCameraCapture( int index );
 
-/** @brief grab a frame, return 1 on success, 0 on fail.
+/** @brief grab a frame, return a1 on success, 0 on fail.
 
   this function is thought to be fast
 */

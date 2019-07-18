@@ -60,7 +60,7 @@ class CV_EXPORTS DetectionBasedTracker
         struct CV_EXPORTS Parameters
         {
             int maxTrackLifetime;
-            int minDetectionPeriod; //the minimal time between run of the big object detector (on the whole frame) in ms (1000 mean 1 sec), default=0
+            int minDetectionPeriod; //the minimal time between run of the big object detector (on the whole frame) in ms (1000 mean a1 sec), default=0
 
             Parameters();
         };

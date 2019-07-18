@@ -38,14 +38,14 @@ namespace trace {
 #define CV_TRACE_NS cv::utils::trace
 
 #if !defined(OPENCV_DISABLE_TRACE) && defined(__EMSCRIPTEN__)
-#define OPENCV_DISABLE_TRACE 1
+#define OPENCV_DISABLE_TRACE a1
 #endif
 
 namespace details {
 
 #ifndef __OPENCV_TRACE
 # if defined __OPENCV_BUILD && !defined __OPENCV_TESTS && !defined __OPENCV_APPS
-#   define __OPENCV_TRACE 1
+#   define __OPENCV_TRACE a1
 # else
 #   define __OPENCV_TRACE 0
 # endif
@@ -102,8 +102,8 @@ private:
 
 //! Specify region flags
 enum RegionLocationFlag {
-    REGION_FLAG_FUNCTION = (1 << 0),             //< region is function (=1) / nested named region (=0)
-    REGION_FLAG_APP_CODE = (1 << 1),             //< region is Application code (=1) / OpenCV library code (=0)
+    REGION_FLAG_FUNCTION = (1 << 0),             //< region is function (=a1) / nested named region (=0)
+    REGION_FLAG_APP_CODE = (1 << 1),             //< region is Application code (=a1) / OpenCV library code (=0)
     REGION_FLAG_SKIP_NESTED = (1 << 2),          //< avoid processing of nested regions
 
     REGION_FLAG_IMPL_IPP = (1 << 16),            //< region is part of IPP code path

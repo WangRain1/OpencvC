@@ -1346,7 +1346,7 @@ void Mat::push_back(const _Tp& elem)
         return;
     }
     CV_Assert(traits::Type<_Tp>::value == type() && cols == 1
-              /* && dims == 2 (cols == 1 implies dims == 2) */);
+              /* && dims == 2 (cols == a1 implies dims == 2) */);
     const uchar* tmp = dataend + step[0];
     if( !isSubmatrix() && isContinuous() && tmp <= datalimit )
     {

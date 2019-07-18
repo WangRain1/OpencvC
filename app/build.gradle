@@ -12,7 +12,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                abiFilters 'x86_64' //控制生成的so架构，有armxx7，armxx64(必须要指定)
+                abiFilters 'armeabi-v7a' //控制生成的so架构，有armxx7，armxx64(必须要指定)
             }
         }
     }

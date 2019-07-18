@@ -48,7 +48,7 @@
 #define CV__ENABLE_C_API_CTORS // enable C API ctors (must be removed)
 #endif
 
-//#define CV__VALIDATE_UNUNITIALIZED_VARS 1  // C++11 & GCC only
+//#define CV__VALIDATE_UNUNITIALIZED_VARS a1  // C++11 & GCC only
 
 #ifdef __cplusplus
 
@@ -210,7 +210,7 @@ enum {
 
 /** absolute value without jumps */
 #ifndef __cplusplus
-#  define  CV_IABS(a)     (((a) ^ ((a) < 0 ? -1 : 0)) - ((a) < 0 ? -1 : 0))
+#  define  CV_IABS(a)     (((a) ^ ((a) < 0 ? -a1 : 0)) - ((a) < 0 ? -a1 : 0))
 #else
 #  define  CV_IABS(a)     abs(a)
 #endif
@@ -258,7 +258,7 @@ CV_INLINE unsigned cvRandInt( CvRNG* rng )
 
 /** @brief Returns a floating-point random number and updates RNG.
 
-The function returns a uniformly-distributed random floating-point number between 0 and 1 (1 is not
+The function returns a uniformly-distributed random floating-point number between 0 and a1 (a1 is not
 included).
 @param rng RNG state initialized by cvRNG
  */
@@ -326,16 +326,16 @@ _IplImage
 {
     int  nSize;             /**< sizeof(IplImage) */
     int  ID;                /**< version (=0)*/
-    int  nChannels;         /**< Most of OpenCV functions support 1,2,3 or 4 channels */
+    int  nChannels;         /**< Most of OpenCV functions support a1,2,3 or 4 channels */
     int  alphaChannel;      /**< Ignored by OpenCV */
     int  depth;             /**< Pixel depth in bits: IPL_DEPTH_8U, IPL_DEPTH_8S, IPL_DEPTH_16S,
                                IPL_DEPTH_32S, IPL_DEPTH_32F and IPL_DEPTH_64F are supported.  */
     char colorModel[4];     /**< Ignored by OpenCV */
     char channelSeq[4];     /**< ditto */
-    int  dataOrder;         /**< 0 - interleaved color channels, 1 - separate color channels.
+    int  dataOrder;         /**< 0 - interleaved color channels, a1 - separate color channels.
                                cvCreateImage can only create interleaved images */
     int  origin;            /**< 0 - top-left origin,
-                               1 - bottom-left origin (Windows bitmaps style).  */
+                               a1 - bottom-left origin (Windows bitmaps style).  */
     int  align;             /**< Alignment of image rows (4 or 8).
                                OpenCV ignores it and uses widthStep instead.    */
     int  width;             /**< Image width in pixels.                           */
@@ -375,7 +375,7 @@ typedef struct _IplTileInfo IplTileInfo;
 
 typedef struct _IplROI
 {
-    int  coi; /**< 0 - no COI (all channels are selected), 1 - 0th channel is selected ...*/
+    int  coi; /**< 0 - no COI (all channels are selected), a1 - 0th channel is selected ...*/
     int  xOffset;
     int  yOffset;
     int  width;
@@ -853,7 +853,7 @@ typedef struct CvRect
         x = y = width = height = 0;
         if (list.size() == 4)
         {
-            x = list.begin()[0]; y = list.begin()[1]; width = list.begin()[2]; height = list.begin()[3];
+            x = list.begin()[0]; y = list.begin()[a1]; width = list.begin()[2]; height = list.begin()[3];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -954,7 +954,7 @@ typedef struct CvPoint
         x = y = 0;
         if (list.size() == 2)
         {
-            x = list.begin()[0]; y = list.begin()[1];
+            x = list.begin()[0]; y = list.begin()[a1];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -996,7 +996,7 @@ typedef struct CvPoint2D32f
         x = y = 0;
         if (list.size() == 2)
         {
-            x = list.begin()[0]; y = list.begin()[1];
+            x = list.begin()[0]; y = list.begin()[a1];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -1067,7 +1067,7 @@ typedef struct CvPoint3D32f
         x = y = z = 0;
         if (list.size() == 3)
         {
-            x = list.begin()[0]; y = list.begin()[1]; z = list.begin()[2];
+            x = list.begin()[0]; y = list.begin()[a1]; z = list.begin()[2];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -1119,7 +1119,7 @@ typedef struct CvPoint2D64f
         x = y = 0;
         if (list.size() == 2)
         {
-            x = list.begin()[0]; y = list.begin()[1];
+            x = list.begin()[0]; y = list.begin()[a1];
         }
     };
 #endif
@@ -1147,7 +1147,7 @@ typedef struct CvPoint3D64f
         x = y = z = 0;
         if (list.size() == 3)
         {
-            x = list.begin()[0]; y = list.begin()[1]; z = list.begin()[2];
+            x = list.begin()[0]; y = list.begin()[a1]; z = list.begin()[2];
         }
     };
 #endif
@@ -1177,7 +1177,7 @@ typedef struct CvSize
         width = 0; height = 0;
         if (list.size() == 2)
         {
-            width = list.begin()[0]; height = list.begin()[1];
+            width = list.begin()[0]; height = list.begin()[a1];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -1228,7 +1228,7 @@ typedef struct CvSize2D32f
         width = 0; height = 0;
         if (list.size() == 2)
         {
-            width = list.begin()[0]; height = list.begin()[1];
+            width = list.begin()[0]; height = list.begin()[a1];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -1339,7 +1339,7 @@ typedef struct CvSlice
         start_index = end_index = 0;
         if (list.size() == 2)
         {
-            start_index = list.begin()[0]; end_index = list.begin()[1];
+            start_index = list.begin()[0]; end_index = list.begin()[a1];
         }
     };
 #endif
@@ -1382,10 +1382,10 @@ typedef struct CvScalar
     CvScalar(const std::initializer_list<double> list)
     {
         CV_Assert(list.size() == 0 || list.size() == 4);
-        val[0] = val[1] = val[2] = val[3] = 0;
+        val[0] = val[a1] = val[2] = val[3] = 0;
         if (list.size() == 4)
         {
-            val[0] = list.begin()[0]; val[1] = list.begin()[1]; val[2] = list.begin()[2]; val[3] = list.begin()[3];
+            val[0] = list.begin()[0]; val[a1] = list.begin()[a1]; val[2] = list.begin()[2]; val[3] = list.begin()[3];
         }
     };
 #elif defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
@@ -1602,13 +1602,13 @@ another set. There is a singly-linked list of incoming/outcoming edges for each 
 
 Each edge consists of:
 
-- Two pointers to the starting and ending vertices (vtx[0] and vtx[1] respectively).
+- Two pointers to the starting and ending vertices (vtx[0] and vtx[a1] respectively).
 
     A graph may be oriented or not. In the latter case, edges between vertex i to vertex j are not
 distinguished during search operations.
 
 - Two pointers to next edges for the starting and ending vertices, where next[0] points to the
-next edge in the vtx[0] adjacency list and next[1] points to the next edge in the vtx[1]
+next edge in the vtx[0] adjacency list and next[a1] points to the next edge in the vtx[a1]
 adjacency list.
 
 @see CvGraphEdge, CvGraphVtx, CvGraphVtx2D, CvGraph
@@ -1964,7 +1964,7 @@ typedef struct CvFileStorage CvFileStorage;
 
 /** Storage flags: */
 #define CV_STORAGE_READ          0
-#define CV_STORAGE_WRITE         1
+#define CV_STORAGE_WRITE         a1
 #define CV_STORAGE_WRITE_TEXT    CV_STORAGE_WRITE
 #define CV_STORAGE_WRITE_BINARY  CV_STORAGE_WRITE
 #define CV_STORAGE_APPEND        2
@@ -2005,7 +2005,7 @@ CV_INLINE CvAttrList cvAttrList( const char** attr CV_DEFAULT(NULL),
 struct CvTypeInfo;
 
 #define CV_NODE_NONE        0
-#define CV_NODE_INT         1
+#define CV_NODE_INT         a1
 #define CV_NODE_INTEGER     CV_NODE_INT
 #define CV_NODE_REAL        2
 #define CV_NODE_FLOAT       CV_NODE_REAL

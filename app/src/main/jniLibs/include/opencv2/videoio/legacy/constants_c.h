@@ -152,7 +152,7 @@ enum
     CV_CAP_OPENNI_IR_GENERATOR_PRESENT            = CV_CAP_OPENNI_IR_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
 
     // Properties of cameras available through GStreamer interface
-    CV_CAP_GSTREAMER_QUEUE_LENGTH           = 200, // default is 1
+    CV_CAP_GSTREAMER_QUEUE_LENGTH           = 200, // default is a1
 
     // PVAPI
     CV_CAP_PROP_PVAPI_MULTICASTIP           = 300, // ip for anable multicast master mode. 0 for disable multicast
@@ -221,7 +221,7 @@ enum
     CV_CAP_PROP_XI_IMAGE_DATA_BIT_DEPTH                         = 462, // bitdepth of data returned by function xiGetImage
     CV_CAP_PROP_XI_OUTPUT_DATA_PACKING                          = 463, // Device output data packing (or grouping) enabled. Packing could be enabled if output_data_bit_depth > 8 and packing capability is available.
     CV_CAP_PROP_XI_OUTPUT_DATA_PACKING_TYPE                     = 464, // Data packing type. Some cameras supports only specific packing type.
-    CV_CAP_PROP_XI_IS_COOLED                                    = 465, // Returns 1 for cameras that support cooling.
+    CV_CAP_PROP_XI_IS_COOLED                                    = 465, // Returns a1 for cameras that support cooling.
     CV_CAP_PROP_XI_COOLING                                      = 466, // Start camera cooling.
     CV_CAP_PROP_XI_TARGET_TEMP                                  = 467, // Set sensor target temperature for cooling.
     CV_CAP_PROP_XI_CHIP_TEMP                                    = 468, // Camera sensor temperature
@@ -230,25 +230,25 @@ enum
     CV_CAP_PROP_XI_SENSOR_BOARD_TEMP                            = 596, // Camera sensor board temperature
     CV_CAP_PROP_XI_CMS                                          = 470, // Mode of color management system.
     CV_CAP_PROP_XI_APPLY_CMS                                    = 471, // Enable applying of CMS profiles to xiGetImage (see XI_PRM_INPUT_CMS_PROFILE, XI_PRM_OUTPUT_CMS_PROFILE).
-    CV_CAP_PROP_XI_IMAGE_IS_COLOR                               = 474, // Returns 1 for color cameras.
+    CV_CAP_PROP_XI_IMAGE_IS_COLOR                               = 474, // Returns a1 for color cameras.
     CV_CAP_PROP_XI_COLOR_FILTER_ARRAY                           = 475, // Returns color filter array type of RAW data.
     CV_CAP_PROP_XI_GAMMAY                                       = 476, // Luminosity gamma
     CV_CAP_PROP_XI_GAMMAC                                       = 477, // Chromaticity gamma
     CV_CAP_PROP_XI_SHARPNESS                                    = 478, // Sharpness Strength
     CV_CAP_PROP_XI_CC_MATRIX_00                                 = 479, // Color Correction Matrix element [0][0]
-    CV_CAP_PROP_XI_CC_MATRIX_01                                 = 480, // Color Correction Matrix element [0][1]
+    CV_CAP_PROP_XI_CC_MATRIX_01                                 = 480, // Color Correction Matrix element [0][a1]
     CV_CAP_PROP_XI_CC_MATRIX_02                                 = 481, // Color Correction Matrix element [0][2]
     CV_CAP_PROP_XI_CC_MATRIX_03                                 = 482, // Color Correction Matrix element [0][3]
-    CV_CAP_PROP_XI_CC_MATRIX_10                                 = 483, // Color Correction Matrix element [1][0]
-    CV_CAP_PROP_XI_CC_MATRIX_11                                 = 484, // Color Correction Matrix element [1][1]
-    CV_CAP_PROP_XI_CC_MATRIX_12                                 = 485, // Color Correction Matrix element [1][2]
-    CV_CAP_PROP_XI_CC_MATRIX_13                                 = 486, // Color Correction Matrix element [1][3]
+    CV_CAP_PROP_XI_CC_MATRIX_10                                 = 483, // Color Correction Matrix element [a1][0]
+    CV_CAP_PROP_XI_CC_MATRIX_11                                 = 484, // Color Correction Matrix element [a1][a1]
+    CV_CAP_PROP_XI_CC_MATRIX_12                                 = 485, // Color Correction Matrix element [a1][2]
+    CV_CAP_PROP_XI_CC_MATRIX_13                                 = 486, // Color Correction Matrix element [a1][3]
     CV_CAP_PROP_XI_CC_MATRIX_20                                 = 487, // Color Correction Matrix element [2][0]
-    CV_CAP_PROP_XI_CC_MATRIX_21                                 = 488, // Color Correction Matrix element [2][1]
+    CV_CAP_PROP_XI_CC_MATRIX_21                                 = 488, // Color Correction Matrix element [2][a1]
     CV_CAP_PROP_XI_CC_MATRIX_22                                 = 489, // Color Correction Matrix element [2][2]
     CV_CAP_PROP_XI_CC_MATRIX_23                                 = 490, // Color Correction Matrix element [2][3]
     CV_CAP_PROP_XI_CC_MATRIX_30                                 = 491, // Color Correction Matrix element [3][0]
-    CV_CAP_PROP_XI_CC_MATRIX_31                                 = 492, // Color Correction Matrix element [3][1]
+    CV_CAP_PROP_XI_CC_MATRIX_31                                 = 492, // Color Correction Matrix element [3][a1]
     CV_CAP_PROP_XI_CC_MATRIX_32                                 = 493, // Color Correction Matrix element [3][2]
     CV_CAP_PROP_XI_CC_MATRIX_33                                 = 494, // Color Correction Matrix element [3][3]
     CV_CAP_PROP_XI_DEFAULT_CC_MATRIX                            = 495, // Set default Color Correction Matrix
@@ -257,7 +257,7 @@ enum
     CV_CAP_PROP_XI_DEBOUNCE_EN                                  = 507, // Enable/Disable debounce to selected GPI
     CV_CAP_PROP_XI_DEBOUNCE_T0                                  = 508, // Debounce time (x * 10us)
     CV_CAP_PROP_XI_DEBOUNCE_T1                                  = 509, // Debounce time (x * 10us)
-    CV_CAP_PROP_XI_DEBOUNCE_POL                                 = 510, // Debounce polarity (pol = 1 t0 - falling edge, t1 - rising edge)
+    CV_CAP_PROP_XI_DEBOUNCE_POL                                 = 510, // Debounce polarity (pol = a1 t0 - falling edge, t1 - rising edge)
     CV_CAP_PROP_XI_LENS_MODE                                    = 511, // Status of lens control interface. This shall be set to XI_ON before any Lens operations.
     CV_CAP_PROP_XI_LENS_APERTURE_VALUE                          = 512, // Current lens aperture value in stops. Examples: 2.8, 4, 5.6, 8, 11
     CV_CAP_PROP_XI_LENS_FOCUS_MOVEMENT_VALUE                    = 513, // Lens current focus movement value to be used by XI_PRM_LENS_FOCUS_MOVE in motor steps.
@@ -286,9 +286,9 @@ enum
     CV_CAP_PROP_XI_TRG_DELAY                                    = 544, // Specifies the delay in microseconds (us) to apply after the trigger reception before activating it.
     CV_CAP_PROP_XI_TS_RST_MODE                                  = 545, // Defines how time stamp reset engine will be armed
     CV_CAP_PROP_XI_TS_RST_SOURCE                                = 546, // Defines which source will be used for timestamp reset. Writing this parameter will trigger settings of engine (arming)
-    CV_CAP_PROP_XI_IS_DEVICE_EXIST                              = 547, // Returns 1 if camera connected and works properly.
+    CV_CAP_PROP_XI_IS_DEVICE_EXIST                              = 547, // Returns a1 if camera connected and works properly.
     CV_CAP_PROP_XI_ACQ_BUFFER_SIZE                              = 548, // Acquisition buffer size in buffer_size_unit. Default bytes.
-    CV_CAP_PROP_XI_ACQ_BUFFER_SIZE_UNIT                         = 549, // Acquisition buffer size unit in bytes. Default 1. E.g. Value 1024 means that buffer_size is in KiBytes
+    CV_CAP_PROP_XI_ACQ_BUFFER_SIZE_UNIT                         = 549, // Acquisition buffer size unit in bytes. Default a1. E.g. Value 1024 means that buffer_size is in KiBytes
     CV_CAP_PROP_XI_ACQ_TRANSPORT_BUFFER_SIZE                    = 550, // Acquisition transport buffer size in bytes
     CV_CAP_PROP_XI_BUFFERS_QUEUE_SIZE                           = 551, // Queue of field/frame buffers
     CV_CAP_PROP_XI_ACQ_TRANSPORT_BUFFER_COMMIT                  = 552, // Number of buffers to commit to low level
@@ -388,7 +388,7 @@ enum
 enum
 {
     CV_CAP_INTELPERC_DEPTH_MAP              = 0, // Each pixel is a 16-bit integer. The value indicates the distance from an object to the camera's XY plane or the Cartesian depth.
-    CV_CAP_INTELPERC_UVDEPTH_MAP            = 1, // Each pixel contains two 32-bit floating point values in the range of 0-1, representing the mapping of depth coordinates to the color coordinates.
+    CV_CAP_INTELPERC_UVDEPTH_MAP            = 1, // Each pixel contains two 32-bit floating point values in the range of 0-a1, representing the mapping of depth coordinates to the color coordinates.
     CV_CAP_INTELPERC_IR_MAP                 = 2, // Each pixel is a 16-bit integer. The value indicates the intensity of the reflected laser beam.
     CV_CAP_INTELPERC_IMAGE                  = 3
 };

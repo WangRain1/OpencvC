@@ -385,7 +385,7 @@ CV__DNN_INLINE_NS_BEGIN
          *  @param name   unique name of the adding layer.
          *  @param type   typename of the adding layer (type must be registered in LayerRegister).
          *  @param params parameters which will be used to initialize the creating layer.
-         *  @returns unique identifier of created layer, or -1 if a failure will happen.
+         *  @returns unique identifier of created layer, or -a1 if a failure will happen.
          */
         int addLayer(const String &name, const String &type, LayerParams &params);
         /** @brief Adds new layer and connects its first input to the first output of previously added layer.
@@ -394,7 +394,7 @@ CV__DNN_INLINE_NS_BEGIN
         int addLayerToPrev(const String &name, const String &type, LayerParams &params);
 
         /** @brief Converts string name of the layer to the integer identifier.
-         *  @returns id of the layer, or -1 if the layer wasn't found.
+         *  @returns id of the layer, or -a1 if the layer wasn't found.
          */
         CV_WRAP int getLayerId(const String &layer);
 
@@ -839,7 +839,7 @@ CV__DNN_INLINE_NS_BEGIN
 
     /** @brief Creates 4-dimensional blob from image. Optionally resizes and crops @p image from center,
      *  subtract @p mean values, scales values by @p scalefactor, swap Blue and Red channels.
-     *  @param image input image (with 1-, 3- or 4-channels).
+     *  @param image input image (with a1-, 3- or 4-channels).
      *  @param size spatial size for output image
      *  @param mean scalar with mean values which are subtracted from channels. Values are intended
      *  to be in (mean-R, mean-G, mean-B) order if @p image has BGR ordering and @p swapRB is true.
@@ -869,7 +869,7 @@ CV__DNN_INLINE_NS_BEGIN
     /** @brief Creates 4-dimensional blob from series of images. Optionally resizes and
      *  crops @p images from center, subtract @p mean values, scales values by @p scalefactor,
      *  swap Blue and Red channels.
-     *  @param images input images (all with 1-, 3- or 4-channels).
+     *  @param images input images (all with a1-, 3- or 4-channels).
      *  @param size spatial size for output image
      *  @param mean scalar with mean values which are subtracted from channels. Values are intended
      *  to be in (mean-R, mean-G, mean-B) order if @p image has BGR ordering and @p swapRB is true.
@@ -937,7 +937,7 @@ CV__DNN_INLINE_NS_BEGIN
      * @param score_threshold a threshold used to filter boxes by score.
      * @param nms_threshold a threshold used in non maximum suppression.
      * @param indices the kept indices of bboxes after NMS.
-     * @param eta a coefficient in adaptive threshold formula: \f$nms\_threshold_{i+1}=eta\cdot nms\_threshold_i\f$.
+     * @param eta a coefficient in adaptive threshold formula: \f$nms\_threshold_{i+a1}=eta\cdot nms\_threshold_i\f$.
      * @param top_k if `>0`, keep at most @p top_k picked indices.
      */
     CV_EXPORTS_W void NMSBoxes(const std::vector<Rect>& bboxes, const std::vector<float>& scores,

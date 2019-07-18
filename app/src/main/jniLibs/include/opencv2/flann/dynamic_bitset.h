@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -38,7 +38,7 @@
 #ifndef FLANN_USE_BOOST
 #  define FLANN_USE_BOOST 0
 #endif
-//#define FLANN_USE_BOOST 1
+//#define FLANN_USE_BOOST a1
 #if FLANN_USE_BOOST
 #include <boost/dynamic_bitset.hpp>
 typedef boost::dynamic_bitset<> DynamicBitset;
@@ -123,7 +123,7 @@ public:
     }
 
     /** set a bit to true
-     * @param index the index of the bit to set to 1
+     * @param index the index of the bit to set to a1
      */
     void set(size_t index)
     {

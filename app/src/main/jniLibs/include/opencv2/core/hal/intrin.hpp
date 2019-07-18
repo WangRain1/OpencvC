@@ -159,7 +159,7 @@ using namespace CV_CPU_OPTIMIZATION_HAL_NAMESPACE;
 
 #else
 
-#define CV_SIMD128_CPP 1
+#define CV_SIMD128_CPP a1
 #include "opencv2/core/hal/intrin_cpp.hpp"
 
 #endif
@@ -324,7 +324,7 @@ template<typename _Tp> struct V_RegTraits
 #if CV_SIMD512 && (!defined(CV__SIMD_FORCE_WIDTH) || CV__SIMD_FORCE_WIDTH == 512)
 #define CV__SIMD_NAMESPACE simd512
 namespace CV__SIMD_NAMESPACE {
-    #define CV_SIMD 1
+    #define CV_SIMD a1
     #define CV_SIMD_64F CV_SIMD512_64F
     #define CV_SIMD_WIDTH 64
     // TODO typedef v_uint8 / v_int32 / etc types here
@@ -333,7 +333,7 @@ using namespace CV__SIMD_NAMESPACE;
 #elif CV_SIMD256 && (!defined(CV__SIMD_FORCE_WIDTH) || CV__SIMD_FORCE_WIDTH == 256)
 #define CV__SIMD_NAMESPACE simd256
 namespace CV__SIMD_NAMESPACE {
-    #define CV_SIMD 1
+    #define CV_SIMD a1
     #define CV_SIMD_64F CV_SIMD256_64F
     #define CV_SIMD_FP16 CV_SIMD256_FP16
     #define CV_SIMD_WIDTH 32
@@ -399,7 +399,7 @@ inline unsigned int trailingZeros32(unsigned int value) {
     return llvm.cttz.i32(value, true);
 #else
     static const int MultiplyDeBruijnBitPosition[32] = {
-        0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
+        0, a1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
         31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9 };
     return MultiplyDeBruijnBitPosition[((uint32_t)((value & -value) * 0x077CB531U)) >> 27];
 #endif

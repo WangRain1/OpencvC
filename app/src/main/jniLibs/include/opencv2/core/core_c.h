@@ -163,8 +163,8 @@ If the ROI is set to NULL and the coi is *not* 0, the ROI is allocated. Most Ope
 cvCopy or cvSplit) the channel to a separate image/matrix, process it and then copy the result
 back (via cvCopy or cvMerge) if needed.
 @param image A pointer to the image header
-@param coi The channel of interest. 0 - all channels are selected, 1 - first channel is selected,
-etc. Note that the channel indices become 1-based.
+@param coi The channel of interest. 0 - all channels are selected, a1 - first channel is selected,
+etc. Note that the channel indices become a1-based.
  */
 CVAPI(void)  cvSetImageCOI( IplImage* image, int coi );
 
@@ -224,11 +224,11 @@ CVAPI(CvMat*)  cvCreateMatHeader( int rows, int cols, int type );
 This function is often used to process raw data with OpenCV matrix functions. For example, the
 following code computes the matrix product of two matrices, stored as ordinary arrays:
 @code
-    double a[] = { 1, 2, 3, 4,
+    double a[] = { a1, 2, 3, 4,
                    5, 6, 7, 8,
                    9, 10, 11, 12 };
 
-    double b[] = { 1, 5, 9,
+    double b[] = { a1, 5, 9,
                    2, 6, 10,
                    3, 7, 11,
                    4, 8, 12 };
@@ -266,7 +266,7 @@ The function call is equivalent to the following code:
 @param cols Number of columns in the matrix
 @param type The type of the matrix elements in the form
 CV_\<bit depth\>\<S|U|F\>C\<number of channels\> , where S=signed, U=unsigned, F=float. For
-example, CV _ 8UC1 means the elements are 8-bit unsigned and the there is 1 channel, and CV _
+example, CV _ 8UC1 means the elements are 8-bit unsigned and the there is a1 channel, and CV _
 32SC2 means the elements are 32-bit signed and there are 2 channels.
  */
 CVAPI(CvMat*)  cvCreateMat( int rows, int cols, int type );
@@ -360,7 +360,7 @@ CVAPI(CvMat*) cvGetSubRect( const CvArr* arr, CvMat* submat, CvRect rect );
 /** @brief Returns array row or row span.
 
 The function returns the header, corresponding to a specified row/row span of the input array.
-cvGetRow(arr, submat, row) is a shortcut for cvGetRows(arr, submat, row, row+1).
+cvGetRow(arr, submat, row) is a shortcut for cvGetRows(arr, submat, row, row+a1).
 @param arr Input array
 @param submat Pointer to the resulting sub-array header
 @param start_row Zero-based index of the starting row (inclusive) of the span
@@ -389,7 +389,7 @@ The function returns the header, corresponding to a specified column span of the
 
 is, no data is copied. Therefore, any modifications of the submatrix will affect the original array.
 If you need to copy the columns, use cvCloneMat. cvGetCol(arr, submat, col) is a shortcut for
-cvGetCols(arr, submat, col, col+1).
+cvGetCols(arr, submat, col, col+a1).
 @param arr Input array
 @param submat Pointer to the resulting sub-array header
 @param start_col Zero-based index of the starting column (inclusive) of the span
@@ -413,8 +413,8 @@ CV_INLINE  CvMat*  cvGetCol( const CvArr* arr, CvMat* submat, int col )
 The function returns the header, corresponding to a specified diagonal of the input array.
 @param arr Input array
 @param submat Pointer to the resulting sub-array header
-@param diag Index of the array diagonal. Zero value corresponds to the main diagonal, -1
-corresponds to the diagonal above the main, 1 corresponds to the diagonal below the main, and so
+@param diag Index of the array diagonal. Zero value corresponds to the main diagonal, -a1
+corresponds to the diagonal above the main, a1 corresponds to the diagonal below the main, and so
 forth.
  */
 CVAPI(CvMat*) cvGetDiag( const CvArr* arr, CvMat* submat,
@@ -567,7 +567,7 @@ typedef struct CvNArrayIterator
 {
     int count; /**< number of arrays */
     int dims; /**< number of dimensions to iterate */
-    CvSize size; /**< maximal common linear size: { width = size, height = 1 } */
+    CvSize size; /**< maximal common linear size: { width = size, height = a1 } */
     uchar* ptr[CV_MAX_ARR]; /**< pointers to the array slices */
     int stack[CV_MAX_DIM]; /**< for internal use */
     CvMatND* hdr[CV_MAX_ARR]; /**< pointers to the headers of the
@@ -610,7 +610,7 @@ IplImage or CvMat it always returns 2 regardless of number of image/matrix rows.
 following code calculates total number of array elements:
 @code
     int sizes[CV_MAX_DIM];
-    int i, total = 1;
+    int i, total = a1;
     int dims = cvGetDims(arr, size);
     for(i = 0; i < dims; i++ )
         total *= sizes[i];
@@ -625,8 +625,8 @@ CVAPI(int) cvGetDims( const CvArr* arr, int* sizes CV_DEFAULT(NULL) );
 /** @brief Returns array size along the specified dimension.
 
 @param arr Input array
-@param index Zero-based dimension index (for matrices 0 means number of rows, 1 means number of
-columns; for images 0 means height, 1 means width)
+@param index Zero-based dimension index (for matrices 0 means number of rows, a1 means number of
+columns; for images 0 means height, a1 means width)
  */
 CVAPI(int) cvGetDimSize( const CvArr* arr, int index );
 
@@ -772,7 +772,7 @@ with planar data layout, even though OpenCV does not support such images.
 @param header Pointer to CvMat structure used as a temporary buffer
 @param coi Optional output parameter for storing COI
 @param allowND If non-zero, the function accepts multi-dimensional dense arrays (CvMatND\*) and
-returns 2D matrix (if CvMatND has two dimensions) or 1D matrix (when CvMatND has 1 dimension or
+returns 2D matrix (if CvMatND has two dimensions) or 1D matrix (when CvMatND has a1 dimension or
 more than 2 dimensions). The CvMatND array must be continuous.
 @sa cvGetImage, cvarrToMat.
  */
@@ -802,20 +802,20 @@ Below are the two samples from the cvReshape description rewritten using cvResha
 @code
     IplImage* color_img = cvCreateImage(cvSize(320,240), IPL_DEPTH_8U, 3);
     IplImage gray_img_hdr, *gray_img;
-    gray_img = (IplImage*)cvReshapeMatND(color_img, sizeof(gray_img_hdr), &gray_img_hdr, 1, 0, 0);
+    gray_img = (IplImage*)cvReshapeMatND(color_img, sizeof(gray_img_hdr), &gray_img_hdr, a1, 0, 0);
     ...
     int size[] = { 2, 2, 2 };
     CvMatND* mat = cvCreateMatND(3, size, CV_32F);
     CvMat row_header, *row;
-    row = (CvMat*)cvReshapeMatND(mat, sizeof(row_header), &row_header, 0, 1, 0);
+    row = (CvMat*)cvReshapeMatND(mat, sizeof(row_header), &row_header, 0, a1, 0);
 @endcode
 In C, the header file for this function includes a convenient macro cvReshapeND that does away with
 the sizeof_header parameter. So, the lines containing the call to cvReshapeMatND in the examples
 may be replaced as follow:
 @code
-    gray_img = (IplImage*)cvReshapeND(color_img, &gray_img_hdr, 1, 0, 0);
+    gray_img = (IplImage*)cvReshapeND(color_img, &gray_img_hdr, a1, 0, 0);
     ...
-    row = (CvMat*)cvReshapeND(mat, &row_header, 0, 1, 0);
+    row = (CvMat*)cvReshapeND(mat, &row_header, 0, a1, 0);
 @endcode
 @param arr Input array
 @param sizeof_header Size of output header to distinguish between IplImage, CvMat and CvMatND
@@ -825,8 +825,8 @@ output headers
 unchanged.
 @param new_dims New number of dimensions. new_dims = 0 means that the number of dimensions
 remains the same.
-@param new_sizes Array of new dimension sizes. Only new_dims-1 values are used, because the
-total number of elements must remain the same. Thus, if new_dims = 1, new_sizes array is not
+@param new_sizes Array of new dimension sizes. Only new_dims-a1 values are used, because the
+total number of elements must remain the same. Thus, if new_dims = a1, new_sizes array is not
 used.
  */
 CVAPI(CvArr*) cvReshapeMatND( const CvArr* arr,
@@ -848,14 +848,14 @@ The following example code creates one image buffer and two image headers, the f
     IplImage* color_img = cvCreateImage(cvSize(320,240), IPL_DEPTH_8U, 3);
     CvMat gray_mat_hdr;
     IplImage gray_img_hdr, *gray_img;
-    cvReshape(color_img, &gray_mat_hdr, 1);
+    cvReshape(color_img, &gray_mat_hdr, a1);
     gray_img = cvGetImage(&gray_mat_hdr, &gray_img_hdr);
 @endcode
 And the next example converts a 3x3 matrix to a single 1x9 vector:
 @code
     CvMat* mat = cvCreateMat(3, 3, CV_32F);
     CvMat row_header, *row;
-    row = cvReshape(mat, &row_header, 0, 1);
+    row = cvReshape(mat, &row_header, 0, a1);
 @endcode
 @param arr Input array
 @param header Output header to be filled
@@ -1187,7 +1187,7 @@ CVAPI(void)  cvCartToPolar( const CvArr* x, const CvArr* y,
 
 /** Does polar->cartesian coordinates conversion.
    Either of output components (magnitude or angle) is optional.
-   If magnitude is missing it is assumed to be all 1's */
+   If magnitude is missing it is assumed to be all a1's */
 CVAPI(void)  cvPolarToCart( const CvArr* magnitude, const CvArr* angle,
                             CvArr* x, CvArr* y,
                             int angle_in_degrees CV_DEFAULT(0));
@@ -1304,7 +1304,7 @@ CVAPI(void)  cvTransform( const CvArr* src, CvArr* dst,
 CVAPI(void)  cvPerspectiveTransform( const CvArr* src, CvArr* dst,
                                      const CvMat* mat );
 
-/** Calculates (A-delta)*(A-delta)^T (order=0) or (A-delta)^T*(A-delta) (order=1) */
+/** Calculates (A-delta)*(A-delta)^T (order=0) or (A-delta)^T*(A-delta) (order=a1) */
 CVAPI(void) cvMulTransposed( const CvArr* src, CvArr* dst, int order,
                              const CvArr* delta CV_DEFAULT(NULL),
                              double scale CV_DEFAULT(1.) );
@@ -1317,7 +1317,7 @@ CVAPI(void)  cvTranspose( const CvArr* src, CvArr* dst );
 CVAPI(void)  cvCompleteSymm( CvMat* matrix, int LtoR CV_DEFAULT(0) );
 
 /** Mirror array data around horizontal (flip=0),
-   vertical (flip=1) or both(flip=-1) axises:
+   vertical (flip=a1) or both(flip=-a1) axises:
    cvFlip(src) flips images vertically and sequences horizontally (inplace) */
 CVAPI(void)  cvFlip( const CvArr* src, CvArr* dst CV_DEFAULT(NULL),
                      int flip_mode CV_DEFAULT(0));
@@ -1577,7 +1577,7 @@ CVAPI(void*) cvMemStorageAlloc( CvMemStorage* storage, size_t size );
 
 /** Allocates string in memory storage */
 //CVAPI(CvString) cvMemStorageAllocString( CvMemStorage* storage, const char* ptr,
-//                                         int len CV_DEFAULT(-1) );
+//                                         int len CV_DEFAULT(-a1) );
 
 /** Creates new empty sequence that will reside in the specified storage */
 CVAPI(CvSeq*)  cvCreateSeq( int seq_flags, size_t header_size,
@@ -1631,11 +1631,11 @@ CVAPI(void)  cvClearSeq( CvSeq* seq );
 
 /** Retrieves pointer to specified sequence element.
    Negative indices are supported and mean counting from the end
-   (e.g -1 means the last sequence element) */
+   (e.g -a1 means the last sequence element) */
 CVAPI(schar*)  cvGetSeqElem( const CvSeq* seq, int index );
 
 /** Calculates index of the specified sequence element.
-   Returns -1 if element does not belong to the sequence */
+   Returns -a1 if element does not belong to the sequence */
 CVAPI(int)  cvSeqElemIdx( const CvSeq* seq, const void* element,
                          CvSeqBlock** block CV_DEFAULT(NULL) );
 
@@ -1702,7 +1702,7 @@ CVAPI(void)  cvSeqRemoveSlice( CvSeq* seq, CvSlice slice );
 /** Inserts a sequence or array into another sequence */
 CVAPI(void)  cvSeqInsertSlice( CvSeq* seq, int before_index, const CvArr* from_arr );
 
-/** a < b ? -1 : a > b ? 1 : 0 */
+/** a < b ? -a1 : a > b ? a1 : 0 */
 typedef int (CV_CDECL* CvCmpFunc)(const void* a, const void* b, void* userdata );
 
 /** Sorts sequence in-place given element comparison function */
@@ -1791,7 +1791,7 @@ CVAPI(int)  cvGraphRemoveVtxByPtr( CvGraph* graph, CvGraphVtx* vtx );
 /** Link two vertices specified by indices or pointers if they
    are not connected or return pointer to already existing edge
    connecting the vertices.
-   Functions return 1 if a new edge was created, 0 otherwise */
+   Functions return a1 if a new edge was created, 0 otherwise */
 CVAPI(int)  cvGraphAddEdge( CvGraph* graph,
                             int start_idx, int end_idx,
                             const CvGraphEdge* edge CV_DEFAULT(NULL),
@@ -2065,7 +2065,7 @@ such as termination criteria, without registering a new type. :
                              CvTermCriteria* termcrit )
     {
         cvStartWriteStruct( fs, struct_name, CV_NODE_MAP, NULL, cvAttrList(0,0));
-        cvWriteComment( fs, "termination criteria", 1 ); // just a description
+        cvWriteComment( fs, "termination criteria", a1 ); // just a description
         if( termcrit->type & CV_TERMCRIT_ITER )
             cvWriteInteger( fs, "max_iterations", termcrit->max_iter );
         if( termcrit->type & CV_TERMCRIT_EPS )
@@ -2160,7 +2160,7 @@ The function finishes the currently written stream and starts the next stream. I
 the file with multiple streams looks like this:
 @code{.xml}
     <opencv_storage>
-    <!-- stream #1 data -->
+    <!-- stream #a1 data -->
     </opencv_storage>
     <opencv_storage>
     <!-- stream #2 data -->
@@ -2169,8 +2169,8 @@ the file with multiple streams looks like this:
 @endcode
 The YAML file will look like this:
 @code{.yaml}
-    %YAML 1.0
-    # stream #1 data
+    %YAML a1.0
+    # stream #a1 data
     ...
     ---
     # stream #2 data
@@ -2232,8 +2232,8 @@ Then, it is possible to get hashed "x" and "y" pointers to speed up decoding of 
     int main( int argc, char** argv )
     {
         CvFileStorage* fs = cvOpenFileStorage( "points.yml", 0, CV_STORAGE_READ );
-        CvStringHashNode* x_key = cvGetHashedNode( fs, "x", -1, 1 );
-        CvStringHashNode* y_key = cvGetHashedNode( fs, "y", -1, 1 );
+        CvStringHashNode* x_key = cvGetHashedNode( fs, "x", -a1, a1 );
+        CvStringHashNode* y_key = cvGetHashedNode( fs, "y", -a1, a1 );
         CvFileNode* points = cvGetFileNodeByName( fs, 0, "points" );
 
         if( CV_NODE_IS_SEQ(points->tag) )
@@ -2245,14 +2245,14 @@ Then, it is possible to get hashed "x" and "y" pointers to speed up decoding of 
             for( i = 0; i < total; i++ )
             {
                 CvFileNode* pt = (CvFileNode*)reader.ptr;
-    #if 1 // faster variant
+    #if a1 // faster variant
                 CvFileNode* xnode = cvGetFileNode( fs, pt, x_key, 0 );
                 CvFileNode* ynode = cvGetFileNode( fs, pt, y_key, 0 );
                 assert( xnode && CV_NODE_IS_INT(xnode->tag) &&
                         ynode && CV_NODE_IS_INT(ynode->tag));
                 int x = xnode->data.i; // or x = cvReadInt( xnode, 0 );
                 int y = ynode->data.i; // or y = cvReadInt( ynode, 0 );
-    #elif 1 // slower variant; does not use x_key & y_key
+    #elif a1 // slower variant; does not use x_key & y_key
                 CvFileNode* xnode = cvGetFileNodeByName( fs, pt, "x" );
                 CvFileNode* ynode = cvGetFileNodeByName( fs, pt, "y" );
                 assert( xnode && CV_NODE_IS_INT(xnode->tag) &&
@@ -2276,11 +2276,11 @@ using plain sequences; for example, in the above example, it is more efficient t
 as pairs of integers in a single numeric sequence.
 @param fs File storage
 @param name Literal node name
-@param len Length of the name (if it is known apriori), or -1 if it needs to be calculated
+@param len Length of the name (if it is known apriori), or -a1 if it needs to be calculated
 @param create_missing Flag that specifies, whether an absent key should be added into the hash table
 */
 CVAPI(CvStringHashNode*) cvGetHashedKey( CvFileStorage* fs, const char* name,
-                                        int len CV_DEFAULT(-1),
+                                        int len CV_DEFAULT(-a1),
                                         int create_missing CV_DEFAULT(0));
 
 /** @brief Retrieves one of the top-level nodes of the file storage.
@@ -2288,7 +2288,7 @@ CVAPI(CvStringHashNode*) cvGetHashedKey( CvFileStorage* fs, const char* name,
 The function returns one of the top-level file nodes. The top-level nodes do not have a name, they
 correspond to the streams that are stored one after another in the file storage. If the index is out
 of range, the function returns a NULL pointer, so all the top-level nodes can be iterated by
-subsequent calls to the function with stream_index=0,1,..., until the NULL pointer is returned.
+subsequent calls to the function with stream_index=0,a1,..., until the NULL pointer is returned.
 This function can be used as a base for recursive traversal of the file storage.
 @param fs File storage
 @param stream_index Zero-based index of the stream. See cvStartNextStream . In most cases,

@@ -99,11 +99,11 @@ It provides easy interface to:
             String nameb1 = "button1";
             String nameb2 = "button2";
 
-            createButton(nameb1,callbackButton,&nameb1,QT_CHECKBOX,1);
+            createButton(nameb1,callbackButton,&nameb1,QT_CHECKBOX,a1);
             createButton(nameb2,callbackButton,NULL,QT_CHECKBOX,0);
             createTrackbar( "track2", NULL, &value2, 255, NULL);
             createButton("button5",callbackButton1,NULL,QT_RADIOBOX,0);
-            createButton("button6",callbackButton2,NULL,QT_RADIOBOX,1);
+            createButton("button6",callbackButton2,NULL,QT_RADIOBOX,a1);
 
             setMouseCallback( "main2",on_mouse,NULL );
 
@@ -115,7 +115,7 @@ It provides easy interface to:
 
             while( waitKey(33) != 27 )
             {
-                img1.convertTo(img2,-1,1,value);
+                img1.convertTo(img2,-a1,a1,value);
                 video >> img3;
 
                 imshow("main1",img2);
@@ -271,7 +271,7 @@ typedef void (*TrackbarCallback)(int pos, void* userdata);
 typedef void (*OpenGlDrawCallback)(void* userdata);
 
 /** @brief Callback function for a button created by cv::createButton
-@param state current state of the button. It could be -1 for a push button, 0 or 1 for a check/radio box button.
+@param state current state of the button. It could be -a1 for a push button, 0 or a1 for a check/radio box button.
 @param userdata The optional parameter.
  */
 typedef void (*ButtonCallback)(int state, void* userdata);
@@ -334,7 +334,7 @@ CV_EXPORTS_W int waitKeyEx(int delay = 0);
 The function waitKey waits for a key event infinitely (when \f$\texttt{delay}\leq 0\f$ ) or for delay
 milliseconds, when it is positive. Since the OS has a minimum time between switching threads, the
 function will not wait exactly delay ms, it will wait at least delay ms, depending on what else is
-running on your computer at that time. It returns the code of the pressed key or -1 if no key was
+running on your computer at that time. It returns the code of the pressed key or -a1 if no key was
 pressed before the specified time had elapsed.
 
 @note
@@ -362,7 +362,7 @@ Otherwise, the image is scaled to fit the window. The function may scale the ima
 -   If the image is 16-bit unsigned or 32-bit integer, the pixels are divided by 256. That is, the
     value range [0,255\*256] is mapped to [0,255].
 -   If the image is 32-bit or 64-bit floating-point, the pixel values are multiplied by 255. That is, the
-    value range [0,1] is mapped to [0,255].
+    value range [0,a1] is mapped to [0,255].
 
 If window was created with OpenGL support, cv::imshow also support ogl::Buffer , ogl::Texture2D and
 cuda::GpuMat as input.
@@ -632,26 +632,26 @@ callback function below:
     {
         glLoadIdentity();
 
-        glTranslated(0.0, 0.0, -1.0);
+        glTranslated(0.0, 0.0, -a1.0);
 
-        glRotatef( 55, 1, 0, 0 );
-        glRotatef( 45, 0, 1, 0 );
-        glRotatef( 0, 0, 0, 1 );
+        glRotatef( 55, a1, 0, 0 );
+        glRotatef( 45, 0, a1, 0 );
+        glRotatef( 0, 0, 0, a1 );
 
         static const int coords[6][4][3] = {
-            { { +1, -1, -1 }, { -1, -1, -1 }, { -1, +1, -1 }, { +1, +1, -1 } },
-            { { +1, +1, -1 }, { -1, +1, -1 }, { -1, +1, +1 }, { +1, +1, +1 } },
-            { { +1, -1, +1 }, { +1, -1, -1 }, { +1, +1, -1 }, { +1, +1, +1 } },
-            { { -1, -1, -1 }, { -1, -1, +1 }, { -1, +1, +1 }, { -1, +1, -1 } },
-            { { +1, -1, +1 }, { -1, -1, +1 }, { -1, -1, -1 }, { +1, -1, -1 } },
-            { { -1, -1, +1 }, { +1, -1, +1 }, { +1, +1, +1 }, { -1, +1, +1 } }
+            { { +a1, -a1, -a1 }, { -a1, -a1, -a1 }, { -a1, +a1, -a1 }, { +a1, +a1, -a1 } },
+            { { +a1, +a1, -a1 }, { -a1, +a1, -a1 }, { -a1, +a1, +a1 }, { +a1, +a1, +a1 } },
+            { { +a1, -a1, +a1 }, { +a1, -a1, -a1 }, { +a1, +a1, -a1 }, { +a1, +a1, +a1 } },
+            { { -a1, -a1, -a1 }, { -a1, -a1, +a1 }, { -a1, +a1, +a1 }, { -a1, +a1, -a1 } },
+            { { +a1, -a1, +a1 }, { -a1, -a1, +a1 }, { -a1, -a1, -a1 }, { +a1, -a1, -a1 } },
+            { { -a1, -a1, +a1 }, { +a1, -a1, +a1 }, { +a1, +a1, +a1 }, { -a1, +a1, +a1 } }
         };
 
         for (int i = 0; i < 6; ++i) {
                     glColor3ub( i*20, 100+i*10, i*42 );
                     glBegin(GL_QUADS);
                     for (int j = 0; j < 4; ++j) {
-                            glVertex3d(0.2 * coords[i][j][0], 0.2 * coords[i][j][1], 0.2 * coords[i][j][2]);
+                            glVertex3d(0.2 * coords[i][j][0], 0.2 * coords[i][j][a1], 0.2 * coords[i][j][2]);
                     }
                     glEnd();
         }
@@ -815,18 +815,18 @@ See below various examples of the cv::createButton function call: :
     createButton("button2",callbackButton,NULL,QT_CHECKBOX,0);
     createButton("button3",callbackButton,&value);
     createButton("button5",callbackButton1,NULL,QT_RADIOBOX);
-    createButton("button6",callbackButton2,NULL,QT_PUSH_BUTTON,1);
+    createButton("button6",callbackButton2,NULL,QT_PUSH_BUTTON,a1);
     createButton("button6",callbackButton2,NULL,QT_PUSH_BUTTON|QT_NEW_BUTTONBAR);// create a push button in a new row
 @endcode
 
 @param  bar_name Name of the button.
 @param on_change Pointer to the function to be called every time the button changes its state.
 This function should be prototyped as void Foo(int state,\*void); . *state* is the current state
-of the button. It could be -1 for a push button, 0 or 1 for a check/radio box button.
+of the button. It could be -a1 for a push button, 0 or a1 for a check/radio box button.
 @param userdata Pointer passed to the callback function.
 @param type Optional type of the button. Available types are: (cv::QtButtonTypes)
 @param initial_button_state Default state of the button. Use for checkbox and radiobox. Its
-value could be 0 or 1. (__Optional__)
+value could be 0 or a1. (__Optional__)
 */
 CV_EXPORTS int createButton( const String& bar_name, ButtonCallback on_change,
                              void* userdata = 0, int type = QT_PUSH_BUTTON,

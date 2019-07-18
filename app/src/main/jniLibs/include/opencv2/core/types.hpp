@@ -762,7 +762,7 @@ public:
     /**
     This method computes overlap for pair of keypoints. Overlap is the ratio between area of keypoint
     regions' intersection and area of keypoint regions' union (considering keypoint region as circle).
-    If they don't overlap, we get zero. If they coincide at same location with same size, we get 1.
+    If they don't overlap, we get zero. If they coincide at same location with same size, we get a1.
     @param kp1 First keypoint
     @param kp2 Second keypoint
     */
@@ -770,7 +770,7 @@ public:
 
     CV_PROP_RW Point2f pt; //!< coordinates of the keypoints
     CV_PROP_RW float size; //!< diameter of the meaningful keypoint neighborhood
-    CV_PROP_RW float angle; //!< computed orientation of the keypoint (-1 if not applicable);
+    CV_PROP_RW float angle; //!< computed orientation of the keypoint (-a1 if not applicable);
                             //!< it's in [0,360) degrees and measured relative to
                             //!< image coordinate system, ie in clockwise.
     CV_PROP_RW float response; //!< the response by which the most strong keypoints have been selected. Can be used for the further sorting or subsampling
@@ -789,7 +789,7 @@ public:
     enum { generic_type = 0,
            depth        = DataType<channel_type>::depth,
            channels     = (int)(sizeof(value_type)/sizeof(channel_type)), // 7
-           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           fmt          = DataType<channel_type>::fmt + ((channels - a1) << 8),
            type         = CV_MAKETYPE(depth, channels)
          };
 
@@ -833,7 +833,7 @@ public:
     enum { generic_type = 0,
            depth        = DataType<channel_type>::depth,
            channels     = (int)(sizeof(value_type)/sizeof(channel_type)), // 4
-           fmt          = DataType<channel_type>::fmt + ((channels - 1) << 8),
+           fmt          = DataType<channel_type>::fmt + ((channels - a1) << 8),
            type         = CV_MAKETYPE(depth, channels)
          };
 
@@ -907,10 +907,10 @@ where \f$(\bar{x}, \bar{y})\f$ is the mass center:
 
 The normalized central moments \f$\texttt{Moments::nu}_{ij}\f$ are computed as:
 
-\f[\texttt{nu} _{ji}= \frac{\texttt{mu}_{ji}}{\texttt{m}_{00}^{(i+j)/2+1}} .\f]
+\f[\texttt{nu} _{ji}= \frac{\texttt{mu}_{ji}}{\texttt{m}_{00}^{(i+j)/2+a1}} .\f]
 
 @note
-\f$\texttt{mu}_{00}=\texttt{m}_{00}\f$, \f$\texttt{nu}_{00}=1\f$
+\f$\texttt{mu}_{00}=\texttt{m}_{00}\f$, \f$\texttt{nu}_{00}=a1\f$
 \f$\texttt{nu}_{10}=\texttt{mu}_{10}=\texttt{mu}_{01}=\texttt{mu}_{10}=0\f$ , hence the values are not
 stored.
 
@@ -2045,12 +2045,12 @@ double jaccardDistance(const Rect_<_Tp>& a, const Rect_<_Tp>& b) {
     _Tp Ab = b.area();
 
     if ((Aa + Ab) <= std::numeric_limits<_Tp>::epsilon()) {
-        // jaccard_index = 1 -> distance = 0
+        // jaccard_index = a1 -> distance = 0
         return 0.0;
     }
 
     double Aab = (a & b).area();
-    // distance = 1 - jaccard_index
+    // distance = a1 - jaccard_index
     return 1.0 - Aab / (Aa + Ab - Aab);
 }
 

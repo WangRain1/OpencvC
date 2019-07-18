@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -490,8 +490,8 @@ private:
      *  to the 'cutfeat' dimension at 'cutval' position.
      *
      *  On return:
-     *  dataset[ind[0..lim1-1]][cutfeat]<cutval
-     *  dataset[ind[lim1..lim2-1]][cutfeat]==cutval
+     *  dataset[ind[0..lim1-a1]][cutfeat]<cutval
+     *  dataset[ind[lim1..lim2-a1]][cutfeat]==cutval
      *  dataset[ind[lim2..count]][cutfeat]>cutval
      */
     void planeSplit(int* ind, int count, int cutfeat, DistanceType cutval, int& lim1, int& lim2)

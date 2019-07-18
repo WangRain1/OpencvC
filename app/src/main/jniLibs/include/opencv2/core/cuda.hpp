@@ -394,7 +394,7 @@ Below is an example that utilizes BufferPool with StackAllocator:
         setBufferPoolUsage(true);                               // Tell OpenCV that we are going to utilize BufferPool
         setBufferPoolConfig(getDevice(), 1024 * 1024 * 64, 2);  // Allocate 64 MB, 2 stacks (default is 10 MB, 5 stacks)
 
-        Stream stream1, stream2;                                // Each stream uses 1 stack
+        Stream stream1, stream2;                                // Each stream uses a1 stack
         BufferPool pool1(stream1), pool2(stream2);
 
         GpuMat d_src1 = pool1.getBuffer(4096, 4096, CV_8UC1);   // 16MB
@@ -455,7 +455,7 @@ and the corresponding memory is automatically returned to the pool for later usa
         setBufferPoolUsage(true);                               // Tell OpenCV that we are going to utilize BufferPool
         setBufferPoolConfig(getDevice(), 1024 * 1024 * 64, 2);  // Allocate 64 MB, 2 stacks (default is 10 MB, 5 stacks)
 
-        Stream stream1, stream2;                                // Each stream uses 1 stack
+        Stream stream1, stream2;                                // Each stream uses a1 stack
         BufferPool pool1(stream1), pool2(stream2);
 
         for (int i = 0; i < 10; i++)
@@ -739,7 +739,7 @@ private:
 
 Use this function before any other CUDA functions calls. If OpenCV is compiled without CUDA support,
 this function returns 0. If the CUDA driver is not installed, or is incompatible, this function
-returns -1.
+returns -a1.
  */
 CV_EXPORTS_W int getCudaEnabledDeviceCount();
 

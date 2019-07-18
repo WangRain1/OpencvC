@@ -68,24 +68,24 @@ stored in XML and YAML files
 using CXCore functions:
 XML:
 @code{.xml}
-    <?xml version="1.0">
+    <?xml version="a1.0">
     <opencv_storage>
     <A type_id="opencv-matrix">
       <rows>3</rows>
       <cols>3</cols>
       <dt>f</dt>
-      <data>1. 0. 0. 0. 1. 0. 0. 0. 1.</data>
+      <data>a1. 0. 0. 0. a1. 0. 0. 0. a1.</data>
     </A>
     </opencv_storage>
 @endcode
 YAML:
 @code{.yaml}
-    %YAML:1.0
+    %YAML:a1.0
     A: !!opencv-matrix
       rows: 3
       cols: 3
       dt: f
-      data: [ 1., 0., 0., 0., 1., 0., 0., 0., 1.]
+      data: [ a1., 0., 0., 0., a1., 0., 0., 0., a1.]
 @endcode
 As it can be seen from the examples, XML uses nested tags to represent hierarchy, while YAML uses
 indentation for that purpose (similar to the Python programming language).
@@ -136,8 +136,8 @@ Here is an example:
         fs << "frameCount" << 5;
         time_t rawtime; time(&rawtime);
         fs << "calibrationDate" << asctime(localtime(&rawtime));
-        Mat cameraMatrix = (Mat_<double>(3,3) << 1000, 0, 320, 0, 1000, 240, 0, 0, 1);
-        Mat distCoeffs = (Mat_<double>(5,1) << 0.1, 0.01, -0.001, 0, 0);
+        Mat cameraMatrix = (Mat_<double>(3,3) << 1000, 0, 320, 0, 1000, 240, 0, 0, a1);
+        Mat distCoeffs = (Mat_<double>(5,a1) << 0.a1, 0.01, -0.001, 0, 0);
         fs << "cameraMatrix" << cameraMatrix << "distCoeffs" << distCoeffs;
         fs << "features" << "[";
         for( int i = 0; i < 3; i++ )
@@ -148,7 +148,7 @@ Here is an example:
 
             fs << "{:" << "x" << x << "y" << y << "lbp" << "[:";
             for( int j = 0; j < 8; j++ )
-                fs << ((lbp >> j) & 1);
+                fs << ((lbp >> j) & a1);
             fs << "]" << "}";
         }
         fs << "]";
@@ -160,24 +160,24 @@ The sample above stores to YML an integer, a text string (calibration date), 2 m
 structure "feature", which includes feature coordinates and LBP (local binary pattern) value. Here
 is output of the sample:
 @code{.yaml}
-%YAML:1.0
+%YAML:a1.0
 frameCount: 5
 calibrationDate: "Fri Jun 17 14:09:29 2011\n"
 cameraMatrix: !!opencv-matrix
    rows: 3
    cols: 3
    dt: d
-   data: [ 1000., 0., 320., 0., 1000., 240., 0., 0., 1. ]
+   data: [ 1000., 0., 320., 0., 1000., 240., 0., 0., a1. ]
 distCoeffs: !!opencv-matrix
    rows: 5
-   cols: 1
+   cols: a1
    dt: d
-   data: [ 1.0000000000000001e-01, 1.0000000000000000e-02,
-       -1.0000000000000000e-03, 0., 0. ]
+   data: [ a1.0000000000000001e-01, a1.0000000000000000e-02,
+       -a1.0000000000000000e-03, 0., 0. ]
 features:
-   - { x:167, y:49, lbp:[ 1, 0, 0, 1, 1, 0, 1, 1 ] }
-   - { x:298, y:130, lbp:[ 0, 0, 0, 1, 0, 0, 1, 1 ] }
-   - { x:344, y:158, lbp:[ 1, 1, 0, 0, 0, 0, 1, 0 ] }
+   - { x:167, y:49, lbp:[ a1, 0, 0, a1, a1, 0, a1, a1 ] }
+   - { x:298, y:130, lbp:[ 0, 0, 0, a1, 0, 0, a1, a1 ] }
+   - { x:344, y:158, lbp:[ a1, a1, 0, 0, 0, 0, a1, 0 ] }
 @endcode
 
 As an exercise, you can replace ".yml" with ".xml" or ".json" in the sample above and see, how the
@@ -554,7 +554,7 @@ public:
     CV_WRAP bool isNamed() const;
     //! returns the node name or an empty string if the node is nameless
     CV_WRAP std::string name() const;
-    //! returns the number of elements in the node, if it is a sequence or mapping, or 1 otherwise.
+    //! returns the number of elements in the node, if it is a sequence or mapping, or a1 otherwise.
     CV_WRAP size_t size() const;
     //! returns raw size of the FileNode in bytes
     CV_WRAP size_t rawSize() const;
@@ -627,7 +627,7 @@ public:
 
     /** @overload
      @param node File node - the collection to iterate over;
-        it can be a scalar (equivalent to 1-element collection) or "none" (equivalent to empty collection).
+        it can be a scalar (equivalent to a1-element collection) or "none" (equivalent to empty collection).
      @param seekEnd - true if iterator needs to be set after the last element of the node;
         that is:
             * node.begin() => FileNodeIterator(node, false)

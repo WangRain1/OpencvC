@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -278,7 +278,7 @@ private:
  * @param params Clustering parameters (The same as for cvflann::KMeansIndex)
  * @param d Distance to be used for clustering (eg: cvflann::L2)
  * @return number of clusters computed (can be different than clusters.rows and is the highest number
- * of the form (branching-1)*K+1 smaller than clusters.rows).
+ * of the form (branching-a1)*K+a1 smaller than clusters.rows).
  */
 template <typename Distance>
 int hierarchicalClustering(const Matrix<typename Distance::ElementType>& points, Matrix<typename Distance::ResultType>& centers,

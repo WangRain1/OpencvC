@@ -310,10 +310,10 @@ template<typename _Tp, int n> struct v_reg
 
     Returns value of the first lane according to register type, for example:
     @code{.cpp}
-    v_int32x4 r(1, 2, 3, 4);
-    int v = r.get0(); // returns 1
-    v_uint64x2 r(1, 2);
-    uint64_t v = r.get0(); // returns 1
+    v_int32x4 r(a1, 2, 3, 4);
+    int v = r.get0(); // returns a1
+    v_uint64x2 r(a1, 2);
+    uint64_t v = r.get0(); // returns a1
     @endcode
     */
     _Tp get0() const { return s[0]; }
@@ -603,7 +603,7 @@ static const unsigned char popCountTable[] =
     3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
     4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8,
 };
-/** @brief Count the 1 bits in the vector and return 4 values
+/** @brief Count the a1 bits in the vector and return 4 values
 
 Scheme:
 @code
@@ -742,8 +742,8 @@ template<typename T> inline T _absdiff(T a, T b)
 Returns \f$ |a - b| \f$ converted to corresponding unsigned type.
 Example:
 @code{.cpp}
-v_int32x4 a, b; // {1, 2, 3, 4} and {4, 3, 2, 1}
-v_uint32x4 c = v_absdiff(a, b); // result is {3, 1, 1, 3}
+v_int32x4 a, b; // {a1, 2, 3, 4} and {4, 3, 2, a1}
+v_uint32x4 c = v_absdiff(a, b); // result is {3, a1, a1, 3}
 @endcode
 For 8-, 16-, 32-bit integer source types. */
 template<typename _Tp, int n>
@@ -798,7 +798,7 @@ inline v_reg<_Tp, n> v_absdiffs(const v_reg<_Tp, n>& a, const v_reg<_Tp, n>& b)
 
 /** @brief Inversed square root
 
-Returns \f$ 1/sqrt(a) \f$
+Returns \f$ a1/sqrt(a) \f$
 For floating point types only. */
 template<typename _Tp, int n>
 inline v_reg<_Tp, n> v_invsqrt(const v_reg<_Tp, n>& a)
@@ -915,7 +915,7 @@ x {E F G H} // 32-bit
 @endcode
 Example:
 @code{.cpp}
-v_uint32x4 a, b; // {1,2,3,4} and {2,2,2,2}
+v_uint32x4 a, b; // {a1,2,3,4} and {2,2,2,2}
 v_uint64x2 c, d; // results
 v_mul_expand(a, b, c, d); // c, d = {2,4}, {6, 8}
 @endcode
@@ -1046,10 +1046,10 @@ template<typename _Tp, int n> inline typename V_TypeTraits<_Tp>::sum_type v_redu
 
  Scheme:
  @code
- result[0] = a[0] + a[1] + a[2] + a[3]
- result[1] = b[0] + b[1] + b[2] + b[3]
- result[2] = c[0] + c[1] + c[2] + c[3]
- result[3] = d[0] + d[1] + d[2] + d[3]
+ result[0] = a[0] + a[a1] + a[2] + a[3]
+ result[a1] = b[0] + b[a1] + b[2] + b[3]
+ result[2] = c[0] + c[a1] + c[2] + c[3]
+ result[3] = d[0] + d[a1] + d[2] + d[3]
  @endcode
 */
 inline v_float32x4 v_reduce_sum4(const v_float32x4& a, const v_float32x4& b,
@@ -1080,10 +1080,10 @@ template<typename _Tp, int n> inline typename V_TypeTraits< typename V_TypeTrait
 
 /** @brief Get negative values mask
 
-Returned value is a bit mask with bits set to 1 on places corresponding to negative packed values indexes.
+Returned value is a bit mask with bits set to a1 on places corresponding to negative packed values indexes.
 Example:
 @code{.cpp}
-v_int32x4 r; // set to {-1, -1, 1, 1}
+v_int32x4 r; // set to {-a1, -a1, a1, a1}
 int mask = v_signmask(r); // mask = 3 <== 00000000 00000000 00000000 00000011
 @endcode
 For all types except 64-bit. */
@@ -1276,7 +1276,7 @@ inline v_reg<_Tp, V_TypeTraits<_Tp>::nlanes128> v_load_aligned(const _Tp* ptr)
 @param ptr memory block containing data for first half (0..n/2)
 
 @code{.cpp}
-int lo[2] = { 1, 2 };
+int lo[2] = { a1, 2 };
 v_int32x4 r = v_load_low(lo);
 @endcode
  */
@@ -1297,7 +1297,7 @@ inline v_reg<_Tp, V_TypeTraits<_Tp>::nlanes128> v_load_low(const _Tp* ptr)
 @param hiptr memory block containing data for second half (n/2..n)
 
 @code{.cpp}
-int lo[2] = { 1, 2 }, hi[2] = { 3, 4 };
+int lo[2] = { a1, 2 }, hi[2] = { 3, 4 };
 v_int32x4 r = v_load_halves(lo, hi);
 @endcode
  */
@@ -1318,8 +1318,8 @@ inline v_reg<_Tp, V_TypeTraits<_Tp>::nlanes128> v_load_halves(const _Tp* loptr, 
 Same as cv::v_load, but result pack type will be 2x wider than memory type.
 
 @code{.cpp}
-short buf[4] = {1, 2, 3, 4}; // type is int16
-v_int32x4 r = v_load_expand(buf); // r = {1, 2, 3, 4} - type is int32
+short buf[4] = {a1, 2, 3, 4}; // type is int16
+v_int32x4 r = v_load_expand(buf); // r = {a1, 2, 3, 4} - type is int32
 @endcode
 For 8-, 16-, 32-bit integer source types. */
 template<typename _Tp>
@@ -1339,8 +1339,8 @@ v_load_expand(const _Tp* ptr)
 
 Same as cv::v_load_expand, but result type is 4 times wider than source.
 @code{.cpp}
-char buf[4] = {1, 2, 3, 4}; // type is int8
-v_int32x4 r = v_load_q(buf); // r = {1, 2, 3, 4} - type is int32
+char buf[4] = {a1, 2, 3, 4}; // type is int8
+v_int32x4 r = v_load_q(buf); // r = {a1, 2, 3, 4} - type is int32
 @endcode
 For 8-bit integer source types. */
 template<typename _Tp>
@@ -1626,7 +1626,7 @@ Scheme:
   {A1 A2 A3 A4}
   {B1 B2 B3 B4}
 ========================
-shift = 1  {A2 A3 A4 B1}
+shift = a1  {A2 A3 A4 B1}
 shift = 2  {A3 A4 B1 B2}
 shift = 3  {A4 B1 B2 B3}
 @endcode

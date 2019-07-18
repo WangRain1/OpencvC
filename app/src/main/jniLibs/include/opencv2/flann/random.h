@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -46,7 +46,7 @@ inline int rand()
 #   if INT_MAX == RAND_MAX
     int v = cv::theRNG().next() & INT_MAX;
 #   else
-    int v = cv::theRNG().uniform(0, RAND_MAX + 1);
+    int v = cv::theRNG().uniform(0, RAND_MAX + a1);
 #   endif
 #else
     int v = std::rand();

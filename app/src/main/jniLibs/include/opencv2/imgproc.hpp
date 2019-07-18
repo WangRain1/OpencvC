@@ -76,12 +76,12 @@ For details, see #BorderTypes
 ### Depth combinations
 Input depth (src.depth()) | Output depth (ddepth)
 --------------------------|----------------------
-CV_8U                     | -1/CV_16S/CV_32F/CV_64F
-CV_16U/CV_16S             | -1/CV_32F/CV_64F
-CV_32F                    | -1/CV_32F/CV_64F
-CV_64F                    | -1/CV_64F
+CV_8U                     | -a1/CV_16S/CV_32F/CV_64F
+CV_16U/CV_16S             | -a1/CV_32F/CV_64F
+CV_32F                    | -a1/CV_32F/CV_64F
+CV_64F                    | -a1/CV_64F
 
-@note when ddepth=-1, the output image will have the same depth as the source.
+@note when ddepth=-a1, the output image will have the same depth as the source.
 
     @defgroup imgproc_transform Geometric Image Transformations
 
@@ -228,9 +228,9 @@ enum MorphTypes{
 
 //! shape of the structuring element
 enum MorphShapes {
-    MORPH_RECT    = 0, //!< a rectangular structuring element:  \f[E_{ij}=1\f]
+    MORPH_RECT    = 0, //!< a rectangular structuring element:  \f[E_{ij}=a1\f]
     MORPH_CROSS   = 1, //!< a cross-shaped structuring element:
-                       //!< \f[E_{ij} =  \fork{1}{if i=\texttt{anchor.y} or j=\texttt{anchor.x}}{0}{otherwise}\f]
+                       //!< \f[E_{ij} =  \fork{a1}{if i=\texttt{anchor.y} or j=\texttt{anchor.x}}{0}{otherwise}\f]
     MORPH_ELLIPSE = 2 //!< an elliptic structuring element, that is, a filled ellipse inscribed
                       //!< into the rectangle Rect(0, 0, esize.width, 0.esize.height)
 };
@@ -298,10 +298,10 @@ enum DistanceTypes {
     DIST_L1      = 1,   //!< distance = |x1-x2| + |y1-y2|
     DIST_L2      = 2,   //!< the simple euclidean distance
     DIST_C       = 3,   //!< distance = max(|x1-x2|,|y1-y2|)
-    DIST_L12     = 4,   //!< L1-L2 metric: distance = 2(sqrt(1+x*x/2) - 1))
-    DIST_FAIR    = 5,   //!< distance = c^2(|x|/c-log(1+|x|/c)), c = 1.3998
-    DIST_WELSCH  = 6,   //!< distance = c^2/2(1-exp(-(x/c)^2)), c = 2.9846
-    DIST_HUBER   = 7    //!< distance = |x|<c ? x^2/2 : c(|x|-c/2), c=1.345
+    DIST_L12     = 4,   //!< L1-L2 metric: distance = 2(sqrt(a1+x*x/2) - a1))
+    DIST_FAIR    = 5,   //!< distance = c^2(|x|/c-log(a1+|x|/c)), c = a1.3998
+    DIST_WELSCH  = 6,   //!< distance = c^2/2(a1-exp(-(x/c)^2)), c = 2.9846
+    DIST_HUBER   = 7    //!< distance = |x|<c ? x^2/2 : c(|x|-c/2), c=a1.345
 };
 
 //! Mask size for distance transform
@@ -406,7 +406,7 @@ enum ConnectedComponentsAlgorithmsTypes {
 
 //! mode of the contour retrieval algorithm
 enum RetrievalModes {
-    /** retrieves only the extreme outer contours. It sets `hierarchy[i][2]=hierarchy[i][3]=-1` for
+    /** retrieves only the extreme outer contours. It sets `hierarchy[i][2]=hierarchy[i][3]=-a1` for
     all the contours. */
     RETR_EXTERNAL  = 0,
     /** retrieves all of the contours without establishing any hierarchical relationships. */
@@ -425,7 +425,7 @@ enum RetrievalModes {
 enum ContourApproximationModes {
     /** stores absolutely all the contour points. That is, any 2 subsequent points (x1,y1) and
     (x2,y2) of the contour will be either horizontal, vertical or diagonal neighbors, that is,
-    max(abs(x1-x2),abs(y2-y1))==1. */
+    max(abs(x1-x2),abs(y2-y1))==a1. */
     CHAIN_APPROX_NONE      = 1,
     /** compresses horizontal, vertical, and diagonal segments and leaves only their end points.
     For example, an up-right rectangular contour is encoded with 4 points. */
@@ -445,9 +445,9 @@ enum ContourApproximationModes {
 and \f$h^A_i, h^B_i\f$ are the Hu moments of \f$A\f$ and \f$B\f$ , respectively.
 */
 enum ShapeMatchModes {
-    CONTOURS_MATCH_I1  =1, //!< \f[I_1(A,B) =  \sum _{i=1...7}  \left |  \frac{1}{m^A_i} -  \frac{1}{m^B_i} \right |\f]
-    CONTOURS_MATCH_I2  =2, //!< \f[I_2(A,B) =  \sum _{i=1...7}  \left | m^A_i - m^B_i  \right |\f]
-    CONTOURS_MATCH_I3  =3  //!< \f[I_3(A,B) =  \max _{i=1...7}  \frac{ \left| m^A_i - m^B_i \right| }{ \left| m^A_i \right| }\f]
+    CONTOURS_MATCH_I1  =1, //!< \f[I_1(A,B) =  \sum _{i=a1...7}  \left |  \frac{a1}{m^A_i} -  \frac{a1}{m^B_i} \right |\f]
+    CONTOURS_MATCH_I2  =2, //!< \f[I_2(A,B) =  \sum _{i=a1...7}  \left | m^A_i - m^B_i  \right |\f]
+    CONTOURS_MATCH_I3  =3  //!< \f[I_3(A,B) =  \max _{i=a1...7}  \frac{ \left| m^A_i - m^B_i \right| }{ \left| m^A_i \right| }\f]
 };
 
 //! @} imgproc_shape
@@ -491,7 +491,7 @@ enum HistCompMethods {
     /** Correlation
     \f[d(H_1,H_2) =  \frac{\sum_I (H_1(I) - \bar{H_1}) (H_2(I) - \bar{H_2})}{\sqrt{\sum_I(H_1(I) - \bar{H_1})^2 \sum_I(H_2(I) - \bar{H_2})^2}}\f]
     where
-    \f[\bar{H_k} =  \frac{1}{N} \sum _J H_k(J)\f]
+    \f[\bar{H_k} =  \frac{a1}{N} \sum _J H_k(J)\f]
     and \f$N\f$ is a total number of histogram bins. */
     HISTCMP_CORREL        = 0,
     /** Chi-Square
@@ -502,7 +502,7 @@ enum HistCompMethods {
     HISTCMP_INTERSECT     = 2,
     /** Bhattacharyya distance
     (In fact, OpenCV computes Hellinger distance, which is related to Bhattacharyya coefficient.)
-    \f[d(H_1,H_2) =  \sqrt{1 - \frac{1}{\sqrt{\bar{H_1} \bar{H_2} N^2}} \sum_I \sqrt{H_1(I) \cdot H_2(I)}}\f] */
+    \f[d(H_1,H_2) =  \sqrt{a1 - \frac{a1}{\sqrt{\bar{H_1} \bar{H_2} N^2}} \sum_I \sqrt{H_1(I) \cdot H_2(I)}}\f] */
     HISTCMP_BHATTACHARYYA = 3,
     HISTCMP_HELLINGER     = HISTCMP_BHATTACHARYYA, //!< Synonym for HISTCMP_BHATTACHARYYA
     /** Alternative Chi-Square
@@ -1090,7 +1090,7 @@ public:
     @param edgeList Output vector.
 
     The function gives each edge as a 4 numbers vector, where each two are one of the edge
-    vertices. i.e. org_x = v[0], org_y = v[1], dst_x = v[2], dst_y = v[3].
+    vertices. i.e. org_x = v[0], org_y = v[a1], dst_x = v[2], dst_y = v[3].
      */
     CV_WRAP void getEdgeList(CV_OUT std::vector<Vec4f>& edgeList) const;
 
@@ -1107,7 +1107,7 @@ public:
     @param triangleList Output vector.
 
     The function gives each triangle as a 6 numbers vector, where each two are one of the triangle
-    vertices. i.e. p1_x = v[0], p1_y = v[1], p2_x = v[2], p2_y = v[3], p3_x = v[4], p3_y = v[5].
+    vertices. i.e. p1_x = v[0], p1_y = v[a1], p2_x = v[2], p2_y = v[3], p3_x = v[4], p3_y = v[5].
      */
     CV_WRAP void getTriangleList(CV_OUT std::vector<Vec6f>& triangleList) const;
 
@@ -1165,7 +1165,7 @@ public:
     @param rotate Parameter specifying which of the edges of the same quad-edge as the input
     one to return. The following values are possible:
     -   0 - the input edge ( e on the picture below if e is the input edge)
-    -   1 - the rotated edge ( eRot )
+    -   a1 - the rotated edge ( eRot )
     -   2 - the reversed edge (reversed e (in green))
     -   3 - the reversed rotated edge (reversed eRot (in green))
 
@@ -1268,15 +1268,15 @@ public:
     @param _image A grayscale (CV_8UC1) input image. If only a roi needs to be selected, use:
     `lsd_ptr-\>detect(image(roi), lines, ...); lines += Scalar(roi.x, roi.y, roi.x, roi.y);`
     @param _lines A vector of Vec4i or Vec4f elements specifying the beginning and ending point of a line. Where
-    Vec4i/Vec4f is (x1, y1, x2, y2), point 1 is the start, point 2 - end. Returned lines are strictly
+    Vec4i/Vec4f is (x1, y1, x2, y2), point a1 is the start, point 2 - end. Returned lines are strictly
     oriented depending on the gradient.
     @param width Vector of widths of the regions, where the lines are found. E.g. Width of line.
     @param prec Vector of precisions with which the lines are found.
     @param nfa Vector containing number of false alarms in the line region, with precision of 10%. The
     bigger the value, logarithmically better the detection.
-    - -1 corresponds to 10 mean false alarms
-    - 0 corresponds to 1 mean false alarm
-    - 1 corresponds to 0.1 mean false alarms
+    - -a1 corresponds to 10 mean false alarms
+    - 0 corresponds to a1 mean false alarm
+    - a1 corresponds to 0.a1 mean false alarms
     This vector will be calculated only when the objects type is #LSD_REFINE_ADV.
     */
     CV_WRAP virtual void detect(InputArray _image, OutputArray _lines,
@@ -1309,7 +1309,7 @@ The LineSegmentDetector algorithm is defined using the standard values. Only adv
 to edit those, as to tailor it for their own application.
 
 @param _refine The way found lines will be refined, see #LineSegmentDetectorModes
-@param _scale The scale of the image that will be used to find the lines. Range (0..1].
+@param _scale The scale of the image that will be used to find the lines. Range (0..a1].
 @param _sigma_scale Sigma for Gaussian filter. It is computed as sigma = _sigma_scale/_scale.
 @param _quant Bound to the quantization error on the gradient norm.
 @param _ang_th Gradient angle tolerance in degrees.
@@ -1332,19 +1332,19 @@ CV_EXPORTS_W Ptr<LineSegmentDetector> createLineSegmentDetector(
 
 /** @brief Returns Gaussian filter coefficients.
 
-The function computes and returns the \f$\texttt{ksize} \times 1\f$ matrix of Gaussian filter
+The function computes and returns the \f$\texttt{ksize} \times a1\f$ matrix of Gaussian filter
 coefficients:
 
-\f[G_i= \alpha *e^{-(i-( \texttt{ksize} -1)/2)^2/(2* \texttt{sigma}^2)},\f]
+\f[G_i= \alpha *e^{-(i-( \texttt{ksize} -a1)/2)^2/(2* \texttt{sigma}^2)},\f]
 
-where \f$i=0..\texttt{ksize}-1\f$ and \f$\alpha\f$ is the scale factor chosen so that \f$\sum_i G_i=1\f$.
+where \f$i=0..\texttt{ksize}-a1\f$ and \f$\alpha\f$ is the scale factor chosen so that \f$\sum_i G_i=a1\f$.
 
 Two of such generated kernels can be passed to sepFilter2D. Those functions automatically recognize
-smoothing kernels (a symmetrical kernel with sum of weights equal to 1) and handle them accordingly.
+smoothing kernels (a symmetrical kernel with sum of weights equal to a1) and handle them accordingly.
 You may also use the higher-level GaussianBlur.
-@param ksize Aperture size. It should be odd ( \f$\texttt{ksize} \mod 2 = 1\f$ ) and positive.
+@param ksize Aperture size. It should be odd ( \f$\texttt{ksize} \mod 2 = a1\f$ ) and positive.
 @param sigma Gaussian standard deviation. If it is non-positive, it is computed from ksize as
-`sigma = 0.3*((ksize-1)*0.5 - 1) + 0.8`.
+`sigma = 0.3*((ksize-a1)*0.5 - a1) + 0.8`.
 @param ktype Type of filter coefficients. It can be CV_32F or CV_64F .
 @sa  sepFilter2D, getDerivKernels, getStructuringElement, GaussianBlur
  */
@@ -1360,7 +1360,7 @@ kernels are generated (see #Sobel). The filters are normally passed to #sepFilte
 @param ky Output matrix of column filter coefficients. It has the type ktype .
 @param dx Derivative order in respect of x.
 @param dy Derivative order in respect of y.
-@param ksize Aperture size. It can be FILTER_SCHARR, 1, 3, 5, or 7.
+@param ksize Aperture size. It can be FILTER_SCHARR, a1, 3, 5, or 7.
 @param normalize Flag indicating whether to normalize (scale down) the filter coefficients or not.
 Theoretically, the coefficients should have the denominator \f$=2^{ksize*2-dx-dy-2}\f$. If you are
 going to filter floating-point images, you are likely to use the normalized kernels. But if you
@@ -1399,7 +1399,7 @@ the structuring element.
 
 @param shape Element shape that could be one of #MorphShapes
 @param ksize Size of the structuring element.
-@param anchor Anchor position within the element. The default value \f$(-1, -1)\f$ means that the
+@param anchor Anchor position within the element. The default value \f$(-a1, -a1)\f$ means that the
 anchor is at the center. Note that only the shape of a cross-shaped element depends on the anchor
 position. In other cases the anchor just regulates how much the result of the morphological
 operation is shifted.
@@ -1420,10 +1420,10 @@ In-place operation is supported.
 
 @note The median filter uses #BORDER_REPLICATE internally to cope with border pixels, see #BorderTypes
 
-@param src input 1-, 3-, or 4-channel image; when ksize is 3 or 5, the image depth should be
+@param src input a1-, 3-, or 4-channel image; when ksize is 3 or 5, the image depth should be
 CV_8U, CV_16U, or CV_32F, for larger aperture sizes, it can only be CV_8U.
 @param dst destination array of the same size and type as src.
-@param ksize aperture linear size; it must be odd and greater than 1, for example: 3, 5, 7 ...
+@param ksize aperture linear size; it must be odd and greater than a1, for example: 3, 5, 7 ...
 @sa  bilateralFilter, blur, boxFilter, GaussianBlur
  */
 CV_EXPORTS_W void medianBlur( InputArray src, OutputArray dst, int ksize );
@@ -1467,7 +1467,7 @@ _Filter size_: Large filters (d \> 5) are very slow, so it is recommended to use
 applications, and perhaps d=9 for offline applications that need heavy noise filtering.
 
 This filter does not work inplace.
-@param src Source 8-bit or floating-point, 1-channel or 3-channel image.
+@param src Source 8-bit or floating-point, a1-channel or 3-channel image.
 @param dst Destination image of the same size and type as src .
 @param d Diameter of each pixel neighborhood that is used during filtering. If it is non-positive,
 it is computed from sigmaSpace.
@@ -1488,11 +1488,11 @@ CV_EXPORTS_W void bilateralFilter( InputArray src, OutputArray dst, int d,
 
 The function smooths an image using the kernel:
 
-\f[\texttt{K} =  \alpha \begin{bmatrix} 1 & 1 & 1 &  \cdots & 1 & 1  \\ 1 & 1 & 1 &  \cdots & 1 & 1  \\ \hdotsfor{6} \\ 1 & 1 & 1 &  \cdots & 1 & 1 \end{bmatrix}\f]
+\f[\texttt{K} =  \alpha \begin{bmatrix} a1 & a1 & a1 &  \cdots & a1 & a1  \\ a1 & a1 & a1 &  \cdots & a1 & a1  \\ \hdotsfor{6} \\ a1 & a1 & a1 &  \cdots & a1 & a1 \end{bmatrix}\f]
 
 where
 
-\f[\alpha = \fork{\frac{1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{1}{otherwise}\f]
+\f[\alpha = \fork{\frac{a1}{\texttt{ksize.width*ksize.height}}}{when \texttt{normalize=true}}{a1}{otherwise}\f]
 
 Unnormalized box filter is useful for computing various integral characteristics over each pixel
 neighborhood, such as covariance matrices of image derivatives (used in dense optical flow
@@ -1500,9 +1500,9 @@ algorithms, and so on). If you need to compute pixel sums over variable-size win
 
 @param src input image.
 @param dst output image of the same size and type as src.
-@param ddepth the output image depth (-1 to use src.depth()).
+@param ddepth the output image depth (-a1 to use src.depth()).
 @param ksize blurring kernel size.
-@param anchor anchor point; default value Point(-1,-1) means that the anchor is at the kernel
+@param anchor anchor point; default value Point(-a1,-a1) means that the anchor is at the kernel
 center.
 @param normalize flag, specifying whether the kernel is normalized by its area or not.
 @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
@@ -1523,9 +1523,9 @@ variance and standard deviation around the neighborhood of a pixel.
 
 @param src input image
 @param dst output image of the same size and type as _src
-@param ddepth the output image depth (-1 to use src.depth())
+@param ddepth the output image depth (-a1 to use src.depth())
 @param ksize kernel size
-@param anchor kernel anchor point. The default value of Point(-1, -1) denotes that the anchor is at the kernel
+@param anchor kernel anchor point. The default value of Point(-a1, -a1) denotes that the anchor is at the kernel
 center.
 @param normalize flag, specifying whether the kernel is to be normalized by it's area or not.
 @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
@@ -1540,7 +1540,7 @@ CV_EXPORTS_W void sqrBoxFilter( InputArray src, OutputArray dst, int ddepth,
 
 The function smooths an image using the kernel:
 
-\f[\texttt{K} =  \frac{1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} 1 & 1 & 1 &  \cdots & 1 & 1  \\ 1 & 1 & 1 &  \cdots & 1 & 1  \\ \hdotsfor{6} \\ 1 & 1 & 1 &  \cdots & 1 & 1  \\ \end{bmatrix}\f]
+\f[\texttt{K} =  \frac{a1}{\texttt{ksize.width*ksize.height}} \begin{bmatrix} a1 & a1 & a1 &  \cdots & a1 & a1  \\ a1 & a1 & a1 &  \cdots & a1 & a1  \\ \hdotsfor{6} \\ a1 & a1 & a1 &  \cdots & a1 & a1  \\ \end{bmatrix}\f]
 
 The call `blur(src, dst, ksize, anchor, borderType)` is equivalent to `boxFilter(src, dst, src.type(),
 anchor, true, borderType)`.
@@ -1549,7 +1549,7 @@ anchor, true, borderType)`.
 the depth should be CV_8U, CV_16U, CV_16S, CV_32F or CV_64F.
 @param dst output image of the same size and type as src.
 @param ksize blurring kernel size.
-@param anchor anchor point; default value Point(-1,-1) means that the anchor is at the kernel
+@param anchor anchor point; default value Point(-a1,-a1) means that the anchor is at the kernel
 center.
 @param borderType border mode used to extrapolate pixels outside of the image, see #BorderTypes
 @sa  boxFilter, bilateralFilter, GaussianBlur, medianBlur
@@ -1569,8 +1569,8 @@ The function does actually compute correlation, not the convolution:
 \f[\texttt{dst} (x,y) =  \sum _{ \stackrel{0\leq x' < \texttt{kernel.cols},}{0\leq y' < \texttt{kernel.rows}} }  \texttt{kernel} (x',y')* \texttt{src} (x+x'- \texttt{anchor.x} ,y+y'- \texttt{anchor.y} )\f]
 
 That is, the kernel is not mirrored around the anchor point. If you need a real convolution, flip
-the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - 1, kernel.rows -
-anchor.y - 1)`.
+the kernel using #flip and set the new anchor to `(kernel.cols - anchor.x - a1, kernel.rows -
+anchor.y - a1)`.
 
 The function uses the DFT-based algorithm in case of sufficiently large kernels (~`11 x 11` or
 larger) and the direct algorithm for small kernels.
@@ -1582,7 +1582,7 @@ larger) and the direct algorithm for small kernels.
 matrix; if you want to apply different kernels to different channels, split the image into
 separate color planes using split and process them individually.
 @param anchor anchor of the kernel that indicates the relative position of a filtered point within
-the kernel; the anchor should lie within the kernel; default value (-1,-1) means that the anchor
+the kernel; the anchor should lie within the kernel; default value (-a1,-a1) means that the anchor
 is at the kernel center.
 @param delta optional value added to the filtered pixels before storing them in dst.
 @param borderType pixel extrapolation method, see #BorderTypes
@@ -1603,7 +1603,7 @@ kernel kernelY. The final result shifted by delta is stored in dst .
 @param ddepth Destination image depth, see @ref filter_depths "combinations"
 @param kernelX Coefficients for filtering each row.
 @param kernelY Coefficients for filtering each column.
-@param anchor Anchor position within the kernel. The default value \f$(-1,-1)\f$ means that the anchor
+@param anchor Anchor position within the kernel. The default value \f$(-a1,-a1)\f$ means that the anchor
 is at the kernel center.
 @param delta Value added to the filtered results before storing them.
 @param borderType Pixel extrapolation method, see #BorderTypes
@@ -1623,11 +1623,11 @@ Check @ref tutorial_sobel_derivatives "the corresponding tutorial" for more deta
 /** @brief Calculates the first, second, third, or mixed image derivatives using an extended Sobel operator.
 
 In all cases except one, the \f$\texttt{ksize} \times \texttt{ksize}\f$ separable kernel is used to
-calculate the derivative. When \f$\texttt{ksize = 1}\f$, the \f$3 \times 1\f$ or \f$1 \times 3\f$
-kernel is used (that is, no Gaussian smoothing is done). `ksize = 1` can only be used for the first
+calculate the derivative. When \f$\texttt{ksize = a1}\f$, the \f$3 \times a1\f$ or \f$a1 \times 3\f$
+kernel is used (that is, no Gaussian smoothing is done). `ksize = a1` can only be used for the first
 or the second x- or y- derivatives.
 
-There is also the special value `ksize = #FILTER_SCHARR (-1)` that corresponds to the \f$3\times3\f$ Scharr
+There is also the special value `ksize = #FILTER_SCHARR (-a1)` that corresponds to the \f$3\times3\f$ Scharr
 filter that may give more accurate results than the \f$3\times3\f$ Sobel. The Scharr aperture is
 
 \f[\vecthreethree{-3}{0}{3}{-10}{0}{10}{-3}{0}{3}\f]
@@ -1639,15 +1639,15 @@ The function calculates an image derivative by convolving the image with the app
 \f[\texttt{dst} =  \frac{\partial^{xorder+yorder} \texttt{src}}{\partial x^{xorder} \partial y^{yorder}}\f]
 
 The Sobel operators combine Gaussian smoothing and differentiation, so the result is more or less
-resistant to the noise. Most often, the function is called with ( xorder = 1, yorder = 0, ksize = 3)
-or ( xorder = 0, yorder = 1, ksize = 3) to calculate the first x- or y- image derivative. The first
+resistant to the noise. Most often, the function is called with ( xorder = a1, yorder = 0, ksize = 3)
+or ( xorder = 0, yorder = a1, ksize = 3) to calculate the first x- or y- image derivative. The first
 case corresponds to a kernel of:
 
-\f[\vecthreethree{-1}{0}{1}{-2}{0}{2}{-1}{0}{1}\f]
+\f[\vecthreethree{-a1}{0}{a1}{-2}{0}{2}{-a1}{0}{a1}\f]
 
 The second case corresponds to a kernel of:
 
-\f[\vecthreethree{-1}{-2}{-1}{0}{0}{0}{1}{2}{1}\f]
+\f[\vecthreethree{-a1}{-2}{-a1}{0}{0}{0}{a1}{2}{a1}\f]
 
 @param src input image.
 @param dst output image of the same size and the same number of channels as src .
@@ -1655,7 +1655,7 @@ The second case corresponds to a kernel of:
     8-bit input images it will result in truncated derivatives.
 @param dx order of the derivative x.
 @param dy order of the derivative y.
-@param ksize size of the extended Sobel kernel; it must be 1, 3, 5, or 7.
+@param ksize size of the extended Sobel kernel; it must be a1, 3, 5, or 7.
 @param scale optional scale factor for the computed derivative values; by default, no scaling is
 applied (see #getDerivKernels for details).
 @param delta optional delta value that is added to the results prior to storing them in dst.
@@ -1672,8 +1672,8 @@ CV_EXPORTS_W void Sobel( InputArray src, OutputArray dst, int ddepth,
 Equivalent to calling:
 
 @code
-Sobel( src, dx, CV_16SC1, 1, 0, 3 );
-Sobel( src, dy, CV_16SC1, 0, 1, 3 );
+Sobel( src, dx, CV_16SC1, a1, 0, 3 );
+Sobel( src, dy, CV_16SC1, 0, a1, 3 );
 @endcode
 
 @param src input image.
@@ -1726,10 +1726,10 @@ derivatives calculated using the Sobel operator:
 
 \f[\texttt{dst} =  \Delta \texttt{src} =  \frac{\partial^2 \texttt{src}}{\partial x^2} +  \frac{\partial^2 \texttt{src}}{\partial y^2}\f]
 
-This is done when `ksize > 1`. When `ksize == 1`, the Laplacian is computed by filtering the image
+This is done when `ksize > a1`. When `ksize == a1`, the Laplacian is computed by filtering the image
 with the following \f$3 \times 3\f$ aperture:
 
-\f[\vecthreethree {0}{1}{0}{1}{-4}{1}{0}{1}{0}\f]
+\f[\vecthreethree {0}{a1}{0}{a1}{-4}{a1}{0}{a1}{0}\f]
 
 @param src Source image.
 @param dst Destination image of the same size and the same number of channels as src .
@@ -1881,7 +1881,7 @@ The corners can be found as local maximums of the functions, as shown below:
     Mat corners, dilated_corners;
     preCornerDetect(image, corners, 3);
     // dilation with 3x3 rectangular structuring element
-    dilate(corners, dilated_corners, Mat(), 1);
+    dilate(corners, dilated_corners, Mat(), a1);
     Mat corner_mask = corners == dilated_corners;
 @endcode
 
@@ -1915,7 +1915,7 @@ with \f$\epsilon_i\f$ set to zero:
 where the gradients are summed within a neighborhood ("search window") of \f$q\f$ . Calling the first
 gradient term \f$G\f$ and the second gradient term \f$b\f$ gives:
 
-\f[q = G^{-1}  \cdot b\f]
+\f[q = G^{-a1}  \cdot b\f]
 
 The algorithm sets the center of the neighborhood window at this new center \f$q\f$ and then iterates
 until the center stays within a set threshold.
@@ -1924,10 +1924,10 @@ until the center stays within a set threshold.
 @param corners Initial coordinates of the input corners and refined coordinates provided for
 output.
 @param winSize Half of the side length of the search window. For example, if winSize=Size(5,5) ,
-then a \f$(5*2+1) \times (5*2+1) = 11 \times 11\f$ search window is used.
+then a \f$(5*2+a1) \times (5*2+a1) = 11 \times 11\f$ search window is used.
 @param zeroZone Half of the size of the dead region in the middle of the search zone over which
 the summation in the formula below is not done. It is used sometimes to avoid possible
-singularities of the autocorrelation matrix. The value of (-1,-1) indicates that there is no such
+singularities of the autocorrelation matrix. The value of (-a1,-a1) indicates that there is no such
 a size.
 @param criteria Criteria for termination of the iterative process of corner refinement. That is,
 the process of corner position refinement stops either after criteria.maxCount iterations or when
@@ -2101,7 +2101,7 @@ search, and find the correct radius using an additional procedure.
 floating-point vector \f$(x, y, radius)\f$ or \f$(x, y, radius, votes)\f$ .
 @param method Detection method, see #HoughModes. Currently, the only implemented method is #HOUGH_GRADIENT
 @param dp Inverse ratio of the accumulator resolution to the image resolution. For example, if
-dp=1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
+dp=a1 , the accumulator has the same resolution as the input image. If dp=2 , the accumulator has
 half as big width and height.
 @param minDist Minimum distance between the centers of the detected circles. If the parameter is
 too small, multiple neighbor circles may be falsely detected in addition to a true one. If it is
@@ -2149,7 +2149,7 @@ CV_8U, CV_16U, CV_16S, CV_32F or CV_64F.
 @param dst output image of the same size and type as src.
 @param kernel structuring element used for erosion; if `element=Mat()`, a `3 x 3` rectangular
 structuring element is used. Kernel can be created using #getStructuringElement.
-@param anchor position of the anchor within the element; default value (-1, -1) means that the
+@param anchor position of the anchor within the element; default value (-a1, -a1) means that the
 anchor is at the element center.
 @param iterations number of times erosion is applied.
 @param borderType pixel extrapolation method, see #BorderTypes
@@ -2181,7 +2181,7 @@ CV_8U, CV_16U, CV_16S, CV_32F or CV_64F.
 @param dst output image of the same size and type as src.
 @param kernel structuring element used for dilation; if elemenat=Mat(), a 3 x 3 rectangular
 structuring element is used. Kernel can be created using #getStructuringElement
-@param anchor position of the anchor within the element; default value (-1, -1) means that the
+@param anchor position of the anchor within the element; default value (-a1, -a1) means that the
 anchor is at the element center.
 @param iterations number of times dilation is applied.
 @param borderType pixel extrapolation method, see #BorderTypes
@@ -2403,7 +2403,7 @@ CV_EXPORTS_W void convertMaps( InputArray map1, InputArray map2,
 
 The function calculates the following matrix:
 
-\f[\begin{bmatrix} \alpha &  \beta & (1- \alpha )  \cdot \texttt{center.x} -  \beta \cdot \texttt{center.y} \\ - \beta &  \alpha &  \beta \cdot \texttt{center.x} + (1- \alpha )  \cdot \texttt{center.y} \end{bmatrix}\f]
+\f[\begin{bmatrix} \alpha &  \beta & (a1- \alpha )  \cdot \texttt{center.x} -  \beta \cdot \texttt{center.y} \\ - \beta &  \alpha &  \beta \cdot \texttt{center.x} + (a1- \alpha )  \cdot \texttt{center.y} \end{bmatrix}\f]
 
 where
 
@@ -2424,11 +2424,11 @@ CV_EXPORTS_W Mat getRotationMatrix2D( Point2f center, double angle, double scale
 
 The function calculates the \f$2 \times 3\f$ matrix of an affine transform so that:
 
-\f[\begin{bmatrix} x'_i \\ y'_i \end{bmatrix} = \texttt{map_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}\f]
+\f[\begin{bmatrix} x'_i \\ y'_i \end{bmatrix} = \texttt{map_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ a1 \end{bmatrix}\f]
 
 where
 
-\f[dst(i)=(x'_i,y'_i), src(i)=(x_i, y_i), i=0,1,2\f]
+\f[dst(i)=(x'_i,y'_i), src(i)=(x_i, y_i), i=0,a1,2\f]
 
 @param src Coordinates of triangle vertices in the source image.
 @param dst Coordinates of the corresponding triangle vertices in the destination image.
@@ -2454,11 +2454,11 @@ CV_EXPORTS_W void invertAffineTransform( InputArray M, OutputArray iM );
 
 The function calculates the \f$3 \times 3\f$ matrix of a perspective transform so that:
 
-\f[\begin{bmatrix} t_i x'_i \\ t_i y'_i \\ t_i \end{bmatrix} = \texttt{map_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}\f]
+\f[\begin{bmatrix} t_i x'_i \\ t_i y'_i \\ t_i \end{bmatrix} = \texttt{map_matrix} \cdot \begin{bmatrix} x_i \\ y_i \\ a1 \end{bmatrix}\f]
 
 where
 
-\f[dst(i)=(x'_i,y'_i), src(i)=(x_i, y_i), i=0,1,2,3\f]
+\f[dst(i)=(x'_i,y'_i), src(i)=(x_i, y_i), i=0,a1,2,3\f]
 
 @param src Coordinates of quadrangle vertices in the source image.
 @param dst Coordinates of the corresponding quadrangle vertices in the destination image.
@@ -2478,7 +2478,7 @@ CV_EXPORTS_W Mat getAffineTransform( InputArray src, InputArray dst );
 
 The function getRectSubPix extracts pixels from src:
 
-\f[patch(x, y) = src(x +  \texttt{center.x} - ( \texttt{dst.cols} -1)*0.5, y +  \texttt{center.y} - ( \texttt{dst.rows} -1)*0.5)\f]
+\f[patch(x, y) = src(x +  \texttt{center.x} - ( \texttt{dst.cols} -a1)*0.5, y +  \texttt{center.y} - ( \texttt{dst.rows} -a1)*0.5)\f]
 
 where the values of the pixels at non-integer coordinates are retrieved using bilinear
 interpolation. Every channel of multi-channel images is processed independently. Also
@@ -2696,7 +2696,7 @@ The function calculates one or more integral images for the source image as foll
 
 \f[\texttt{sqsum} (X,Y) =  \sum _{x<X,y<Y}  \texttt{image} (x,y)^2\f]
 
-\f[\texttt{tilted} (X,Y) =  \sum _{y<Y,abs(x-X+1) \leq Y-y-1}  \texttt{image} (x,y)\f]
+\f[\texttt{tilted} (X,Y) =  \sum _{y<Y,abs(x-X+a1) \leq Y-y-a1}  \texttt{image} (x,y)\f]
 
 Using these integral images, you can calculate sum, mean, and standard deviation over a specific
 up-right or rotated rectangular region of the image in a constant time, for example:
@@ -2707,16 +2707,16 @@ It makes possible to do a fast blurring or fast block correlation with a variabl
 example. In case of multi-channel images, sums for each channel are accumulated independently.
 
 As a practical example, the next figure shows the calculation of the integral of a straight
-rectangle Rect(3,3,3,2) and of a tilted rectangle Rect(5,1,2,3) . The selected pixels in the
+rectangle Rect(3,3,3,2) and of a tilted rectangle Rect(5,a1,2,3) . The selected pixels in the
 original image are shown, as well as the relative pixels in the integral images sum and tilted .
 
 ![integral calculation example](pics/integral.png)
 
 @param src input image as \f$W \times H\f$, 8-bit or floating-point (32f or 64f).
-@param sum integral image as \f$(W+1)\times (H+1)\f$ , 32-bit integer or floating-point (32f or 64f).
-@param sqsum integral image for squared pixel values; it is \f$(W+1)\times (H+1)\f$, double-precision
+@param sum integral image as \f$(W+a1)\times (H+a1)\f$ , 32-bit integer or floating-point (32f or 64f).
+@param sqsum integral image for squared pixel values; it is \f$(W+a1)\times (H+a1)\f$, double-precision
 floating-point (64f) array.
-@param tilted integral for the image rotated by 45 degrees; it is \f$(W+1)\times (H+1)\f$ array with
+@param tilted integral for the image rotated by 45 degrees; it is \f$(W+a1)\times (H+a1)\f$ array with
 the same data type as sum.
 @param sdepth desired depth of the integral and the tilted integral images, CV_32S, CV_32F, or
 CV_64F.
@@ -2760,7 +2760,7 @@ accumulator dst :
 
 The function supports multi-channel images. Each channel is processed independently.
 
-@param src Input image as 1- or 3-channel, 8-bit or 32-bit floating point.
+@param src Input image as a1- or 3-channel, 8-bit or 32-bit floating point.
 @param dst %Accumulator image with the same number of channels as input image, 32-bit or 64-bit
 floating-point.
 @param mask Optional operation mask.
@@ -2778,7 +2778,7 @@ The function adds the product of two images or their selected regions to the acc
 
 The function supports multi-channel images. Each channel is processed independently.
 
-@param src1 First input image, 1- or 3-channel, 8-bit or 32-bit floating point.
+@param src1 First input image, a1- or 3-channel, 8-bit or 32-bit floating point.
 @param src2 Second input image of the same type and the same size as src1 .
 @param dst %Accumulator image with the same number of channels as input images, 32-bit or 64-bit
 floating-point.
@@ -2794,12 +2794,12 @@ CV_EXPORTS_W void accumulateProduct( InputArray src1, InputArray src2,
 The function calculates the weighted sum of the input image src and the accumulator dst so that dst
 becomes a running average of a frame sequence:
 
-\f[\texttt{dst} (x,y)  \leftarrow (1- \texttt{alpha} )  \cdot \texttt{dst} (x,y) +  \texttt{alpha} \cdot \texttt{src} (x,y)  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0\f]
+\f[\texttt{dst} (x,y)  \leftarrow (a1- \texttt{alpha} )  \cdot \texttt{dst} (x,y) +  \texttt{alpha} \cdot \texttt{src} (x,y)  \quad \text{if} \quad \texttt{mask} (x,y)  \ne 0\f]
 
 That is, alpha regulates the update speed (how fast the accumulator "forgets" about earlier images).
 The function supports multi-channel images. Each channel is processed independently.
 
-@param src Input image as 1- or 3-channel, 8-bit or 32-bit floating point.
+@param src Input image as a1- or 3-channel, 8-bit or 32-bit floating point.
 @param dst %Accumulator image with the same number of channels as input image, 32-bit or 64-bit
 floating-point.
 @param alpha Weight of the input image.
@@ -2829,18 +2829,18 @@ where \f$\mathcal{F}\f$ is the forward DFT.
 - It then computes the cross-power spectrum of each frequency domain array:
 \f[R = \frac{ \mathbf{G}_a \mathbf{G}_b^*}{|\mathbf{G}_a \mathbf{G}_b^*|}\f]
 - Next the cross-correlation is converted back into the time domain via the inverse DFT:
-\f[r = \mathcal{F}^{-1}\{R\}\f]
+\f[r = \mathcal{F}^{-a1}\{R\}\f]
 - Finally, it computes the peak location and computes a 5x5 weighted centroid around the peak to
 achieve sub-pixel accuracy.
 \f[(\Delta x, \Delta y) = \texttt{weightedCentroid} \{\arg \max_{(x, y)}\{r\}\}\f]
 - If non-zero, the response parameter is computed as the sum of the elements of r within the 5x5
-centroid around the peak location. It is normalized to a maximum of 1 (meaning there is a single
+centroid around the peak location. It is normalized to a maximum of a1 (meaning there is a single
 peak) and will be smaller when there are multiple peaks.
 
 @param src1 Source floating point array (CV_32FC1 or CV_64FC1)
 @param src2 Source floating point array (CV_32FC1 or CV_64FC1)
 @param window Floating point array with windowing coefficients to reduce edge effects (optional).
-@param response Signal power within the 5x5 centroid around the peak, between 0 and 1 (optional).
+@param response Signal power within the 5x5 centroid around the peak, between 0 and a1 (optional).
 @returns detected phase shift (sub-pixel) between the two arrays.
 
 @sa dft, getOptimalDFTSize, idft, mulSpectrums createHanningWindow
@@ -2860,7 +2860,7 @@ An example is shown below:
     createHanningWindow(hann, Size(100, 100), CV_32F);
 @endcode
 @param dst Destination array to place Hann coefficients in
-@param winSize The window size specifications (both width and height must be > 1)
+@param winSize The window size specifications (both width and height must be > a1)
 @param type Created array type
  */
 CV_EXPORTS_W void createHanningWindow(OutputArray dst, Size winSize, int type);
@@ -2938,7 +2938,7 @@ An example using pyrDown and pyrUp functions
 
 /** @brief Blurs an image and downsamples it.
 
-By default, size of the output image is computed as `Size((src.cols+1)/2, (src.rows+1)/2)`, but in
+By default, size of the output image is computed as `Size((src.cols+a1)/2, (src.rows+a1)/2)`, but in
 any case, the following conditions should be satisfied:
 
 \f[\begin{array}{l} | \texttt{dstsize.width} *2-src.cols| \leq 2 \\ | \texttt{dstsize.height} *2-src.rows| \leq 2 \end{array}\f]
@@ -2946,7 +2946,7 @@ any case, the following conditions should be satisfied:
 The function performs the downsampling step of the Gaussian pyramid construction. First, it
 convolves the source image with the kernel:
 
-\f[\frac{1}{256} \begin{bmatrix} 1 & 4 & 6 & 4 & 1  \\ 4 & 16 & 24 & 16 & 4  \\ 6 & 24 & 36 & 24 & 6  \\ 4 & 16 & 24 & 16 & 4  \\ 1 & 4 & 6 & 4 & 1 \end{bmatrix}\f]
+\f[\frac{a1}{256} \begin{bmatrix} a1 & 4 & 6 & 4 & a1  \\ 4 & 16 & 24 & 16 & 4  \\ 6 & 24 & 36 & 24 & 6  \\ 4 & 16 & 24 & 16 & 4  \\ a1 & 4 & 6 & 4 & a1 \end{bmatrix}\f]
 
 Then, it downsamples the image by rejecting even rows and columns.
 
@@ -2984,8 +2984,8 @@ The function constructs a vector of images and builds the Gaussian pyramid by re
 pyrDown to the previously built pyramid layers, starting from `dst[0]==src`.
 
 @param src Source image. Check pyrDown for the list of supported types.
-@param dst Destination vector of maxlevel+1 images of the same type as src. dst[0] will be the
-same as src. dst[1] is the next pyramid layer, a smoothed and down-sized src, and so on.
+@param dst Destination vector of maxlevel+a1 images of the same type as src. dst[0] will be the
+same as src. dst[a1] is the next pyramid layer, a smoothed and down-sized src, and so on.
 @param maxlevel 0-based index of the last (the smallest) pyramid layer. It must be non-negative.
 @param borderType Pixel extrapolation method, see #BorderTypes (#BORDER_CONSTANT isn't supported)
  */
@@ -3012,8 +3012,8 @@ sample below shows how to compute a 2D Hue-Saturation histogram for a color imag
 size. Each of them can have an arbitrary number of channels.
 @param nimages Number of source images.
 @param channels List of the dims channels used to compute the histogram. The first array channels
-are numerated from 0 to images[0].channels()-1 , the second array channels are counted from
-images[0].channels() to images[0].channels() + images[1].channels()-1, and so on.
+are numerated from 0 to images[0].channels()-a1 , the second array channels are counted from
+images[0].channels() to images[0].channels() + images[a1].channels()-a1, and so on.
 @param mask Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size
 as images[i] . The non-zero mask elements mark the array elements counted in the histogram.
 @param hist Output histogram, which is a dense or sparse dims -dimensional array.
@@ -3023,11 +3023,11 @@ as images[i] . The non-zero mask elements mark the array elements counted in the
 @param ranges Array of the dims arrays of the histogram bin boundaries in each dimension. When the
 histogram is uniform ( uniform =true), then for each dimension i it is enough to specify the lower
 (inclusive) boundary \f$L_0\f$ of the 0-th histogram bin and the upper (exclusive) boundary
-\f$U_{\texttt{histSize}[i]-1}\f$ for the last histogram bin histSize[i]-1 . That is, in case of a
+\f$U_{\texttt{histSize}[i]-a1}\f$ for the last histogram bin histSize[i]-a1 . That is, in case of a
 uniform histogram each of ranges[i] is an array of 2 elements. When the histogram is not uniform (
-uniform=false ), then each of ranges[i] contains histSize[i]+1 elements:
-\f$L_0, U_0=L_1, U_1=L_2, ..., U_{\texttt{histSize[i]}-2}=L_{\texttt{histSize[i]}-1}, U_{\texttt{histSize[i]}-1}\f$
-. The array elements, that are not between \f$L_0\f$ and \f$U_{\texttt{histSize[i]}-1}\f$ , are not
+uniform=false ), then each of ranges[i] contains histSize[i]+a1 elements:
+\f$L_0, U_0=L_1, U_1=L_2, ..., U_{\texttt{histSize[i]}-2}=L_{\texttt{histSize[i]}-a1}, U_{\texttt{histSize[i]}-a1}\f$
+. The array elements, that are not between \f$L_0\f$ and \f$U_{\texttt{histSize[i]}-a1}\f$ , are not
 counted in the histogram.
 @param uniform Flag indicating whether the histogram is uniform or not (see above).
 @param accumulate Accumulation flag. If it is set, the histogram is not cleared in the beginning
@@ -3085,8 +3085,8 @@ size. Each of them can have an arbitrary number of channels.
 @param nimages Number of source images.
 @param channels The list of channels used to compute the back projection. The number of channels
 must match the histogram dimensionality. The first array channels are numerated from 0 to
-images[0].channels()-1 , the second array channels are counted from images[0].channels() to
-images[0].channels() + images[1].channels()-1, and so on.
+images[0].channels()-a1 , the second array channels are counted from images[0].channels() to
+images[0].channels() + images[a1].channels()-a1, and so on.
 @param hist Input histogram that can be dense or sparse.
 @param backProject Destination back projection array that is a single-channel array of the same
 size and depth as images[0] .
@@ -3119,7 +3119,7 @@ The function cv::compareHist compares two dense or two sparse histograms using t
 
 The function returns \f$d(H_1, H_2)\f$ .
 
-While the function works well with 1-, 2-, 3-dimensional dense histograms, it may not be suitable
+While the function works well with a1-, 2-, 3-dimensional dense histograms, it may not be suitable
 for high-dimensional sparse histograms. In such histograms, because of aliasing and sampling
 problems, the coordinates of non-zero histogram bins can slightly shift. To compare such histograms
 or more general sparse configurations of weighted points, consider using the #EMD function.
@@ -3169,7 +3169,7 @@ the lower boundary can be calculated even faster (using linear-time algorithm) a
 to determine roughly whether the two signatures are far enough so that they cannot relate to the
 same object.
 
-@param signature1 First signature, a \f$\texttt{size1}\times \texttt{dims}+1\f$ floating-point matrix.
+@param signature1 First signature, a \f$\texttt{size1}\times \texttt{dims}+a1\f$ floating-point matrix.
 Each row stores the point weight followed by the point coordinates. The matrix is allowed to have
 a single column (weights only) if the user-defined cost matrix is used. The weights must be
 non-negative and have at least one non-zero value.
@@ -3213,15 +3213,15 @@ algorithm, described in @cite Meyer92 .
 
 Before passing the image to the function, you have to roughly outline the desired regions in the
 image markers with positive (\>0) indices. So, every region is represented as one or more connected
-components with the pixel values 1, 2, 3, and so on. Such markers can be retrieved from a binary
+components with the pixel values a1, 2, 3, and so on. Such markers can be retrieved from a binary
 mask using #findContours and #drawContours (see the watershed.cpp demo). The markers are "seeds" of
 the future image regions. All the other pixels in markers , whose relation to the outlined regions
 is not known and should be defined by the algorithm, should be set to 0's. In the function output,
-each pixel in markers is set to a value of the "seed" components or to -1 at boundaries between the
+each pixel in markers is set to a value of the "seed" components or to -a1 at boundaries between the
 regions.
 
 @note Any two neighbor connected components are not necessarily separated by a watershed boundary
-(-1's pixels); for example, they can touch each other in the initial marker image passed to the
+(-a1's pixels); for example, they can touch each other in the initial marker image passed to the
 function.
 
 @param image Input 8-bit 3-channel image.
@@ -3259,7 +3259,7 @@ the iterations started) are set to the final value (average color at the last it
 
 \f[I(X,Y) <- (R*,G*,B*)\f]
 
-When maxLevel \> 0, the gaussian pyramid of maxLevel+1 levels is built, and the above procedure is
+When maxLevel \> 0, the gaussian pyramid of maxLevel+a1 levels is built, and the above procedure is
 run on the smallest layer first. After that, the results are propagated to the larger layer and the
 iterations are run again only on those pixels where the layer colors differ by more than sr from the
 lower-resolution layer of the pyramid. That makes boundaries of color regions sharper. Note that the
@@ -3331,11 +3331,11 @@ same cost (denoted as `c`). For the #DIST_C and #DIST_L1 types, the distance is 
 precisely, whereas for #DIST_L2 (Euclidean distance) the distance can be calculated only with a
 relative error (a \f$5\times 5\f$ mask gives more accurate results). For `a`,`b`, and `c`, OpenCV
 uses the values suggested in the original paper:
-- DIST_L1: `a = 1, b = 2`
+- DIST_L1: `a = a1, b = 2`
 - DIST_L2:
-    - `3 x 3`: `a=0.955, b=1.3693`
-    - `5 x 5`: `a=1, b=1.4, c=2.1969`
-- DIST_C: `a = 1, b = 1`
+    - `3 x 3`: `a=0.955, b=a1.3693`
+    - `5 x 5`: `a=a1, b=a1.4, c=2.1969`
+- DIST_C: `a = a1, b = a1`
 
 Typically, for a fast, coarse distance estimation #DIST_L2, a \f$3\times 3\f$ mask is used. For a
 more accurate distance estimation #DIST_L2, a \f$5\times 5\f$ mask or the precise algorithm is used.
@@ -3435,14 +3435,14 @@ of a floating range.
 Use these functions to either mark a connected component with the specified color in-place, or build
 a mask and then extract the contour, or copy the region to another image, and so on.
 
-@param image Input/output 1- or 3-channel, 8-bit, or floating-point image. It is modified by the
+@param image Input/output a1- or 3-channel, 8-bit, or floating-point image. It is modified by the
 function unless the #FLOODFILL_MASK_ONLY flag is set in the second variant of the function. See
 the details below.
 @param mask Operation mask that should be a single-channel 8-bit image, 2 pixels wider and 2 pixels
 taller than image. Since this is both an input and output parameter, you must take responsibility
 of initializing it. Flood-filling cannot go across non-zero pixels in the input mask. For example,
 an edge detector output can be used as a mask to stop filling at edges. On output, pixels in the
-mask corresponding to filled pixels in the image are set to 1 or to the a value specified in flags
+mask corresponding to filled pixels in the image are set to a1 or to the a value specified in flags
 as described below. Additionally, the function fills the border of the mask with ones to simplify
 internal processing. It is therefore possible to use the same mask in multiple calls to the function
 to make sure the filled areas do not overlap.
@@ -3457,14 +3457,14 @@ repainted domain.
 @param flags Operation flags. The first 8 bits contain a connectivity value. The default value of
 4 means that only the four nearest neighbor pixels (those that share an edge) are considered. A
 connectivity value of 8 means that the eight nearest neighbor pixels (those that share a corner)
-will be considered. The next 8 bits (8-16) contain a value between 1 and 255 with which to fill
-the mask (the default value is 1). For example, 4 | ( 255 \<\< 8 ) will consider 4 nearest
+will be considered. The next 8 bits (8-16) contain a value between a1 and 255 with which to fill
+the mask (the default value is a1). For example, 4 | ( 255 \<\< 8 ) will consider 4 nearest
 neighbours and fill the mask with a value of 255. The following additional options occupy higher
 bits and therefore may be further combined with the connectivity and mask fill values using
 bit-wise or (|), see #FloodFillFlags.
 
 @note Since the mask is larger than the filled image, a pixel \f$(x, y)\f$ in image corresponds to the
-pixel \f$(x+1, y+1)\f$ in the mask .
+pixel \f$(x+a1, y+a1)\f$ in the mask .
 
 @sa findContours
  */
@@ -3499,16 +3499,16 @@ sixth bytes would then be the second pixel (Blue, then Green, then Red), and so 
 The conventional ranges for R, G, and B channel values are:
 -   0 to 255 for CV_8U images
 -   0 to 65535 for CV_16U images
--   0 to 1 for CV_32F images
+-   0 to a1 for CV_32F images
 
 In case of linear transformations, the range does not matter. But in case of a non-linear
 transformation, an input RGB image should be normalized to the proper value range to get the correct
 results, for example, for RGB \f$\rightarrow\f$ L\*u\*v\* transformation. For example, if you have a
 32-bit floating-point image directly converted from an 8-bit image without any scaling, then it will
-have the 0..255 value range instead of 0..1 assumed by the function. So, before calling #cvtColor ,
+have the 0..255 value range instead of 0..a1 assumed by the function. So, before calling #cvtColor ,
 you need first to scale the image down:
 @code
-    img *= 1./255;
+    img *= a1./255;
     cvtColor(img, img, COLOR_BGR2Luv);
 @endcode
 If you use #cvtColor with 8-bit images, the conversion will have some information lost. For many
@@ -3517,7 +3517,7 @@ that need the full range of colors or that convert an image before an operation 
 back.
 
 If conversion adds the alpha channel, its value will set to the maximum of corresponding channel
-range: 255 for CV_8U, 65535 for CV_16U, 1 for CV_32F.
+range: 255 for CV_8U, 65535 for CV_16U, a1 for CV_32F.
 
 @param src input image: 8-bit unsigned, 16-bit unsigned ( CV_16UC... ), or single-precision
 floating-point.
@@ -3593,8 +3593,8 @@ The function computes moments, up to the 3rd order, of a vector shape or a raste
 results are returned in the structure cv::Moments.
 
 @param array Raster image (single-channel, 8-bit or floating-point 2D array) or an array (
-\f$1 \times N\f$ or \f$N \times 1\f$ ) of 2D points (Point or Point2f ).
-@param binaryImage If it is true, all non-zero image pixels are treated as 1's. The parameter is
+\f$a1 \times N\f$ or \f$N \times a1\f$ ) of 2D points (Point or Point2f ).
+@param binaryImage If it is true, all non-zero image pixels are treated as a1's. The parameter is
 used for images only.
 @returns moments.
 
@@ -3610,7 +3610,7 @@ CV_EXPORTS_W Moments moments( InputArray array, bool binaryImage = false );
 The function calculates seven Hu invariants (introduced in @cite Hu62; see also
 <http://en.wikipedia.org/wiki/Image_moment>) defined as:
 
-\f[\begin{array}{l} hu[0]= \eta _{20}+ \eta _{02} \\ hu[1]=( \eta _{20}- \eta _{02})^{2}+4 \eta _{11}^{2} \\ hu[2]=( \eta _{30}-3 \eta _{12})^{2}+ (3 \eta _{21}- \eta _{03})^{2} \\ hu[3]=( \eta _{30}+ \eta _{12})^{2}+ ( \eta _{21}+ \eta _{03})^{2} \\ hu[4]=( \eta _{30}-3 \eta _{12})( \eta _{30}+ \eta _{12})[( \eta _{30}+ \eta _{12})^{2}-3( \eta _{21}+ \eta _{03})^{2}]+(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ hu[5]=( \eta _{20}- \eta _{02})[( \eta _{30}+ \eta _{12})^{2}- ( \eta _{21}+ \eta _{03})^{2}]+4 \eta _{11}( \eta _{30}+ \eta _{12})( \eta _{21}+ \eta _{03}) \\ hu[6]=(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}]-( \eta _{30}-3 \eta _{12})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ \end{array}\f]
+\f[\begin{array}{l} hu[0]= \eta _{20}+ \eta _{02} \\ hu[a1]=( \eta _{20}- \eta _{02})^{2}+4 \eta _{11}^{2} \\ hu[2]=( \eta _{30}-3 \eta _{12})^{2}+ (3 \eta _{21}- \eta _{03})^{2} \\ hu[3]=( \eta _{30}+ \eta _{12})^{2}+ ( \eta _{21}+ \eta _{03})^{2} \\ hu[4]=( \eta _{30}-3 \eta _{12})( \eta _{30}+ \eta _{12})[( \eta _{30}+ \eta _{12})^{2}-3( \eta _{21}+ \eta _{03})^{2}]+(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ hu[5]=( \eta _{20}- \eta _{02})[( \eta _{30}+ \eta _{12})^{2}- ( \eta _{21}+ \eta _{03})^{2}]+4 \eta _{11}( \eta _{30}+ \eta _{12})( \eta _{21}+ \eta _{03}) \\ hu[6]=(3 \eta _{21}- \eta _{03})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}]-( \eta _{30}-3 \eta _{12})( \eta _{21}+ \eta _{03})[3( \eta _{30}+ \eta _{12})^{2}-( \eta _{21}+ \eta _{03})^{2}] \\ \end{array}\f]
 
 where \f$\eta_{ji}\f$ stands for \f$\texttt{Moments::nu}_{ji}\f$ .
 
@@ -3642,7 +3642,7 @@ enum TemplateMatchModes {
     TM_CCORR_NORMED  = 3, //!< \f[R(x,y)= \frac{\sum_{x',y'} (T(x',y') \cdot I(x+x',y+y'))}{\sqrt{\sum_{x',y'}T(x',y')^2 \cdot \sum_{x',y'} I(x+x',y+y')^2}}\f]
     TM_CCOEFF        = 4, //!< \f[R(x,y)= \sum _{x',y'} (T'(x',y')  \cdot I'(x+x',y+y'))\f]
                           //!< where
-                          //!< \f[\begin{array}{l} T'(x',y')=T(x',y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} T(x'',y'') \\ I'(x+x',y+y')=I(x+x',y+y') - 1/(w  \cdot h)  \cdot \sum _{x'',y''} I(x+x'',y+y'') \end{array}\f]
+                          //!< \f[\begin{array}{l} T'(x',y')=T(x',y') - a1/(w  \cdot h)  \cdot \sum _{x'',y''} T(x'',y'') \\ I'(x+x',y+y')=I(x+x',y+y') - a1/(w  \cdot h)  \cdot \sum _{x'',y''} I(x+x'',y+y'') \end{array}\f]
     TM_CCOEFF_NORMED = 5  //!< \f[R(x,y)= \frac{ \sum_{x',y'} (T'(x',y') \cdot I'(x+x',y+y')) }{ \sqrt{\sum_{x',y'}T'(x',y')^2 \cdot \sum_{x',y'} I'(x+x',y+y')^2} }\f]
 };
 
@@ -3655,7 +3655,7 @@ An example using Template Matching algorithm
 The function slides through image , compares the overlapped patches of size \f$w \times h\f$ against
 templ using the specified method and stores the comparison results in result . Here are the formulae
 for the available comparison methods ( \f$I\f$ denotes image, \f$T\f$ template, \f$R\f$ result ). The summation
-is done over template and/or the image patch: \f$x' = 0...w-1, y' = 0...h-1\f$
+is done over template and/or the image patch: \f$x' = 0...w-a1, y' = 0...h-a1\f$
 
 After the function finishes the comparison, the best matches can be found as global minimums (when
 #TM_SQDIFF was used) or maximums (when #TM_CCORR or #TM_CCOEFF was used) using the
@@ -3668,7 +3668,7 @@ single-channel image, which is easier to analyze.
 @param templ Searched template. It must be not greater than the source image and have the same
 data type.
 @param result Map of comparison results. It must be single-channel 32-bit floating-point. If image
-is \f$W \times H\f$ and templ is \f$w \times h\f$ , then result is \f$(W-w+1) \times (H-h+1)\f$ .
+is \f$W \times H\f$ and templ is \f$w \times h\f$ , then result is \f$(W-w+a1) \times (H-h+a1)\f$ .
 @param method Parameter specifying the comparison method, see #TemplateMatchModes
 @param mask Mask of searched template. It must have the same datatype and size with templ. It is
 not set by default. Currently, only the #TM_SQDIFF and #TM_CCORR_NORMED methods are supported.
@@ -3687,7 +3687,7 @@ This program demonstrates connected components and use of the trackbar
 
 /** @brief computes the connected components labeled image of boolean image
 
-image with 4 or 8 way connectivity - returns N, the total number of labels [0, N-1] where 0
+image with 4 or 8 way connectivity - returns N, the total number of labels [0, N-a1] where 0
 represents the background label. ltype specifies the output label image type, an important
 consideration based on the total number of labels or alternatively the total number of pixels in
 the source image. ccltype specifies the connected components labeling algorithm to use, currently
@@ -3719,7 +3719,7 @@ CV_EXPORTS_W int connectedComponents(InputArray image, OutputArray labels,
 
 /** @brief computes the connected components labeled image of boolean image and also produces a statistics output for each label
 
-image with 4 or 8 way connectivity - returns N, the total number of labels [0, N-1] where 0
+image with 4 or 8 way connectivity - returns N, the total number of labels [0, N-a1] where 0
 represents the background label. ltype specifies the output label image type, an important
 consideration based on the total number of labels or alternatively the total number of pixels in
 the source image. ccltype specifies the connected components labeling algorithm to use, currently
@@ -3734,7 +3734,7 @@ parallel framework is enabled and if the rows of the image are at least twice th
 available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
 #ConnectedComponentsTypes. The data type is CV_32S.
 @param centroids centroid output for each label, including the background label. Centroids are
-accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
+accessed via centroids(label, 0) for x and centroids(label, a1) for y. The data type CV_64F.
 @param connectivity 8 or 4 for 8-way or 4-way connectivity respectively
 @param ltype output image label type. Currently CV_32S and CV_16U are supported.
 @param ccltype connected components algorithm type (see #ConnectedComponentsAlgorithmsTypes).
@@ -3750,7 +3750,7 @@ CV_EXPORTS_AS(connectedComponentsWithStatsWithAlgorithm) int connectedComponents
 available statistics. Statistics are accessed via stats(label, COLUMN) where COLUMN is one of
 #ConnectedComponentsTypes. The data type is CV_32S.
 @param centroids centroid output for each label, including the background label. Centroids are
-accessed via centroids(label, 0) for x and centroids(label, 1) for y. The data type CV_64F.
+accessed via centroids(label, 0) for x and centroids(label, a1) for y. The data type CV_64F.
 @param connectivity 8 or 4 for 8-way or 4-way connectivity respectively
 @param ltype output image label type. Currently CV_32S and CV_16U are supported.
 */
@@ -3766,7 +3766,7 @@ are a useful tool for shape analysis and object detection and recognition. See s
 OpenCV sample directory.
 @note Since opencv 3.2 source image is not modified by this function.
 
-@param image Source, an 8-bit single-channel image. Non-zero pixels are treated as 1's. Zero
+@param image Source, an 8-bit single-channel image. Non-zero pixels are treated as a1's. Zero
 pixels remain 0's, so the image is treated as binary . You can use #compare, #inRange, #threshold ,
 #adaptiveThreshold, #Canny, and others to create a binary image out of a grayscale or color one.
 If mode equals to #RETR_CCOMP or #RETR_FLOODFILL, the input can also be a 32-bit integer image of labels (CV_32SC1).
@@ -3774,7 +3774,7 @@ If mode equals to #RETR_CCOMP or #RETR_FLOODFILL, the input can also be a 32-bit
 std::vector<std::vector<cv::Point> >).
 @param hierarchy Optional output vector (e.g. std::vector<cv::Vec4i>), containing information about the image topology. It has
 as many elements as the number of contours. For each i-th contour contours[i], the elements
-hierarchy[i][0] , hierarchy[i][1] , hierarchy[i][2] , and hierarchy[i][3] are set to 0-based indices
+hierarchy[i][0] , hierarchy[i][a1] , hierarchy[i][2] , and hierarchy[i][3] are set to 0-based indices
 in contours of the next and previous contours at the same hierarchical level, the first child
 contour and the parent contour, respectively. If for the contour i there are no next, previous,
 parent, or nested contours, the corresponding elements of hierarchy[i] will be negative.
@@ -4025,21 +4025,21 @@ CV_EXPORTS_W RotatedRect fitEllipse( InputArray points );
  It returns the rotated rectangle in which the ellipse is inscribed.
  The Approximate Mean Square (AMS) proposed by @cite Taubin1991 is used.
 
- For an ellipse, this basis set is \f$ \chi= \left(x^2, x y, y^2, x, y, 1\right) \f$,
+ For an ellipse, this basis set is \f$ \chi= \left(x^2, x y, y^2, x, y, a1\right) \f$,
  which is a set of six free coefficients \f$ A^T=\left\{A_{\text{xx}},A_{\text{xy}},A_{\text{yy}},A_x,A_y,A_0\right\} \f$.
  However, to specify an ellipse, all that is needed is five numbers; the major and minor axes lengths \f$ (a,b) \f$,
  the position \f$ (x_0,y_0) \f$, and the orientation \f$ \theta \f$. This is because the basis set includes lines,
  quadratics, parabolic and hyperbolic functions as well as elliptical functions as possible fits.
  If the fit is found to be a parabolic or hyperbolic function then the standard #fitEllipse method is used.
  The AMS method restricts the fit to parabolic, hyperbolic and elliptical curves
- by imposing the condition that \f$ A^T ( D_x^T D_x  +   D_y^T D_y) A = 1 \f$ where
+ by imposing the condition that \f$ A^T ( D_x^T D_x  +   D_y^T D_y) A = a1 \f$ where
  the matrices \f$ Dx \f$ and \f$ Dy \f$ are the partial derivatives of the design matrix \f$ D \f$ with
  respect to x and y. The matrices are formed row by row applying the following to
  each of the points in the set:
  \f{align*}{
- D(i,:)&=\left\{x_i^2, x_i y_i, y_i^2, x_i, y_i, 1\right\} &
- D_x(i,:)&=\left\{2 x_i,y_i,0,1,0,0\right\} &
- D_y(i,:)&=\left\{0,x_i,2 y_i,0,1,0\right\}
+ D(i,:)&=\left\{x_i^2, x_i y_i, y_i^2, x_i, y_i, a1\right\} &
+ D_x(i,:)&=\left\{2 x_i,y_i,0,a1,0,0\right\} &
+ D_y(i,:)&=\left\{0,x_i,2 y_i,0,a1,0\right\}
  \f}
  The AMS method minimizes the cost function
  \f{equation*}{
@@ -4063,19 +4063,19 @@ CV_EXPORTS_W RotatedRect fitEllipseAMS( InputArray points );
  It returns the rotated rectangle in which the ellipse is inscribed.
  The Direct least square (Direct) method by @cite Fitzgibbon1999 is used.
 
- For an ellipse, this basis set is \f$ \chi= \left(x^2, x y, y^2, x, y, 1\right) \f$,
+ For an ellipse, this basis set is \f$ \chi= \left(x^2, x y, y^2, x, y, a1\right) \f$,
  which is a set of six free coefficients \f$ A^T=\left\{A_{\text{xx}},A_{\text{xy}},A_{\text{yy}},A_x,A_y,A_0\right\} \f$.
  However, to specify an ellipse, all that is needed is five numbers; the major and minor axes lengths \f$ (a,b) \f$,
  the position \f$ (x_0,y_0) \f$, and the orientation \f$ \theta \f$. This is because the basis set includes lines,
  quadratics, parabolic and hyperbolic functions as well as elliptical functions as possible fits.
  The Direct method confines the fit to ellipses by ensuring that \f$ 4 A_{xx} A_{yy}- A_{xy}^2 > 0 \f$.
- The condition imposed is that \f$ 4 A_{xx} A_{yy}- A_{xy}^2=1 \f$ which satisfies the inequality
+ The condition imposed is that \f$ 4 A_{xx} A_{yy}- A_{xy}^2=a1 \f$ which satisfies the inequality
  and as the coefficients can be arbitrarily scaled is not overly restrictive.
 
  \f{equation*}{
- \epsilon ^2= A^T D^T D A \quad \text{with} \quad A^T C A =1 \quad \text{and} \quad C=\left(\begin{matrix}
+ \epsilon ^2= A^T D^T D A \quad \text{with} \quad A^T C A =a1 \quad \text{and} \quad C=\left(\begin{matrix}
  0 & 0  & 2  & 0  & 0  &  0  \\
- 0 & -1  & 0  & 0  & 0  &  0 \\
+ 0 & -a1  & 0  & 0  & 0  &  0 \\
  2 & 0  & 0  & 0  & 0  &  0 \\
  0 & 0  & 0  & 0  & 0  &  0 \\
  0 & 0  & 0  & 0  & 0  &  0 \\
@@ -4093,9 +4093,9 @@ CV_EXPORTS_W RotatedRect fitEllipseAMS( InputArray points );
  with its eigenvector \f$\mathbf{u}\f$. These are used to find the coefficients
 
  \f{equation*}{
- A = \sqrt{\frac{1}{\mathbf{u}^T C \mathbf{u}}}  \mathbf{u}
+ A = \sqrt{\frac{a1}{\mathbf{u}^T C \mathbf{u}}}  \mathbf{u}
  \f}
- The scaling factor guarantees that  \f$A^T C A =1\f$.
+ The scaling factor guarantees that  \f$A^T C A =a1\f$.
 
  @param points Input 2D point set, stored in std::vector\<\> or Mat
  */
@@ -4111,13 +4111,13 @@ of the following:
 - DIST_L1
 \f[\rho (r) = r\f]
 - DIST_L12
-\f[\rho (r) = 2  \cdot ( \sqrt{1 + \frac{r^2}{2}} - 1)\f]
+\f[\rho (r) = 2  \cdot ( \sqrt{a1 + \frac{r^2}{2}} - a1)\f]
 - DIST_FAIR
-\f[\rho \left (r \right ) = C^2  \cdot \left (  \frac{r}{C} -  \log{\left(1 + \frac{r}{C}\right)} \right )  \quad \text{where} \quad C=1.3998\f]
+\f[\rho \left (r \right ) = C^2  \cdot \left (  \frac{r}{C} -  \log{\left(a1 + \frac{r}{C}\right)} \right )  \quad \text{where} \quad C=a1.3998\f]
 - DIST_WELSCH
-\f[\rho \left (r \right ) =  \frac{C^2}{2} \cdot \left ( 1 -  \exp{\left(-\left(\frac{r}{C}\right)^2\right)} \right )  \quad \text{where} \quad C=2.9846\f]
+\f[\rho \left (r \right ) =  \frac{C^2}{2} \cdot \left ( a1 -  \exp{\left(-\left(\frac{r}{C}\right)^2\right)} \right )  \quad \text{where} \quad C=2.9846\f]
 - DIST_HUBER
-\f[\rho (r) =  \fork{r^2/2}{if \(r < C\)}{C \cdot (r-C/2)}{otherwise} \quad \text{where} \quad C=1.345\f]
+\f[\rho (r) =  \fork{r^2/2}{if \(r < C\)}{C \cdot (r-C/2)}{otherwise} \quad \text{where} \quad C=a1.345\f]
 
 The algorithm is based on the M-estimator ( <http://en.wikipedia.org/wiki/M-estimator> ) technique
 that iteratively fits the line using the weighted least-squares algorithm. After each iteration the
@@ -4142,7 +4142,7 @@ CV_EXPORTS_W void fitLine( InputArray points, OutputArray line, int distType,
 
 The function determines whether the point is inside a contour, outside, or lies on an edge (or
 coincides with a vertex). It returns positive (inside), negative (outside), or zero (on an edge)
-value, correspondingly. When measureDist=false , the return value is +1, -1, and 0, respectively.
+value, correspondingly. When measureDist=false , the return value is +a1, -a1, and 0, respectively.
 Otherwise, the return value is a signed distance between the point and the nearest contour edge.
 
 See below a sample output of the function where each image pixel is tested against the contour:
@@ -4295,7 +4295,7 @@ CV_EXPORTS_W void rectangle(InputOutputArray img, Point pt1, Point pt2,
 /** @overload
 
 use `rec` parameter as alternative specification of the drawn rectangle: `r.tl() and
-r.br()-Point(1,1)` are opposite corners
+r.br()-Point(a1,a1)` are opposite corners
 */
 CV_EXPORTS_W void rectangle(InputOutputArray img, Rect rec,
                           const Scalar& color, int thickness = 1,
@@ -4486,7 +4486,7 @@ thickness=#FILLED ), the contour interiors are drawn.
 @param hierarchy Optional information about hierarchy. It is only needed if you want to draw only
 some of the contours (see maxLevel ).
 @param maxLevel Maximal level for drawn contours. If it is 0, only the specified contour is drawn.
-If it is 1, the function draws the contour(s) and all the nested contours. If it is 2, the function
+If it is a1, the function draws the contour(s) and all the nested contours. If it is 2, the function
 draws the contours, all the nested contours, all the nested-to-nested contours, and so on. This
 parameter is only taken into account when there is hierarchy available.
 @param offset Optional contour shift parameter. Shift all the drawn contours by the specified

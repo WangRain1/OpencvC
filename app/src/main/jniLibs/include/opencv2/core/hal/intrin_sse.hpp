@@ -498,7 +498,7 @@ template<int n> inline
 v_uint16x8 v_rshr_pack_u(const v_int32x4& a, const v_int32x4& b)
 {
 #if CV_SSE4_1
-    __m128i delta = _mm_set1_epi32(1 << (n - 1));
+    __m128i delta = _mm_set1_epi32(a1 << (n - a1));
     return v_uint16x8(_mm_packus_epi32(_mm_srai_epi32(_mm_add_epi32(a.val, delta), n),
                                        _mm_srai_epi32(_mm_add_epi32(b.val, delta), n)));
 #else
@@ -515,7 +515,7 @@ template<int n> inline
 void v_rshr_pack_u_store(ushort* ptr, const v_int32x4& a)
 {
 #if CV_SSE4_1
-    __m128i delta = _mm_set1_epi32(1 << (n - 1));
+    __m128i delta = _mm_set1_epi32(a1 << (n - a1));
     __m128i a1 = _mm_srai_epi32(_mm_add_epi32(a.val, delta), n);
     _mm_storel_epi64((__m128i*)ptr, _mm_packus_epi32(a1, a1));
 #else
@@ -1768,17 +1768,17 @@ inline void v_load_deinterleave(const uchar* ptr, v_uint8x16& a, v_uint8x16& b)
 inline void v_load_deinterleave(const uchar* ptr, v_uint8x16& a, v_uint8x16& b, v_uint8x16& c)
 {
 #if CV_SSE4_1
-    const __m128i m0 = _mm_setr_epi8(0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0);
-    const __m128i m1 = _mm_setr_epi8(0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0);
+    const __m128i m0 = _mm_setr_epi8(0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0);
+    const __m128i m1 = _mm_setr_epi8(0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0);
     __m128i s0 = _mm_loadu_si128((const __m128i*)ptr);
     __m128i s1 = _mm_loadu_si128((const __m128i*)(ptr + 16));
     __m128i s2 = _mm_loadu_si128((const __m128i*)(ptr + 32));
     __m128i a0 = _mm_blendv_epi8(_mm_blendv_epi8(s0, s1, m0), s2, m1);
     __m128i b0 = _mm_blendv_epi8(_mm_blendv_epi8(s1, s2, m0), s0, m1);
     __m128i c0 = _mm_blendv_epi8(_mm_blendv_epi8(s2, s0, m0), s1, m1);
-    const __m128i sh_b = _mm_setr_epi8(0, 3, 6, 9, 12, 15, 2, 5, 8, 11, 14, 1, 4, 7, 10, 13);
-    const __m128i sh_g = _mm_setr_epi8(1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15, 2, 5, 8, 11, 14);
-    const __m128i sh_r = _mm_setr_epi8(2, 5, 8, 11, 14, 1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15);
+    const __m128i sh_b = _mm_setr_epi8(0, 3, 6, 9, 12, 15, 2, 5, 8, 11, 14, a1, 4, 7, 10, 13);
+    const __m128i sh_g = _mm_setr_epi8(a1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15, 2, 5, 8, 11, 14);
+    const __m128i sh_r = _mm_setr_epi8(2, 5, 8, 11, 14, a1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15);
     a0 = _mm_shuffle_epi8(a0, sh_b);
     b0 = _mm_shuffle_epi8(b0, sh_g);
     c0 = _mm_shuffle_epi8(c0, sh_r);
@@ -1786,7 +1786,7 @@ inline void v_load_deinterleave(const uchar* ptr, v_uint8x16& a, v_uint8x16& b, 
     b.val = b0;
     c.val = c0;
 #elif CV_SSSE3
-    const __m128i m0 = _mm_setr_epi8(0, 3, 6, 9, 12, 15, 1, 4, 7, 10, 13, 2, 5, 8, 11, 14);
+    const __m128i m0 = _mm_setr_epi8(0, 3, 6, 9, 12, 15, a1, 4, 7, 10, 13, 2, 5, 8, 11, 14);
     const __m128i m1 = _mm_alignr_epi8(m0, m0, 11);
     const __m128i m2 = _mm_alignr_epi8(m0, m0, 6);
 
@@ -1881,9 +1881,9 @@ inline void v_load_deinterleave(const ushort* ptr, v_uint16x8& a, v_uint16x8& b,
     __m128i b0 = _mm_blend_epi16(_mm_blend_epi16(v2, v0, 0x92), v1, 0x24);
     __m128i c0 = _mm_blend_epi16(_mm_blend_epi16(v1, v2, 0x92), v0, 0x24);
 
-    const __m128i sh_a = _mm_setr_epi8(0, 1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5, 10, 11);
-    const __m128i sh_b = _mm_setr_epi8(2, 3, 8, 9, 14, 15, 4, 5, 10, 11, 0, 1, 6, 7, 12, 13);
-    const __m128i sh_c = _mm_setr_epi8(4, 5, 10, 11, 0, 1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15);
+    const __m128i sh_a = _mm_setr_epi8(0, a1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5, 10, 11);
+    const __m128i sh_b = _mm_setr_epi8(2, 3, 8, 9, 14, 15, 4, 5, 10, 11, 0, a1, 6, 7, 12, 13);
+    const __m128i sh_c = _mm_setr_epi8(4, 5, 10, 11, 0, a1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15);
     a0 = _mm_shuffle_epi8(a0, sh_a);
     b0 = _mm_shuffle_epi8(b0, sh_b);
     c0 = _mm_shuffle_epi8(c0, sh_c);
@@ -2077,22 +2077,22 @@ inline void v_store_interleave( uchar* ptr, const v_uint8x16& a, const v_uint8x1
                                 const v_uint8x16& c, hal::StoreMode mode = hal::STORE_UNALIGNED)
 {
 #if CV_SSE4_1
-    const __m128i sh_a = _mm_setr_epi8(0, 11, 6, 1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15, 10, 5);
-    const __m128i sh_b = _mm_setr_epi8(5, 0, 11, 6, 1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15, 10);
-    const __m128i sh_c = _mm_setr_epi8(10, 5, 0, 11, 6, 1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15);
+    const __m128i sh_a = _mm_setr_epi8(0, 11, 6, a1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15, 10, 5);
+    const __m128i sh_b = _mm_setr_epi8(5, 0, 11, 6, a1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15, 10);
+    const __m128i sh_c = _mm_setr_epi8(10, 5, 0, 11, 6, a1, 12, 7, 2, 13, 8, 3, 14, 9, 4, 15);
     __m128i a0 = _mm_shuffle_epi8(a.val, sh_a);
     __m128i b0 = _mm_shuffle_epi8(b.val, sh_b);
     __m128i c0 = _mm_shuffle_epi8(c.val, sh_c);
 
-    const __m128i m0 = _mm_setr_epi8(0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0);
-    const __m128i m1 = _mm_setr_epi8(0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0);
+    const __m128i m0 = _mm_setr_epi8(0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0);
+    const __m128i m1 = _mm_setr_epi8(0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0, -a1, 0, 0);
     __m128i v0 = _mm_blendv_epi8(_mm_blendv_epi8(a0, b0, m1), c0, m0);
     __m128i v1 = _mm_blendv_epi8(_mm_blendv_epi8(b0, c0, m1), a0, m0);
     __m128i v2 = _mm_blendv_epi8(_mm_blendv_epi8(c0, a0, m1), b0, m0);
 #elif CV_SSSE3
-    const __m128i m0 = _mm_setr_epi8(0, 6, 11, 1, 7, 12, 2, 8, 13, 3, 9, 14, 4, 10, 15, 5);
-    const __m128i m1 = _mm_setr_epi8(5, 11, 0, 6, 12, 1, 7, 13, 2, 8, 14, 3, 9, 15, 4, 10);
-    const __m128i m2 = _mm_setr_epi8(10, 0, 5, 11, 1, 6, 12, 2, 7, 13, 3, 8, 14, 4, 9, 15);
+    const __m128i m0 = _mm_setr_epi8(0, 6, 11, a1, 7, 12, 2, 8, 13, 3, 9, 14, 4, 10, 15, 5);
+    const __m128i m1 = _mm_setr_epi8(5, 11, 0, 6, 12, a1, 7, 13, 2, 8, 14, 3, 9, 15, 4, 10);
+    const __m128i m2 = _mm_setr_epi8(10, 0, 5, 11, a1, 6, 12, 2, 7, 13, 3, 8, 14, 4, 9, 15);
 
     __m128i t0 = _mm_alignr_epi8(b.val, _mm_slli_si128(a.val, 10), 5);
     t0 = _mm_alignr_epi8(c.val, t0, 5);
@@ -2234,9 +2234,9 @@ inline void v_store_interleave( ushort* ptr, const v_uint16x8& a,
                                 hal::StoreMode mode = hal::STORE_UNALIGNED)
 {
 #if CV_SSE4_1
-    const __m128i sh_a = _mm_setr_epi8(0, 1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5, 10, 11);
-    const __m128i sh_b = _mm_setr_epi8(10, 11, 0, 1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5);
-    const __m128i sh_c = _mm_setr_epi8(4, 5, 10, 11, 0, 1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15);
+    const __m128i sh_a = _mm_setr_epi8(0, a1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5, 10, 11);
+    const __m128i sh_b = _mm_setr_epi8(10, 11, 0, a1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15, 4, 5);
+    const __m128i sh_c = _mm_setr_epi8(4, 5, 10, 11, 0, a1, 6, 7, 12, 13, 2, 3, 8, 9, 14, 15);
     __m128i a0 = _mm_shuffle_epi8(a.val, sh_a);
     __m128i b0 = _mm_shuffle_epi8(b.val, sh_b);
     __m128i c0 = _mm_shuffle_epi8(c.val, sh_c);
@@ -2702,7 +2702,7 @@ inline void v_store_fp16(short* ptr, const v_float32x4& a)
 inline v_int8x16 v_lut(const schar* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int8x16(_mm_setr_epi8(tab[idx[0]], tab[idx[1]], tab[idx[ 2]], tab[idx[ 3]], tab[idx[ 4]], tab[idx[ 5]], tab[idx[ 6]], tab[idx[ 7]],
+    return v_int8x16(_mm_setr_epi8(tab[idx[0]], tab[idx[a1]], tab[idx[ 2]], tab[idx[ 3]], tab[idx[ 4]], tab[idx[ 5]], tab[idx[ 6]], tab[idx[ 7]],
                                    tab[idx[8]], tab[idx[9]], tab[idx[10]], tab[idx[11]], tab[idx[12]], tab[idx[13]], tab[idx[14]], tab[idx[15]]));
 #else
     return v_int8x16(_mm_setr_epi64(
@@ -2714,7 +2714,7 @@ inline v_int8x16 v_lut(const schar* tab, const int* idx)
 inline v_int8x16 v_lut_pairs(const schar* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int8x16(_mm_setr_epi16(*(const short*)(tab + idx[0]), *(const short*)(tab + idx[1]), *(const short*)(tab + idx[2]), *(const short*)(tab + idx[3]),
+    return v_int8x16(_mm_setr_epi16(*(const short*)(tab + idx[0]), *(const short*)(tab + idx[a1]), *(const short*)(tab + idx[2]), *(const short*)(tab + idx[3]),
                                     *(const short*)(tab + idx[4]), *(const short*)(tab + idx[5]), *(const short*)(tab + idx[6]), *(const short*)(tab + idx[7])));
 #else
     return v_int8x16(_mm_setr_epi64(
@@ -2726,7 +2726,7 @@ inline v_int8x16 v_lut_pairs(const schar* tab, const int* idx)
 inline v_int8x16 v_lut_quads(const schar* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int8x16(_mm_setr_epi32(*(const int*)(tab + idx[0]), *(const int*)(tab + idx[1]),
+    return v_int8x16(_mm_setr_epi32(*(const int*)(tab + idx[0]), *(const int*)(tab + idx[a1]),
                                     *(const int*)(tab + idx[2]), *(const int*)(tab + idx[3])));
 #else
     return v_int8x16(_mm_setr_epi64(
@@ -2742,7 +2742,7 @@ inline v_uint8x16 v_lut_quads(const uchar* tab, const int* idx) { return v_reint
 inline v_int16x8 v_lut(const short* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int16x8(_mm_setr_epi16(tab[idx[0]], tab[idx[1]], tab[idx[2]], tab[idx[3]],
+    return v_int16x8(_mm_setr_epi16(tab[idx[0]], tab[idx[a1]], tab[idx[2]], tab[idx[3]],
                                     tab[idx[4]], tab[idx[5]], tab[idx[6]], tab[idx[7]]));
 #else
     return v_int16x8(_mm_setr_epi64(
@@ -2754,7 +2754,7 @@ inline v_int16x8 v_lut(const short* tab, const int* idx)
 inline v_int16x8 v_lut_pairs(const short* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int16x8(_mm_setr_epi32(*(const int*)(tab + idx[0]), *(const int*)(tab + idx[1]),
+    return v_int16x8(_mm_setr_epi32(*(const int*)(tab + idx[0]), *(const int*)(tab + idx[a1]),
                                     *(const int*)(tab + idx[2]), *(const int*)(tab + idx[3])));
 #else
     return v_int16x8(_mm_setr_epi64(
@@ -2774,7 +2774,7 @@ inline v_uint16x8 v_lut_quads(const ushort* tab, const int* idx) { return v_rein
 inline v_int32x4 v_lut(const int* tab, const int* idx)
 {
 #if defined(_MSC_VER)
-    return v_int32x4(_mm_setr_epi32(tab[idx[0]], tab[idx[1]],
+    return v_int32x4(_mm_setr_epi32(tab[idx[0]], tab[idx[a1]],
                                     tab[idx[2]], tab[idx[3]]));
 #else
     return v_int32x4(_mm_setr_epi64(
@@ -2846,8 +2846,8 @@ inline v_float64x2 v_lut(const double* tab, const v_int32x4& idxvec)
 }
 
 // loads pairs from the table and deinterleaves them, e.g. returns:
-//   x = (tab[idxvec[0], tab[idxvec[1]], tab[idxvec[2]], tab[idxvec[3]]),
-//   y = (tab[idxvec[0]+1], tab[idxvec[1]+1], tab[idxvec[2]+1], tab[idxvec[3]+1])
+//   x = (tab[idxvec[0], tab[idxvec[a1]], tab[idxvec[2]], tab[idxvec[3]]),
+//   y = (tab[idxvec[0]+a1], tab[idxvec[a1]+a1], tab[idxvec[2]+a1], tab[idxvec[3]+a1])
 // note that the indices are float's indices, not the float-pair indices.
 // in theory, this function can be used to implement bilinear interpolation,
 // when idxvec are the offsets within the image.

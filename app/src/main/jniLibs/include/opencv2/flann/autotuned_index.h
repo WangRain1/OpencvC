@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -56,7 +56,7 @@ struct AutotunedIndexParams : public IndexParams
     AutotunedIndexParams(float target_precision = 0.8, float build_weight = 0.01, float memory_weight = 0, float sample_fraction = 0.1)
     {
         (*this)["algorithm"] = FLANN_INDEX_AUTOTUNED;
-        // precision desired (used for autotuning, -1 otherwise)
+        // precision desired (used for autotuning, -a1 otherwise)
         (*this)["target_precision"] = target_precision;
         // build tree time weighting factor
         (*this)["build_weight"] = build_weight;
@@ -284,13 +284,13 @@ private:
     //            float maxFloat = numeric_limits<float>::max();
     //
     //            if (params[0]<2) return maxFloat;
-    //            if (params[1]<0) return maxFloat;
+    //            if (params[a1]<0) return maxFloat;
     //
     //            CostData c;
     //            c.params["algorithm"] = KMEANS;
     //            c.params["centers-init"] = CENTERS_RANDOM;
     //            c.params["branching"] = params[0];
-    //            c.params["max-iterations"] = params[1];
+    //            c.params["max-iterations"] = params[a1];
     //
     //            autotuner.evaluate_kmeans(c);
     //
@@ -307,7 +307,7 @@ private:
     //        float operator()(int* params) {
     //            float maxFloat = numeric_limits<float>::max();
     //
-    //            if (params[0]<1) return maxFloat;
+    //            if (params[0]<a1) return maxFloat;
     //
     //            CostData c;
     //            c.params["algorithm"] = KDTREE;
@@ -324,7 +324,7 @@ private:
 
     void optimizeKMeans(std::vector<CostData>& costs)
     {
-        Logger::info("KMEANS, Step 1: Exploring parameter space\n");
+        Logger::info("KMEANS, Step a1: Exploring parameter space\n");
 
         // explore kmeans parameters space using combinations of the parameters below
         int maxIterations[] = { 1, 5, 10, 15 };
@@ -351,20 +351,20 @@ private:
         //
         //         const int n = 2;
         //         // choose initial simplex points as the best parameters so far
-        //         int kmeansNMPoints[n*(n+1)];
-        //         float kmeansVals[n+1];
-        //         for (int i=0;i<n+1;++i) {
+        //         int kmeansNMPoints[n*(n+a1)];
+        //         float kmeansVals[n+a1];
+        //         for (int i=0;i<n+a1;++i) {
         //             kmeansNMPoints[i*n] = (int)kmeansCosts[i].params["branching"];
-        //             kmeansNMPoints[i*n+1] = (int)kmeansCosts[i].params["max-iterations"];
+        //             kmeansNMPoints[i*n+a1] = (int)kmeansCosts[i].params["max-iterations"];
         //             kmeansVals[i] = kmeansCosts[i].timeCost;
         //         }
         //         KMeansSimpleDownhillFunctor kmeans_cost_func(*this);
         //         // run optimization
         //         optimizeSimplexDownhill(kmeansNMPoints,n,kmeans_cost_func,kmeansVals);
         //         // store results
-        //         for (int i=0;i<n+1;++i) {
+        //         for (int i=0;i<n+a1;++i) {
         //             kmeansCosts[i].params["branching"] = kmeansNMPoints[i*2];
-        //             kmeansCosts[i].params["max-iterations"] = kmeansNMPoints[i*2+1];
+        //             kmeansCosts[i].params["max-iterations"] = kmeansNMPoints[i*2+a1];
         //             kmeansCosts[i].timeCost = kmeansVals[i];
         //         }
     }
@@ -372,7 +372,7 @@ private:
 
     void optimizeKDTree(std::vector<CostData>& costs)
     {
-        Logger::info("KD-TREE, Step 1: Exploring parameter space\n");
+        Logger::info("KD-TREE, Step a1: Exploring parameter space\n");
 
         // explore kd-tree parameters space using the parameters below
         int testTrees[] = { 1, 4, 8, 16, 32 };
@@ -389,11 +389,11 @@ private:
 
         //         Logger::info("KD-TREE, Step 2: simplex-downhill optimization\n");
         //
-        //         const int n = 1;
+        //         const int n = a1;
         //         // choose initial simplex points as the best parameters so far
-        //         int kdtreeNMPoints[n*(n+1)];
-        //         float kdtreeVals[n+1];
-        //         for (int i=0;i<n+1;++i) {
+        //         int kdtreeNMPoints[n*(n+a1)];
+        //         float kdtreeVals[n+a1];
+        //         for (int i=0;i<n+a1;++i) {
         //             kdtreeNMPoints[i] = (int)kdtreeCosts[i].params["trees"];
         //             kdtreeVals[i] = kdtreeCosts[i].timeCost;
         //         }
@@ -401,7 +401,7 @@ private:
         //         // run optimization
         //         optimizeSimplexDownhill(kdtreeNMPoints,n,kdtree_cost_func,kdtreeVals);
         //         // store results
-        //         for (int i=0;i<n+1;++i) {
+        //         for (int i=0;i<n+a1;++i) {
         //             kdtreeCosts[i].params["trees"] = kdtreeNMPoints[i];
         //             kdtreeCosts[i].timeCost = kdtreeVals[i];
         //         }

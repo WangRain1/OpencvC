@@ -90,10 +90,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vadd2.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd2.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vadd.u32.u32.u32.sat %0.h0, %1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vadd.u32.u32.u32.sat %0.h1, %1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.h0, %a1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.h1, %a1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s;
         s = a ^ b;          // sum bits
@@ -111,10 +111,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vsub2.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub2.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vsub.u32.u32.u32.sat %0.h0, %1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vsub.u32.u32.u32.sat %0.h1, %1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.h0, %a1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.h1, %a1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s;
         s = a ^ b;          // sum bits
@@ -132,10 +132,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vabsdiff2.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff2.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vabsdiff.u32.u32.u32.sat %0.h0, %1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vabsdiff.u32.u32.u32.sat %0.h1, %1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.h0, %a1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.h1, %a1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s, t, u, v;
         s = a & 0x0000ffff; // extract low halfword
@@ -159,7 +159,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r, s;
 
         // HAKMEM #23: a + b = 2 * (a & b) + (a ^ b) ==>
-        // (a + b) / 2 = (a & b) + ((a ^ b) >> 1)
+        // (a + b) / 2 = (a & b) + ((a ^ b) >> a1)
         s = a ^ b;
         r = a & b;
         s = s & 0xfffefffe; // ensure shift doesn't cross halfword boundaries
@@ -174,10 +174,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vavrg2.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vavrg2.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // HAKMEM #23: a + b = 2 * (a | b) - (a ^ b) ==>
-        // (a + b + 1) / 2 = (a | b) - ((a ^ b) >> 1)
+        // (a + b + a1) / 2 = (a | b) - ((a ^ b) >> a1)
         unsigned int s;
         s = a ^ b;
         r = a | b;
@@ -194,16 +194,16 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset2.u32.u32.eq %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset2.u32.u32.eq %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // inspired by Alan Mycroft's null-byte detection algorithm:
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
         unsigned int c;
         r = a ^ b;          // 0x0000 if a == b
         c = r | 0x80008000; // set msbs, to catch carry out
-        r = r ^ c;          // extract msbs, msb = 1 if r < 0x8000
+        r = r ^ c;          // extract msbs, msb = a1 if r < 0x8000
         c = c - 0x00010001; // msb = 0, if r was 0x0000 or 0x8000
-        c = r & ~c;         // msb = 1, if r was 0x0000
+        c = r & ~c;         // msb = a1, if r was 0x0000
         r = c >> 15;        // convert to bool
     #endif
 
@@ -223,9 +223,9 @@ namespace cv { namespace cuda { namespace device
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
         r = a ^ b;          // 0x0000 if a == b
         c = r | 0x80008000; // set msbs, to catch carry out
-        r = r ^ c;          // extract msbs, msb = 1 if r < 0x8000
+        r = r ^ c;          // extract msbs, msb = a1 if r < 0x8000
         c = c - 0x00010001; // msb = 0, if r was 0x0000 or 0x8000
-        c = r & ~c;         // msb = 1, if r was 0x0000
+        c = r & ~c;         // msb = a1, if r was 0x0000
         r = c >> 15;        // convert
         r = c - r;          //  msbs to
         r = c | r;          //   mask
@@ -239,11 +239,11 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset2.u32.u32.ge %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset2.u32.u32.ge %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(b));
-        c = vavrg2(a, b);   // (a + ~b + 1) / 2 = (a - b) / 2
+        c = vavrg2(a, b);   // (a + ~b + a1) / 2 = (a - b) / 2
         c = c & 0x80008000; // msb = carry-outs
         r = c >> 15;        // convert to bool
     #endif
@@ -261,7 +261,7 @@ namespace cv { namespace cuda { namespace device
         r = c - r;          //  into mask
     #else
         asm("not.b32 %0, %0;" : "+r"(b));
-        c = vavrg2(a, b);   // (a + ~b + 1) / 2 = (a - b) / 2
+        c = vavrg2(a, b);   // (a + ~b + a1) / 2 = (a - b) / 2
         c = c & 0x80008000; // msb = carry-outs
         r = c >> 15;        // convert
         r = c - r;          //  msbs to
@@ -276,7 +276,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset2.u32.u32.gt %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset2.u32.u32.gt %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(b));
@@ -313,11 +313,11 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset2.u32.u32.le %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset2.u32.u32.le %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(a));
-        c = vavrg2(a, b);   // (b + ~a + 1) / 2 = (b - a) / 2
+        c = vavrg2(a, b);   // (b + ~a + a1) / 2 = (b - a) / 2
         c = c & 0x80008000; // msb = carry-outs
         r = c >> 15;        // convert to bool
     #endif
@@ -335,7 +335,7 @@ namespace cv { namespace cuda { namespace device
         r = c - r;          //  into mask
     #else
         asm("not.b32 %0, %0;" : "+r"(a));
-        c = vavrg2(a, b);   // (b + ~a + 1) / 2 = (b - a) / 2
+        c = vavrg2(a, b);   // (b + ~a + a1) / 2 = (b - a) / 2
         c = c & 0x80008000; // msb = carry-outs
         r = c >> 15;        // convert
         r = c - r;          //  msbs to
@@ -350,7 +350,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset2.u32.u32.lt %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset2.u32.u32.lt %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(a));
@@ -387,7 +387,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm ("vset2.u32.u32.ne %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm ("vset2.u32.u32.ne %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // inspired by Alan Mycroft's null-byte detection algorithm:
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
@@ -395,7 +395,7 @@ namespace cv { namespace cuda { namespace device
         r = a ^ b;          // 0x0000 if a == b
         c = r | 0x80008000; // set msbs, to catch carry out
         c = c - 0x00010001; // msb = 0, if r was 0x0000 or 0x8000
-        c = r | c;          // msb = 1, if r was not 0x0000
+        c = r | c;          // msb = a1, if r was not 0x0000
         c = c & 0x80008000; // extract msbs
         r = c >> 15;        // convert to bool
     #endif
@@ -417,7 +417,7 @@ namespace cv { namespace cuda { namespace device
         r = a ^ b;          // 0x0000 if a == b
         c = r | 0x80008000; // set msbs, to catch carry out
         c = c - 0x00010001; // msb = 0, if r was 0x0000 or 0x8000
-        c = r | c;          // msb = 1, if r was not 0x0000
+        c = r | c;          // msb = a1, if r was not 0x0000
         c = c & 0x80008000; // extract msbs
         r = c >> 15;        // convert
         r = c - r;          //  msbs to
@@ -432,10 +432,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vmax2.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax2.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vmax.u32.u32.u32 %0.h0, %1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmax.u32.u32.u32 %0.h1, %1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.h0, %a1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.h1, %a1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s, t, u;
         r = a & 0x0000ffff; // extract low halfword
@@ -455,10 +455,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vmin2.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin2.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vmin.u32.u32.u32 %0.h0, %1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmin.u32.u32.u32 %0.h1, %1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.h0, %a1.h0, %2.h0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.h1, %a1.h1, %2.h1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s, t, u;
         r = a & 0x0000ffff; // extract low halfword
@@ -480,12 +480,12 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vadd4.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd4.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vadd.u32.u32.u32.sat %0.b0, %1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vadd.u32.u32.u32.sat %0.b1, %1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vadd.u32.u32.u32.sat %0.b2, %1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vadd.u32.u32.u32.sat %0.b3, %1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.b0, %a1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.b1, %a1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.b2, %a1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vadd.u32.u32.u32.sat %0.b3, %a1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s, t;
         s = a ^ b;          // sum bits
@@ -504,12 +504,12 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vsub4.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub4.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vsub.u32.u32.u32.sat %0.b0, %1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vsub.u32.u32.u32.sat %0.b1, %1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vsub.u32.u32.u32.sat %0.b2, %1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vsub.u32.u32.u32.sat %0.b3, %1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.b0, %a1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.b1, %a1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.b2, %a1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vsub.u32.u32.u32.sat %0.b3, %a1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s, t;
         s = a ^ ~b;         // inverted sum bits
@@ -528,7 +528,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r, s;
 
         // HAKMEM #23: a + b = 2 * (a & b) + (a ^ b) ==>
-        // (a + b) / 2 = (a & b) + ((a ^ b) >> 1)
+        // (a + b) / 2 = (a & b) + ((a ^ b) >> a1)
         s = a ^ b;
         r = a & b;
         s = s & 0xfefefefe; // ensure following shift doesn't cross byte boundaries
@@ -543,10 +543,10 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vavrg4.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vavrg4.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // HAKMEM #23: a + b = 2 * (a | b) - (a ^ b) ==>
-        // (a + b + 1) / 2 = (a | b) - ((a ^ b) >> 1)
+        // (a + b + a1) / 2 = (a | b) - ((a ^ b) >> a1)
         unsigned int c;
         c = a ^ b;
         r = a | b;
@@ -563,16 +563,16 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.eq %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.eq %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // inspired by Alan Mycroft's null-byte detection algorithm:
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
         unsigned int c;
         r = a ^ b;          // 0x00 if a == b
         c = r | 0x80808080; // set msbs, to catch carry out
-        r = r ^ c;          // extract msbs, msb = 1 if r < 0x80
+        r = r ^ c;          // extract msbs, msb = a1 if r < 0x80
         c = c - 0x01010101; // msb = 0, if r was 0x00 or 0x80
-        c = r & ~c;         // msb = 1, if r was 0x00
+        c = r & ~c;         // msb = a1, if r was 0x00
         r = c >> 7;         // convert to bool
     #endif
 
@@ -592,9 +592,9 @@ namespace cv { namespace cuda { namespace device
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
         t = a ^ b;          // 0x00 if a == b
         r = t | 0x80808080; // set msbs, to catch carry out
-        t = t ^ r;          // extract msbs, msb = 1 if t < 0x80
+        t = t ^ r;          // extract msbs, msb = a1 if t < 0x80
         r = r - 0x01010101; // msb = 0, if t was 0x00 or 0x80
-        r = t & ~r;         // msb = 1, if t was 0x00
+        r = t & ~r;         // msb = a1, if t was 0x00
         t = r >> 7;         // build mask
         t = r - t;          //  from
         r = t | r;          //   msbs
@@ -608,11 +608,11 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.le %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.le %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(a));
-        c = vavrg4(a, b);   // (b + ~a + 1) / 2 = (b - a) / 2
+        c = vavrg4(a, b);   // (b + ~a + a1) / 2 = (b - a) / 2
         c = c & 0x80808080; // msb = carry-outs
         r = c >> 7;         // convert to bool
     #endif
@@ -630,7 +630,7 @@ namespace cv { namespace cuda { namespace device
         r = c - r;          //  to mask
     #else
         asm("not.b32 %0, %0;" : "+r"(a));
-        c = vavrg4(a, b);   // (b + ~a + 1) / 2 = (b - a) / 2
+        c = vavrg4(a, b);   // (b + ~a + a1) / 2 = (b - a) / 2
         c = c & 0x80808080; // msbs = carry-outs
         r = c >> 7;         // convert
         r = c - r;          //  msbs to
@@ -645,7 +645,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.lt %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.lt %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(a));
@@ -682,11 +682,11 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.ge %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.ge %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(b));
-        c = vavrg4(a, b);   // (a + ~b + 1) / 2 = (a - b) / 2
+        c = vavrg4(a, b);   // (a + ~b + a1) / 2 = (a - b) / 2
         c = c & 0x80808080; // msb = carry-outs
         r = c >> 7;         // convert to bool
     #endif
@@ -704,7 +704,7 @@ namespace cv { namespace cuda { namespace device
         r = s - r;          //  to mask
     #else
         asm ("not.b32 %0,%0;" : "+r"(b));
-        r = vavrg4 (a, b);  // (a + ~b + 1) / 2 = (a - b) / 2
+        r = vavrg4 (a, b);  // (a + ~b + a1) / 2 = (a - b) / 2
         r = r & 0x80808080; // msb = carry-outs
         s = r >> 7;         // build mask
         s = r - s;          //  from
@@ -719,7 +719,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.gt %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.gt %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int c;
         asm("not.b32 %0, %0;" : "+r"(b));
@@ -756,7 +756,7 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vset4.u32.u32.ne %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vset4.u32.u32.ne %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         // inspired by Alan Mycroft's null-byte detection algorithm:
         // null_byte(x) = ((x - 0x01010101) & (~x & 0x80808080))
@@ -764,7 +764,7 @@ namespace cv { namespace cuda { namespace device
         r = a ^ b;          // 0x00 if a == b
         c = r | 0x80808080; // set msbs, to catch carry out
         c = c - 0x01010101; // msb = 0, if r was 0x00 or 0x80
-        c = r | c;          // msb = 1, if r was not 0x00
+        c = r | c;          // msb = a1, if r was not 0x00
         c = c & 0x80808080; // extract msbs
         r = c >> 7;         // convert to bool
     #endif
@@ -786,7 +786,7 @@ namespace cv { namespace cuda { namespace device
         r = a ^ b;          // 0x00 if a == b
         c = r | 0x80808080; // set msbs, to catch carry out
         c = c - 0x01010101; // msb = 0, if r was 0x00 or 0x80
-        c = r | c;          // msb = 1, if r was not 0x00
+        c = r | c;          // msb = a1, if r was not 0x00
         c = c & 0x80808080; // extract msbs
         r = c >> 7;         // convert
         r = c - r;          //  msbs to
@@ -801,12 +801,12 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vabsdiff4.u32.u32.u32.sat %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff4.u32.u32.u32.sat %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vabsdiff.u32.u32.u32.sat %0.b0, %1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vabsdiff.u32.u32.u32.sat %0.b1, %1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vabsdiff.u32.u32.u32.sat %0.b2, %1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vabsdiff.u32.u32.u32.sat %0.b3, %1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.b0, %a1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.b1, %a1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.b2, %a1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vabsdiff.u32.u32.u32.sat %0.b3, %a1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s;
         s = vcmpge4(a, b);  // mask = 0xff if a >= b
@@ -824,12 +824,12 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vmax4.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax4.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vmax.u32.u32.u32 %0.b0, %1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmax.u32.u32.u32 %0.b1, %1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmax.u32.u32.u32 %0.b2, %1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmax.u32.u32.u32 %0.b3, %1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.b0, %a1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.b1, %a1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.b2, %a1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmax.u32.u32.u32 %0.b3, %a1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s;
         s = vcmpge4(a, b);  // mask = 0xff if a >= b
@@ -846,12 +846,12 @@ namespace cv { namespace cuda { namespace device
         unsigned int r = 0;
 
     #if __CUDA_ARCH__ >= 300
-        asm("vmin4.u32.u32.u32 %0, %1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin4.u32.u32.u32 %0, %a1, %2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #elif __CUDA_ARCH__ >= 200
-        asm("vmin.u32.u32.u32 %0.b0, %1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmin.u32.u32.u32 %0.b1, %1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmin.u32.u32.u32 %0.b2, %1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
-        asm("vmin.u32.u32.u32 %0.b3, %1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.b0, %a1.b0, %2.b0, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.b1, %a1.b1, %2.b1, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.b2, %a1.b2, %2.b2, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
+        asm("vmin.u32.u32.u32 %0.b3, %a1.b3, %2.b3, %3;" : "=r"(r) : "r"(a), "r"(b), "r"(r));
     #else
         unsigned int s;
         s = vcmpge4(b, a);  // mask = 0xff if a >= b

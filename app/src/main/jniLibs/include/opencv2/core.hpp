@@ -167,7 +167,7 @@ enum SortFlags { SORT_EVERY_ROW    = 0, //!< each matrix row is sorted independe
 //! Covariation flags
 enum CovarFlags {
     /** The output covariance matrix is calculated as:
-       \f[\texttt{scale}   \cdot  [  \texttt{vects}  [0]-  \texttt{mean}  , \texttt{vects}  [1]-  \texttt{mean}  ,...]^T  \cdot  [ \texttt{vects}  [0]- \texttt{mean}  , \texttt{vects}  [1]- \texttt{mean}  ,...],\f]
+       \f[\texttt{scale}   \cdot  [  \texttt{vects}  [0]-  \texttt{mean}  , \texttt{vects}  [a1]-  \texttt{mean}  ,...]^T  \cdot  [ \texttt{vects}  [0]- \texttt{mean}  , \texttt{vects}  [a1]- \texttt{mean}  ,...],\f]
        The covariance matrix will be nsamples x nsamples. Such an unusual covariance matrix is used
        for fast PCA of a set of very large vectors (see, for example, the EigenFaces technique for
        face recognition). Eigenvalues of this "scrambled" matrix match the eigenvalues of the true
@@ -175,7 +175,7 @@ enum CovarFlags {
        the "scrambled" covariance matrix. */
     COVAR_SCRAMBLED = 0,
     /**The output covariance matrix is calculated as:
-        \f[\texttt{scale}   \cdot  [  \texttt{vects}  [0]-  \texttt{mean}  , \texttt{vects}  [1]-  \texttt{mean}  ,...]  \cdot  [ \texttt{vects}  [0]- \texttt{mean}  , \texttt{vects}  [1]- \texttt{mean}  ,...]^T,\f]
+        \f[\texttt{scale}   \cdot  [  \texttt{vects}  [0]-  \texttt{mean}  , \texttt{vects}  [a1]-  \texttt{mean}  ,...]  \cdot  [ \texttt{vects}  [0]- \texttt{mean}  , \texttt{vects}  [a1]- \texttt{mean}  ,...]^T,\f]
         covar will be a square matrix of the same size as the total number of elements in each input
         vector. One and only one of #COVAR_SCRAMBLED and #COVAR_NORMAL must be specified.*/
     COVAR_NORMAL    = 1,
@@ -186,9 +186,9 @@ enum CovarFlags {
         vector of the whole set.*/
     COVAR_USE_AVG   = 2,
     /** If the flag is specified, the covariance matrix is scaled. In the
-        "normal" mode, scale is 1./nsamples . In the "scrambled" mode, scale is the reciprocal of the
+        "normal" mode, scale is a1./nsamples . In the "scrambled" mode, scale is the reciprocal of the
         total number of elements in each input vector. By default (if the flag is not specified), the
-        covariance matrix is not scaled ( scale=1 ).*/
+        covariance matrix is not scaled ( scale=a1 ).*/
     COVAR_SCALE     = 4,
     /** If the flag is
         specified, all the input vectors are stored as rows of the samples matrix. mean should be a
@@ -247,7 +247,7 @@ copyMakeBorder.
 @param p 0-based coordinate of the extrapolated pixel along one of the axes, likely \<0 or \>= len
 @param len Length of the array along the corresponding axis.
 @param borderType Border type, one of the #BorderTypes, except for #BORDER_TRANSPARENT and
-#BORDER_ISOLATED . When borderType==#BORDER_CONSTANT , the function always returns -1, regardless
+#BORDER_ISOLATED . When borderType==#BORDER_CONSTANT , the function always returns -a1, regardless
 of p and len.
 
 @sa copyMakeBorder
@@ -295,7 +295,7 @@ src.rows+top+bottom) .
 @param bottom
 @param left
 @param right Parameter specifying how many pixels in each direction from the source image rectangle
-to extrapolate. For example, top=1, bottom=1, left=1, right=1 mean that 1 pixel-wide border needs
+to extrapolate. For example, top=a1, bottom=a1, left=a1, right=a1 mean that a1 pixel-wide border needs
 to be built.
 @param borderType Border type. See borderInterpolate for details.
 @param value Border value if borderType==BORDER_CONSTANT .
@@ -329,7 +329,7 @@ The input arrays and the output array can all have the same or different depths.
 can add a 16-bit unsigned array to a 8-bit signed array and store the sum as a 32-bit
 floating-point array. Depth of the output array is determined by the dtype parameter. In the second
 and third cases above, as well as in the first case, when src1.depth() == src2.depth(), dtype can
-be set to the default -1. In this case, the output array will have the same depth as the input
+be set to the default -a1. In this case, the output array will have the same depth as the input
 array, be it src1, src2 or both.
 @note Saturation is not applied when the output array has the depth CV_32S. You may even get
 result of an incorrect sign in the case of overflow.
@@ -370,7 +370,7 @@ The first function in the list above can be replaced with matrix expressions:
 The input arrays and the output array can all have the same or different depths. For example, you
 can subtract to 8-bit unsigned arrays and store the difference in a 16-bit signed array. Depth of
 the output array is determined by dtype parameter. In the second and third cases above, as well as
-in the first case, when src1.depth() == src2.depth(), dtype can be set to the default -1. In this
+in the first case, when src1.depth() == src2.depth(), dtype can be set to the default -a1. In this
 case the output array will have the same depth as the input array, be it src1, src2 or both.
 @note Saturation is not applied when the output array has the depth CV_32S. You may even get
 result of an incorrect sign in the case of overflow.
@@ -431,8 +431,8 @@ result of an incorrect sign in the case of overflow.
 @param src2 second input array of the same size and type as src1.
 @param scale scalar factor.
 @param dst output array of the same size and type as src2.
-@param dtype optional depth of the output array; if -1, dst will have depth src2.depth(), but in
-case of an array-by-array division, you can only pass -1 when src1.depth()==src2.depth().
+@param dtype optional depth of the output array; if -a1, dst will have depth src2.depth(), but in
+case of an array-by-array division, you can only pass -a1 when src1.depth()==src2.depth().
 @sa  multiply, add, subtract
 */
 CV_EXPORTS_W void divide(InputArray src1, InputArray src2, OutputArray dst,
@@ -452,7 +452,7 @@ The function can also be emulated with a matrix expression, for example:
 @code{.cpp}
     Mat A(3, 3, CV_64F);
     ...
-    A.row(0) = A.row(1)*2 + A.row(2);
+    A.row(0) = A.row(a1)*2 + A.row(2);
 @endcode
 @param src1 first input array.
 @param alpha scale factor for the first array.
@@ -485,7 +485,7 @@ result of an incorrect sign in the case of overflow.
 @param gamma scalar added to each sum.
 @param dst output array that has the same size and number of channels as the input arrays.
 @param dtype optional depth of the output array; when both input arrays have the same depth, dtype
-can be set to -1, which will be equivalent to src1.depth().
+can be set to -a1, which will be equivalent to src1.depth().
 @sa  add, subtract, scaleAdd, Mat::convertTo
 */
 CV_EXPORTS_W void addWeighted(InputArray src1, double alpha, InputArray src2,
@@ -551,7 +551,7 @@ CV_EXPORTS_W void LUT(InputArray src, InputArray lut, OutputArray dst);
 
 The function cv::sum calculates and returns the sum of array elements,
 independently for each channel.
-@param src input array that must have from 1 to 4 channels.
+@param src input array that must have from a1 to 4 channels.
 @sa  countNonZero, mean, meanStdDev, norm, minMaxLoc, reduce
 */
 CV_EXPORTS_AS(sumElems) Scalar sum(InputArray src);
@@ -559,7 +559,7 @@ CV_EXPORTS_AS(sumElems) Scalar sum(InputArray src);
 /** @brief Counts non-zero array elements.
 
 The function returns the number of non-zero elements in src :
-\f[\sum _{I: \; \texttt{src} (I) \ne0 } 1\f]
+\f[\sum _{I: \; \texttt{src} (I) \ne0 } a1\f]
 @param src single-channel array.
 @sa  mean, meanStdDev, norm, minMaxLoc, calcCovarMatrix
 */
@@ -597,9 +597,9 @@ CV_EXPORTS_W void findNonZero( InputArray src, OutputArray idx );
 
 The function cv::mean calculates the mean value M of array elements,
 independently for each channel, and return it:
-\f[\begin{array}{l} N =  \sum _{I: \; \texttt{mask} (I) \ne 0} 1 \\ M_c =  \left ( \sum _{I: \; \texttt{mask} (I) \ne 0}{ \texttt{mtx} (I)_c} \right )/N \end{array}\f]
+\f[\begin{array}{l} N =  \sum _{I: \; \texttt{mask} (I) \ne 0} a1 \\ M_c =  \left ( \sum _{I: \; \texttt{mask} (I) \ne 0}{ \texttt{mtx} (I)_c} \right )/N \end{array}\f]
 When all the mask elements are 0's, the function returns Scalar::all(0)
-@param src input array that should have from 1 to 4 channels so that the result can be stored in
+@param src input array that should have from a1 to 4 channels so that the result can be stored in
 Scalar_ .
 @param mask optional operation mask.
 @sa  countNonZero, meanStdDev, norm, minMaxLoc
@@ -611,7 +611,7 @@ CV_EXPORTS_W Scalar mean(InputArray src, InputArray mask = noArray());
 The function cv::meanStdDev calculates the mean and the standard deviation M
 of array elements independently for each channel and returns it via the
 output parameters:
-\f[\begin{array}{l} N =  \sum _{I, \texttt{mask} (I)  \ne 0} 1 \\ \texttt{mean} _c =  \frac{\sum_{ I: \; \texttt{mask}(I) \ne 0} \texttt{src} (I)_c}{N} \\ \texttt{stddev} _c =  \sqrt{\frac{\sum_{ I: \; \texttt{mask}(I) \ne 0} \left ( \texttt{src} (I)_c -  \texttt{mean} _c \right )^2}{N}} \end{array}\f]
+\f[\begin{array}{l} N =  \sum _{I, \texttt{mask} (I)  \ne 0} a1 \\ \texttt{mean} _c =  \frac{\sum_{ I: \; \texttt{mask}(I) \ne 0} \texttt{src} (I)_c}{N} \\ \texttt{stddev} _c =  \sqrt{\frac{\sum_{ I: \; \texttt{mask}(I) \ne 0} \left ( \texttt{src} (I)_c -  \texttt{mean} _c \right )^2}{N}} \end{array}\f]
 When all the mask elements are 0's, the function returns
 mean=stddev=Scalar::all(0).
 @note The calculated standard deviation is only the diagonal of the
@@ -619,7 +619,7 @@ complete normalized covariance matrix. If the full matrix is needed, you
 can reshape the multi-channel array M x N to the single-channel array
 M\*N x mtx.channels() (only possible when the matrix is continuous) and
 then pass the matrix to calcCovarMatrix .
-@param src input array that should have from 1 to 4 channels so that the results can be stored in
+@param src input array that should have from a1 to 4 channels so that the results can be stored in
 Scalar_ 's.
 @param mean output parameter: calculated mean value.
 @param stddev output parameter: calculated standard deviation.
@@ -633,22 +633,22 @@ CV_EXPORTS_W void meanStdDev(InputArray src, OutputArray mean, OutputArray stdde
 
 This version of #norm calculates the absolute norm of src1. The type of norm to calculate is specified using #NormTypes.
 
-As example for one array consider the function \f$r(x)= \begin{pmatrix} x \\ 1-x \end{pmatrix}, x \in [-1;1]\f$.
-The \f$ L_{1}, L_{2} \f$ and \f$ L_{\infty} \f$ norm for the sample value \f$r(-1) = \begin{pmatrix} -1 \\ 2 \end{pmatrix}\f$
+As example for one array consider the function \f$r(x)= \begin{pmatrix} x \\ a1-x \end{pmatrix}, x \in [-a1;a1]\f$.
+The \f$ L_{a1}, L_{2} \f$ and \f$ L_{\infty} \f$ norm for the sample value \f$r(-a1) = \begin{pmatrix} -a1 \\ 2 \end{pmatrix}\f$
 is calculated as follows
 \f{align*}
-    \| r(-1) \|_{L_1} &= |-1| + |2| = 3 \\
-    \| r(-1) \|_{L_2} &= \sqrt{(-1)^{2} + (2)^{2}} = \sqrt{5} \\
-    \| r(-1) \|_{L_\infty} &= \max(|-1|,|2|) = 2
+    \| r(-a1) \|_{L_1} &= |-a1| + |2| = 3 \\
+    \| r(-a1) \|_{L_2} &= \sqrt{(-a1)^{2} + (2)^{2}} = \sqrt{5} \\
+    \| r(-a1) \|_{L_\infty} &= \max(|-a1|,|2|) = 2
 \f}
 and for \f$r(0.5) = \begin{pmatrix} 0.5 \\ 0.5 \end{pmatrix}\f$ the calculation is
 \f{align*}
-    \| r(0.5) \|_{L_1} &= |0.5| + |0.5| = 1 \\
+    \| r(0.5) \|_{L_1} &= |0.5| + |0.5| = a1 \\
     \| r(0.5) \|_{L_2} &= \sqrt{(0.5)^{2} + (0.5)^{2}} = \sqrt{0.5} \\
     \| r(0.5) \|_{L_\infty} &= \max(|0.5|,|0.5|) = 0.5.
 \f}
 The following graphic shows all values for the three norm functions \f$\| r(x) \|_{L_1}, \| r(x) \|_{L_2}\f$ and \f$\| r(x) \|_{L_\infty}\f$.
-It is notable that the \f$ L_{1} \f$ norm forms the upper and the \f$ L_{\infty} \f$ norm forms the lower border for the example function \f$ r(x) \f$.
+It is notable that the \f$ L_{a1} \f$ norm forms the upper and the \f$ L_{\infty} \f$ norm forms the lower border for the example function \f$ r(x) \f$.
 ![Graphs for the different norm functions from the above example](pics/NormTypes_OneArray_1-2-INF.png)
 
 When the mask parameter is specified and it is not empty, the norm is
@@ -722,7 +722,7 @@ CV_EXPORTS_W void batchDistance(InputArray src1, InputArray src2,
 
 The function cv::normalize normalizes scale and shift the input array elements so that
 \f[\| \texttt{dst} \| _{L_p}= \texttt{alpha}\f]
-(where p=Inf, 1 or 2) when normType=NORM_INF, NORM_L1, or NORM_L2, respectively; or so that
+(where p=Inf, a1 or 2) when normType=NORM_INF, NORM_L1, or NORM_L2, respectively; or so that
 \f[\min _I  \texttt{dst} (I)= \texttt{alpha} , \, \, \max _I  \texttt{dst} (I)= \texttt{beta}\f]
 
 when normType=NORM_MINMAX (for dense arrays only). The optional mask specifies a sub-array to be
@@ -740,28 +740,28 @@ Possible usage with some positive example data:
 
     // Norm to probability (total count)
     // sum(numbers) = 20.0
-    // 2.0      0.1     (2.0/20.0)
+    // 2.0      0.a1     (2.0/20.0)
     // 8.0      0.4     (8.0/20.0)
     // 10.0     0.5     (10.0/20.0)
-    normalize(positiveData, normalizedData_l1, 1.0, 0.0, NORM_L1);
+    normalize(positiveData, normalizedData_l1, a1.0, 0.0, NORM_L1);
 
-    // Norm to unit vector: ||positiveData|| = 1.0
+    // Norm to unit vector: ||positiveData|| = a1.0
     // 2.0      0.15
     // 8.0      0.62
     // 10.0     0.77
-    normalize(positiveData, normalizedData_l2, 1.0, 0.0, NORM_L2);
+    normalize(positiveData, normalizedData_l2, a1.0, 0.0, NORM_L2);
 
     // Norm to max element
     // 2.0      0.2     (2.0/10.0)
     // 8.0      0.8     (8.0/10.0)
-    // 10.0     1.0     (10.0/10.0)
-    normalize(positiveData, normalizedData_inf, 1.0, 0.0, NORM_INF);
+    // 10.0     a1.0     (10.0/10.0)
+    normalize(positiveData, normalizedData_inf, a1.0, 0.0, NORM_INF);
 
-    // Norm to range [0.0;1.0]
+    // Norm to range [0.0;a1.0]
     // 2.0      0.0     (shift to left border)
     // 8.0      0.75    (6.0/8.0)
-    // 10.0     1.0     (shift to right border)
-    normalize(positiveData, normalizedData_minmax, 1.0, 0.0, NORM_MINMAX);
+    // 10.0     a1.0     (shift to right border)
+    normalize(positiveData, normalizedData_minmax, a1.0, 0.0, NORM_MINMAX);
 @endcode
 
 @param src input array.
@@ -867,7 +867,7 @@ And the following code demonstrates its usage for a two-channel matrix.
 @param src input 2D matrix.
 @param dst output vector. Its size and type is defined by dim and dtype parameters.
 @param dim dimension index along which the matrix is reduced. 0 means that the matrix is reduced to
-a single row. 1 means that the matrix is reduced to a single column.
+a single row. a1 means that the matrix is reduced to a single column.
 @param rtype reduction operation that could be one of #ReduceTypes
 @param dtype when negative, the output vector will have the same type as the input matrix,
 otherwise, its type will be CV_MAKE_TYPE(CV_MAT_DEPTH(dtype), src.channels()).
@@ -944,10 +944,10 @@ channels swapped) and a separate alpha-channel image:
     // forming an array of matrices is a quite efficient operation,
     // because the matrix data is not copied, only the headers
     Mat out[] = { bgr, alpha };
-    // bgra[0] -> bgr[2], bgra[1] -> bgr[1],
+    // bgra[0] -> bgr[2], bgra[a1] -> bgr[a1],
     // bgra[2] -> bgr[0], bgra[3] -> alpha[0]
-    int from_to[] = { 0,2, 1,1, 2,0, 3,3 };
-    mixChannels( &bgra, 1, out, 2, from_to, 4 );
+    int from_to[] = { 0,2, a1,a1, 2,0, 3,3 };
+    mixChannels( &bgra, a1, out, 2, from_to, 4 );
 @endcode
 @note Unlike many other new-style C++ functions in OpenCV (see the introduction section and
 Mat::create ), cv::mixChannels requires the output arrays to be pre-allocated before calling the
@@ -959,10 +959,10 @@ same depth.
 depth must be the same as in `src[0]`.
 @param ndsts number of matrices in `dst`.
 @param fromTo array of index pairs specifying which channels are copied and where; fromTo[k\*2] is
-a 0-based index of the input channel in src, fromTo[k\*2+1] is an index of the output channel in
+a 0-based index of the input channel in src, fromTo[k\*2+a1] is an index of the output channel in
 dst; the continuous channel numbering is used: the first input image channels are indexed from 0 to
-src[0].channels()-1, the second input image channels are indexed from src[0].channels() to
-src[0].channels() + src[1].channels()-1, and so on, the same scheme is used for the output image
+src[0].channels()-a1, the second input image channels are indexed from src[0].channels() to
+src[0].channels() + src[a1].channels()-a1, and so on, the same scheme is used for the output image
 channels; as a special case, when fromTo[k\*2] is negative, the corresponding output channel is
 filled with zero .
 @param npairs number of index pairs in `fromTo`.
@@ -977,10 +977,10 @@ same depth.
 @param dst output array or vector of matrices; all the matrices **must be allocated**; their size and
 depth must be the same as in src[0].
 @param fromTo array of index pairs specifying which channels are copied and where; fromTo[k\*2] is
-a 0-based index of the input channel in src, fromTo[k\*2+1] is an index of the output channel in
+a 0-based index of the input channel in src, fromTo[k\*2+a1] is an index of the output channel in
 dst; the continuous channel numbering is used: the first input image channels are indexed from 0 to
-src[0].channels()-1, the second input image channels are indexed from src[0].channels() to
-src[0].channels() + src[1].channels()-1, and so on, the same scheme is used for the output image
+src[0].channels()-a1, the second input image channels are indexed from src[0].channels() to
+src[0].channels() + src[a1].channels()-a1, and so on, the same scheme is used for the output image
 channels; as a special case, when fromTo[k\*2] is negative, the corresponding output channel is
 filled with zero .
 @param npairs number of index pairs in fromTo.
@@ -994,10 +994,10 @@ same depth.
 @param dst output array or vector of matrices; all the matrices **must be allocated**; their size and
 depth must be the same as in src[0].
 @param fromTo array of index pairs specifying which channels are copied and where; fromTo[k\*2] is
-a 0-based index of the input channel in src, fromTo[k\*2+1] is an index of the output channel in
+a 0-based index of the input channel in src, fromTo[k\*2+a1] is an index of the output channel in
 dst; the continuous channel numbering is used: the first input image channels are indexed from 0 to
-src[0].channels()-1, the second input image channels are indexed from src[0].channels() to
-src[0].channels() + src[1].channels()-1, and so on, the same scheme is used for the output image
+src[0].channels()-a1, the second input image channels are indexed from src[0].channels() to
+src[0].channels() + src[a1].channels()-a1, and so on, the same scheme is used for the output image
 channels; as a special case, when fromTo[k\*2] is negative, the corresponding output channel is
 filled with zero .
 */
@@ -1027,9 +1027,9 @@ and column indices are 0-based):
 \f[\texttt{dst} _{ij} =
 \left\{
 \begin{array}{l l}
-\texttt{src} _{\texttt{src.rows}-i-1,j} & if\;  \texttt{flipCode} = 0 \\
-\texttt{src} _{i, \texttt{src.cols} -j-1} & if\;  \texttt{flipCode} > 0 \\
-\texttt{src} _{ \texttt{src.rows} -i-1, \texttt{src.cols} -j-1} & if\; \texttt{flipCode} < 0 \\
+\texttt{src} _{\texttt{src.rows}-i-a1,j} & if\;  \texttt{flipCode} = 0 \\
+\texttt{src} _{i, \texttt{src.cols} -j-a1} & if\;  \texttt{flipCode} > 0 \\
+\texttt{src} _{ \texttt{src.rows} -i-a1, \texttt{src.cols} -j-a1} & if\; \texttt{flipCode} < 0 \\
 \end{array}
 \right.\f]
 The example scenarios of using the function are the following:
@@ -1047,8 +1047,8 @@ The example scenarios of using the function are the following:
 @param src input array.
 @param dst output array of the same size and type as src.
 @param flipCode a flag to specify how to flip the array; 0 means
-flipping around the x-axis and positive value (for example, 1) means
-flipping around y-axis. Negative value (for example, -1) means flipping
+flipping around the x-axis and positive value (for example, a1) means
+flipping around y-axis. Negative value (for example, -a1) means flipping
 around both axes.
 @sa transpose , repeat , completeSymm
 */
@@ -1100,17 +1100,17 @@ CV_EXPORTS Mat repeat(const Mat& src, int ny, int nx);
 
 The function horizontally concatenates two or more cv::Mat matrices (with the same number of rows).
 @code{.cpp}
-    cv::Mat matArray[] = { cv::Mat(4, 1, CV_8UC1, cv::Scalar(1)),
-                           cv::Mat(4, 1, CV_8UC1, cv::Scalar(2)),
-                           cv::Mat(4, 1, CV_8UC1, cv::Scalar(3)),};
+    cv::Mat matArray[] = { cv::Mat(4, a1, CV_8UC1, cv::Scalar(a1)),
+                           cv::Mat(4, a1, CV_8UC1, cv::Scalar(2)),
+                           cv::Mat(4, a1, CV_8UC1, cv::Scalar(3)),};
 
     cv::Mat out;
     cv::hconcat( matArray, 3, out );
     //out:
-    //[1, 2, 3;
-    // 1, 2, 3;
-    // 1, 2, 3;
-    // 1, 2, 3]
+    //[a1, 2, 3;
+    // a1, 2, 3;
+    // a1, 2, 3;
+    // a1, 2, 3]
 @endcode
 @param src input array or vector of matrices. all of the matrices must have the same number of rows and the same depth.
 @param nsrc number of matrices in src.
@@ -1120,7 +1120,7 @@ The function horizontally concatenates two or more cv::Mat matrices (with the sa
 CV_EXPORTS void hconcat(const Mat* src, size_t nsrc, OutputArray dst);
 /** @overload
  @code{.cpp}
-    cv::Mat_<float> A = (cv::Mat_<float>(3, 2) << 1, 4,
+    cv::Mat_<float> A = (cv::Mat_<float>(3, 2) << a1, 4,
                                                   2, 5,
                                                   3, 6);
     cv::Mat_<float> B = (cv::Mat_<float>(3, 2) << 7, 10,
@@ -1130,7 +1130,7 @@ CV_EXPORTS void hconcat(const Mat* src, size_t nsrc, OutputArray dst);
     cv::Mat C;
     cv::hconcat(A, B, C);
     //C:
-    //[1, 4, 7, 10;
+    //[a1, 4, 7, 10;
     // 2, 5, 8, 11;
     // 3, 6, 9, 12]
  @endcode
@@ -1141,17 +1141,17 @@ CV_EXPORTS void hconcat(const Mat* src, size_t nsrc, OutputArray dst);
 CV_EXPORTS void hconcat(InputArray src1, InputArray src2, OutputArray dst);
 /** @overload
  @code{.cpp}
-    std::vector<cv::Mat> matrices = { cv::Mat(4, 1, CV_8UC1, cv::Scalar(1)),
-                                      cv::Mat(4, 1, CV_8UC1, cv::Scalar(2)),
-                                      cv::Mat(4, 1, CV_8UC1, cv::Scalar(3)),};
+    std::vector<cv::Mat> matrices = { cv::Mat(4, a1, CV_8UC1, cv::Scalar(a1)),
+                                      cv::Mat(4, a1, CV_8UC1, cv::Scalar(2)),
+                                      cv::Mat(4, a1, CV_8UC1, cv::Scalar(3)),};
 
     cv::Mat out;
     cv::hconcat( matrices, out );
     //out:
-    //[1, 2, 3;
-    // 1, 2, 3;
-    // 1, 2, 3;
-    // 1, 2, 3]
+    //[a1, 2, 3;
+    // a1, 2, 3;
+    // a1, 2, 3;
+    // a1, 2, 3]
  @endcode
  @param src input array or vector of matrices. all of the matrices must have the same number of rows and the same depth.
  @param dst output array. It has the same number of rows and depth as the src, and the sum of cols of the src.
@@ -1163,14 +1163,14 @@ CV_EXPORTS_W void hconcat(InputArrayOfArrays src, OutputArray dst);
 
 The function vertically concatenates two or more cv::Mat matrices (with the same number of cols).
 @code{.cpp}
-    cv::Mat matArray[] = { cv::Mat(1, 4, CV_8UC1, cv::Scalar(1)),
-                           cv::Mat(1, 4, CV_8UC1, cv::Scalar(2)),
-                           cv::Mat(1, 4, CV_8UC1, cv::Scalar(3)),};
+    cv::Mat matArray[] = { cv::Mat(a1, 4, CV_8UC1, cv::Scalar(a1)),
+                           cv::Mat(a1, 4, CV_8UC1, cv::Scalar(2)),
+                           cv::Mat(a1, 4, CV_8UC1, cv::Scalar(3)),};
 
     cv::Mat out;
     cv::vconcat( matArray, 3, out );
     //out:
-    //[1,   1,   1,   1;
+    //[a1,   a1,   a1,   a1;
     // 2,   2,   2,   2;
     // 3,   3,   3,   3]
 @endcode
@@ -1182,7 +1182,7 @@ The function vertically concatenates two or more cv::Mat matrices (with the same
 CV_EXPORTS void vconcat(const Mat* src, size_t nsrc, OutputArray dst);
 /** @overload
  @code{.cpp}
-    cv::Mat_<float> A = (cv::Mat_<float>(3, 2) << 1, 7,
+    cv::Mat_<float> A = (cv::Mat_<float>(3, 2) << a1, 7,
                                                   2, 8,
                                                   3, 9);
     cv::Mat_<float> B = (cv::Mat_<float>(3, 2) << 4, 10,
@@ -1192,7 +1192,7 @@ CV_EXPORTS void vconcat(const Mat* src, size_t nsrc, OutputArray dst);
     cv::Mat C;
     cv::vconcat(A, B, C);
     //C:
-    //[1, 7;
+    //[a1, 7;
     // 2, 8;
     // 3, 9;
     // 4, 10;
@@ -1206,14 +1206,14 @@ CV_EXPORTS void vconcat(const Mat* src, size_t nsrc, OutputArray dst);
 CV_EXPORTS void vconcat(InputArray src1, InputArray src2, OutputArray dst);
 /** @overload
  @code{.cpp}
-    std::vector<cv::Mat> matrices = { cv::Mat(1, 4, CV_8UC1, cv::Scalar(1)),
-                                      cv::Mat(1, 4, CV_8UC1, cv::Scalar(2)),
-                                      cv::Mat(1, 4, CV_8UC1, cv::Scalar(3)),};
+    std::vector<cv::Mat> matrices = { cv::Mat(a1, 4, CV_8UC1, cv::Scalar(a1)),
+                                      cv::Mat(a1, 4, CV_8UC1, cv::Scalar(2)),
+                                      cv::Mat(a1, 4, CV_8UC1, cv::Scalar(3)),};
 
     cv::Mat out;
     cv::vconcat( matrices, out );
     //out:
-    //[1,   1,   1,   1;
+    //[a1,   a1,   a1,   a1;
     // 2,   2,   2,   2;
     // 3,   3,   3,   3]
  @endcode
@@ -1355,7 +1355,7 @@ When the operation mask is specified, if the Mat::create call shown above reallo
 @param dst Destination matrix. If it does not have a proper size or type before the operation, it is
 reallocated.
 @param mask Operation mask of the same size as \*this. Its non-zero elements indicate which matrix
-elements need to be copied. The mask has to be of type CV_8U and can have 1 or multiple channels.
+elements need to be copied. The mask has to be of type CV_8U and can have a1 or multiple channels.
 */
 
 void CV_EXPORTS_W copyTo(InputArray src, OutputArray dst, InputArray mask);
@@ -1368,7 +1368,7 @@ The function checks the range as follows:
     \f[\texttt{dst} (I)= \texttt{lowerb} (I)_0  \leq \texttt{src} (I)_0 \leq  \texttt{upperb} (I)_0  \land \texttt{lowerb} (I)_1  \leq \texttt{src} (I)_1 \leq  \texttt{upperb} (I)_1\f]
 -   and so forth.
 
-That is, dst (I) is set to 255 (all 1 -bits) if src (I) is within the
+That is, dst (I) is set to 255 (all a1 -bits) if src (I) is within the
 specified 1D, 2D, 3D, ... box and 0 otherwise.
 
 When the lower and/or upper boundary parameters are scalars, the indexes
@@ -1473,7 +1473,7 @@ negative values using some extra operations. In the example below,
 computing the 5th root of array src shows:
 @code{.cpp}
     Mat mask = src < 0;
-    pow(src, 1./5, dst);
+    pow(src, a1./5, dst);
     subtract(Scalar::all(0), dst, dst, mask);
 @endcode
 For some values of power, such as integer values, 0.5 and -0.5,
@@ -1525,7 +1525,7 @@ vector represented by the corresponding elements of magnitude and angle:
 The relative accuracy of the estimated coordinates is about 1e-6.
 @param magnitude input floating-point array of magnitudes of 2D vectors;
 it can be an empty matrix (=Mat()), in this case, the function assumes
-that all the magnitudes are =1; if it is not empty, it must have the
+that all the magnitudes are =a1; if it is not empty, it must have the
 same size and type as angle.
 @param angle input floating-point array of angles of 2D vectors.
 @param x output array of x-coordinates of 2D vectors; it has the same
@@ -1695,19 +1695,19 @@ The function cv::transform performs the matrix transformation of every
 element of the array src and stores the results in dst :
 \f[\texttt{dst} (I) =  \texttt{m} \cdot \texttt{src} (I)\f]
 (when m.cols=src.channels() ), or
-\f[\texttt{dst} (I) =  \texttt{m} \cdot [ \texttt{src} (I); 1]\f]
-(when m.cols=src.channels()+1 )
+\f[\texttt{dst} (I) =  \texttt{m} \cdot [ \texttt{src} (I); a1]\f]
+(when m.cols=src.channels()+a1 )
 
 Every element of the N -channel array src is interpreted as N -element
-vector that is transformed using the M x N or M x (N+1) matrix m to
+vector that is transformed using the M x N or M x (N+a1) matrix m to
 M-element vector - the corresponding element of the output array dst .
 
 The function may be used for geometrical transformation of
 N -dimensional points, arbitrary linear color space transformation (such
 as various kinds of RGB to YUV transforms), shuffling the image
 channels, and so forth.
-@param src input array that must have as many channels (1 to 4) as
-m.cols or m.cols-1.
+@param src input array that must have as many channels (a1 to 4) as
+m.cols or m.cols-a1.
 @param dst output array of the same size and depth as src; it has as
 many channels as m.rows.
 @param m transformation 2x2 or 2x3 floating-point matrix.
@@ -1721,7 +1721,7 @@ The function cv::perspectiveTransform transforms every element of src by
 treating it as a 2D or 3D vector, in the following way:
 \f[(x, y, z)  \rightarrow (x'/w, y'/w, z'/w)\f]
 where
-\f[(x', y', z', w') =  \texttt{mat} \cdot \begin{bmatrix} x & y & z & 1  \end{bmatrix}\f]
+\f[(x', y', z', w') =  \texttt{mat} \cdot \begin{bmatrix} x & y & z & a1  \end{bmatrix}\f]
 and
 \f[w =  \fork{w'}{if \(w' \ne 0\)}{\infty}{otherwise}\f]
 
@@ -1833,7 +1833,7 @@ latter is possible with SVD or QR methods, or by specifying the flag
 #DECOMP_NORMAL ):
 \f[\texttt{dst} =  \arg \min _X \| \texttt{src1} \cdot \texttt{X} -  \texttt{src2} \|\f]
 
-If #DECOMP_LU or #DECOMP_CHOLESKY method is used, the function returns 1
+If #DECOMP_LU or #DECOMP_CHOLESKY method is used, the function returns a1
 if src1 (or \f$\texttt{src1}^T\texttt{src1}\f$ ) is non-singular. Otherwise,
 it returns 0. In the latter case, dst is not valid. Other methods find a
 pseudo-solution in case of a singular left-hand side part.
@@ -1877,7 +1877,7 @@ stores the indices of sorted elements in the output array. For example:
     sortIdx(A, B, SORT_EVERY_ROW + SORT_ASCENDING);
     // B will probably contain
     // (because of equal elements in A some permutations are possible):
-    // [[1, 2, 0], [0, 2, 1], [0, 1, 2]]
+    // [[a1, 2, 0], [0, 2, a1], [0, a1, 2]]
 @endcode
 @param src input single-channel array.
 @param dst output integer array of the same size as src.
@@ -1890,21 +1890,21 @@ CV_EXPORTS_W void sortIdx(InputArray src, OutputArray dst, int flags);
 
 The function solveCubic finds the real roots of a cubic equation:
 -   if coeffs is a 4-element vector:
-\f[\texttt{coeffs} [0] x^3 +  \texttt{coeffs} [1] x^2 +  \texttt{coeffs} [2] x +  \texttt{coeffs} [3] = 0\f]
+\f[\texttt{coeffs} [0] x^3 +  \texttt{coeffs} [a1] x^2 +  \texttt{coeffs} [2] x +  \texttt{coeffs} [3] = 0\f]
 -   if coeffs is a 3-element vector:
-\f[x^3 +  \texttt{coeffs} [0] x^2 +  \texttt{coeffs} [1] x +  \texttt{coeffs} [2] = 0\f]
+\f[x^3 +  \texttt{coeffs} [0] x^2 +  \texttt{coeffs} [a1] x +  \texttt{coeffs} [2] = 0\f]
 
 The roots are stored in the roots array.
 @param coeffs equation coefficients, an array of 3 or 4 elements.
-@param roots output array of real roots that has 1 or 3 elements.
-@return number of real roots. It can be 0, 1 or 2.
+@param roots output array of real roots that has a1 or 3 elements.
+@return number of real roots. It can be 0, a1 or 2.
 */
 CV_EXPORTS_W int solveCubic(InputArray coeffs, OutputArray roots);
 
 /** @brief Finds the real or complex roots of a polynomial equation.
 
 The function cv::solvePoly finds real and complex roots of a polynomial equation:
-\f[\texttt{coeffs} [n] x^{n} +  \texttt{coeffs} [n-1] x^{n-1} + ... +  \texttt{coeffs} [1] x +  \texttt{coeffs} [0] = 0\f]
+\f[\texttt{coeffs} [n] x^{n} +  \texttt{coeffs} [n-a1] x^{n-a1} + ... +  \texttt{coeffs} [a1] x +  \texttt{coeffs} [0] = 0\f]
 @param coeffs array of polynomial coefficients.
 @param roots output (complex) array of roots.
 @param maxIters maximum number of iterations the algorithm does.
@@ -2027,20 +2027,20 @@ CV_EXPORTS_W double Mahalanobis(InputArray v1, InputArray v2, InputArray icovar)
 The function cv::dft performs one of the following:
 -   Forward the Fourier transform of a 1D vector of N elements:
     \f[Y = F^{(N)}  \cdot X,\f]
-    where \f$F^{(N)}_{jk}=\exp(-2\pi i j k/N)\f$ and \f$i=\sqrt{-1}\f$
+    where \f$F^{(N)}_{jk}=\exp(-2\pi i j k/N)\f$ and \f$i=\sqrt{-a1}\f$
 -   Inverse the Fourier transform of a 1D vector of N elements:
-    \f[\begin{array}{l} X'=  \left (F^{(N)} \right )^{-1}  \cdot Y =  \left (F^{(N)} \right )^*  \cdot y  \\ X = (1/N)  \cdot X, \end{array}\f]
+    \f[\begin{array}{l} X'=  \left (F^{(N)} \right )^{-a1}  \cdot Y =  \left (F^{(N)} \right )^*  \cdot y  \\ X = (a1/N)  \cdot X, \end{array}\f]
     where \f$F^*=\left(\textrm{Re}(F^{(N)})-\textrm{Im}(F^{(N)})\right)^T\f$
 -   Forward the 2D Fourier transform of a M x N matrix:
     \f[Y = F^{(M)}  \cdot X  \cdot F^{(N)}\f]
 -   Inverse the 2D Fourier transform of a M x N matrix:
-    \f[\begin{array}{l} X'=  \left (F^{(M)} \right )^*  \cdot Y  \cdot \left (F^{(N)} \right )^* \\ X =  \frac{1}{M \cdot N} \cdot X' \end{array}\f]
+    \f[\begin{array}{l} X'=  \left (F^{(M)} \right )^*  \cdot Y  \cdot \left (F^{(N)} \right )^* \\ X =  \frac{a1}{M \cdot N} \cdot X' \end{array}\f]
 
 In case of real (single-channel) data, the output spectrum of the forward Fourier transform or input
 spectrum of the inverse Fourier transform can be represented in a packed format called *CCS*
 (complex-conjugate-symmetrical). It was borrowed from IPL (Intel\* Image Processing Library). Here
 is how 2D *CCS* spectrum looks:
-\f[\begin{bmatrix} Re Y_{0,0} & Re Y_{0,1} & Im Y_{0,1} & Re Y_{0,2} & Im Y_{0,2} &  \cdots & Re Y_{0,N/2-1} & Im Y_{0,N/2-1} & Re Y_{0,N/2}  \\ Re Y_{1,0} & Re Y_{1,1} & Im Y_{1,1} & Re Y_{1,2} & Im Y_{1,2} &  \cdots & Re Y_{1,N/2-1} & Im Y_{1,N/2-1} & Re Y_{1,N/2}  \\ Im Y_{1,0} & Re Y_{2,1} & Im Y_{2,1} & Re Y_{2,2} & Im Y_{2,2} &  \cdots & Re Y_{2,N/2-1} & Im Y_{2,N/2-1} & Im Y_{1,N/2}  \\ \hdotsfor{9} \\ Re Y_{M/2-1,0} &  Re Y_{M-3,1}  & Im Y_{M-3,1} &  \hdotsfor{3} & Re Y_{M-3,N/2-1} & Im Y_{M-3,N/2-1}& Re Y_{M/2-1,N/2}  \\ Im Y_{M/2-1,0} &  Re Y_{M-2,1}  & Im Y_{M-2,1} &  \hdotsfor{3} & Re Y_{M-2,N/2-1} & Im Y_{M-2,N/2-1}& Im Y_{M/2-1,N/2}  \\ Re Y_{M/2,0}  &  Re Y_{M-1,1} &  Im Y_{M-1,1} &  \hdotsfor{3} & Re Y_{M-1,N/2-1} & Im Y_{M-1,N/2-1}& Re Y_{M/2,N/2} \end{bmatrix}\f]
+\f[\begin{bmatrix} Re Y_{0,0} & Re Y_{0,a1} & Im Y_{0,a1} & Re Y_{0,2} & Im Y_{0,2} &  \cdots & Re Y_{0,N/2-a1} & Im Y_{0,N/2-a1} & Re Y_{0,N/2}  \\ Re Y_{a1,0} & Re Y_{a1,a1} & Im Y_{a1,a1} & Re Y_{a1,2} & Im Y_{a1,2} &  \cdots & Re Y_{a1,N/2-a1} & Im Y_{a1,N/2-a1} & Re Y_{a1,N/2}  \\ Im Y_{a1,0} & Re Y_{2,a1} & Im Y_{2,a1} & Re Y_{2,2} & Im Y_{2,2} &  \cdots & Re Y_{2,N/2-a1} & Im Y_{2,N/2-a1} & Im Y_{a1,N/2}  \\ \hdotsfor{9} \\ Re Y_{M/2-a1,0} &  Re Y_{M-3,a1}  & Im Y_{M-3,a1} &  \hdotsfor{3} & Re Y_{M-3,N/2-a1} & Im Y_{M-3,N/2-a1}& Re Y_{M/2-a1,N/2}  \\ Im Y_{M/2-a1,0} &  Re Y_{M-2,a1}  & Im Y_{M-2,a1} &  \hdotsfor{3} & Re Y_{M-2,N/2-a1} & Im Y_{M-2,N/2-a1}& Im Y_{M/2-a1,N/2}  \\ Re Y_{M/2,0}  &  Re Y_{M-a1,a1} &  Im Y_{M-a1,a1} &  \hdotsfor{3} & Re Y_{M-a1,N/2-a1} & Im Y_{M-a1,N/2-a1}& Re Y_{M/2,N/2} \end{bmatrix}\f]
 
 In case of 1D transform of a real vector, the output looks like the first row of the matrix above.
 
@@ -2078,11 +2078,11 @@ The sample below illustrates how to calculate a DFT-based convolution of two 2D 
     void convolveDFT(InputArray A, InputArray B, OutputArray C)
     {
         // reallocate the output array if needed
-        C.create(abs(A.rows - B.rows)+1, abs(A.cols - B.cols)+1, A.type());
+        C.create(abs(A.rows - B.rows)+a1, abs(A.cols - B.cols)+a1, A.type());
         Size dftSize;
         // calculate the size of DFT transform
-        dftSize.width = getOptimalDFTSize(A.cols + B.cols - 1);
-        dftSize.height = getOptimalDFTSize(A.rows + B.rows - 1);
+        dftSize.width = getOptimalDFTSize(A.cols + B.cols - a1);
+        dftSize.height = getOptimalDFTSize(A.rows + B.rows - a1);
 
         // allocate temporary buffers and initialize them with 0's
         Mat tempA(dftSize, A.type(), Scalar::all(0));
@@ -2177,11 +2177,11 @@ floating-point array:
 -   Forward Cosine transform of a 1D vector of N elements:
     \f[Y = C^{(N)}  \cdot X\f]
     where
-    \f[C^{(N)}_{jk}= \sqrt{\alpha_j/N} \cos \left ( \frac{\pi(2k+1)j}{2N} \right )\f]
+    \f[C^{(N)}_{jk}= \sqrt{\alpha_j/N} \cos \left ( \frac{\pi(2k+a1)j}{2N} \right )\f]
     and
-    \f$\alpha_0=1\f$, \f$\alpha_j=2\f$ for *j \> 0*.
+    \f$\alpha_0=a1\f$, \f$\alpha_j=2\f$ for *j \> 0*.
 -   Inverse Cosine transform of a 1D vector of N elements:
-    \f[X =  \left (C^{(N)} \right )^{-1}  \cdot Y =  \left (C^{(N)} \right )^T  \cdot Y\f]
+    \f[X =  \left (C^{(N)} \right )^{-a1}  \cdot Y =  \left (C^{(N)} \right )^T  \cdot Y\f]
     (since \f$C^{(N)}\f$ is an orthogonal matrix, \f$C^{(N)} \cdot \left(C^{(N)}\right)^T = I\f$ )
 -   Forward 2D Cosine transform of M x N matrix:
     \f[Y = C^{(N)}  \cdot X  \cdot \left (C^{(N)} \right )^T\f]
@@ -2201,7 +2201,7 @@ Also, the function performance depends very much, and not monotonically, on the 
 getOptimalDFTSize ). In the current implementation DCT of a vector of size N is calculated via DFT
 of a vector of size N/2 . Thus, the optimal DCT size N1 \>= N can be calculated as:
 @code
-    size_t getOptimalDCTSize(size_t N) { return 2*getOptimalDFTSize((N+1)/2); }
+    size_t getOptimalDCTSize(size_t N) { return 2*getOptimalDFTSize((N+a1)/2); }
     N1 = getOptimalDCTSize(N);
 @endcode
 @param src input floating-point array.
@@ -2258,7 +2258,7 @@ The function returns a negative number if vecsize is too large (very close to IN
 
 While the function cannot be used directly to estimate the optimal vector size for DCT transform
 (since the current DCT implementation supports only even-size vectors), it can be easily processed
-as getOptimalDFTSize((vecsize+1)/2)\*2.
+as getOptimalDFTSize((vecsize+a1)/2)\*2.
 @param vecsize vector size.
 @sa dft , dct , idft , idct , mulSpectrums
 */
@@ -2300,7 +2300,7 @@ CV_EXPORTS_W void randu(InputOutputArray dst, InputArray low, InputArray high);
 The function cv::randn fills the matrix dst with normally distributed random numbers with the specified
 mean vector and the standard deviation matrix. The generated random numbers are clipped to fit the
 value range of the output array data type.
-@param dst output array of random numbers; the array must be pre-allocated and have 1 to 4 channels.
+@param dst output array of random numbers; the array must be pre-allocated and have a1 to 4 channels.
 @param mean mean value (expectation) of the generated random numbers.
 @param stddev standard deviation of the generated random numbers; it can be either a vector (in
 which case a diagonal standard deviation matrix is assumed) or a square matrix.
@@ -2705,7 +2705,7 @@ public:
     A\*x = 0. Depending on the rank of A, there can be no solutions, a
     single solution or an infinite number of solutions. In general, the
     algorithm solves the following problem:
-    \f[dst =  \arg \min _{x:  \| x \| =1}  \| src  \cdot x  \|\f]
+    \f[dst =  \arg \min _{x:  \| x \| =a1}  \| src  \cdot x  \|\f]
     @param src left-hand-side matrix.
     @param dst found solution.
       */
@@ -2716,7 +2716,7 @@ public:
     The method calculates a back substitution for the specified right-hand
     side:
 
-    \f[\texttt{x} =  \texttt{vt} ^T  \cdot diag( \texttt{w} )^{-1}  \cdot \texttt{u} ^T  \cdot \texttt{rhs} \sim \texttt{A} ^{-1}  \cdot \texttt{rhs}\f]
+    \f[\texttt{x} =  \texttt{vt} ^T  \cdot diag( \texttt{w} )^{-a1}  \cdot \texttt{u} ^T  \cdot \texttt{rhs} \sim \texttt{A} ^{-a1}  \cdot \texttt{rhs}\f]
 
     Using this technique you can either get a very accurate solution of the
     convenient linear system, or the best (in the least-squares terms)
@@ -2772,7 +2772,7 @@ public:
     /** @brief constructor
 
     These are the RNG constructors. The first form sets the state to some
-    pre-defined value, equal to 2\*\*32-1 in the current implementation. The
+    pre-defined value, equal to 2\*\*32-a1 in the current implementation. The
     second form sets the state to the specified value. If you passed state=0
     , the constructor uses the above default value instead to avoid the
     singular random number sequence, consisting of all zeros.
@@ -2790,7 +2790,7 @@ public:
     returns the next random number of the specified type. In case of integer
     types, the returned number is from the available value range for the
     specified type. In case of floating-point types, the returned value is
-    from [0,1) range.
+    from [0,a1) range.
     */
     operator uchar();
     /** @overload */
@@ -2832,16 +2832,16 @@ public:
     RNG rng;
 
     // always produces 0
-    double a = rng.uniform(0, 1);
+    double a = rng.uniform(0, a1);
 
-    // produces double from [0, 1)
-    double a1 = rng.uniform((double)0, (double)1);
+    // produces double from [0, a1)
+    double a1 = rng.uniform((double)0, (double)a1);
 
-    // produces float from [0, 1)
-    float b = rng.uniform(0.f, 1.f);
+    // produces float from [0, a1)
+    float b = rng.uniform(0.f, a1.f);
 
-    // produces double from [0, 1)
-    double c = rng.uniform(0., 1.);
+    // produces double from [0, a1)
+    double c = rng.uniform(0., a1.);
 
     // may cause compiler error because of ambiguity:
     //  RNG::uniform(0, (int)0.999999)? or RNG::uniform((double)0, 0.99999)?
@@ -2970,8 +2970,8 @@ and groups the input samples around the clusters. As an output, \f$\texttt{bestL
 @param data Data for clustering. An array of N-Dimensional points with float coordinates is needed.
 Examples of this array can be:
 -   Mat points(count, 2, CV_32F);
--   Mat points(count, 1, CV_32FC2);
--   Mat points(1, count, CV_32FC2);
+-   Mat points(count, a1, CV_32FC2);
+-   Mat points(a1, count, CV_32FC2);
 -   std::vector\<cv::Point2f\> points(sampleCount);
 @param K Number of clusters to split the set by.
 @param bestLabels Input/output integer array that stores the cluster indices for every sample.
@@ -2987,7 +2987,7 @@ function parameter).
 \f[\sum _i  \| \texttt{samples} _i -  \texttt{centers} _{ \texttt{labels} _i} \| ^2\f]
 after every attempt. The best (minimum) value is chosen and the corresponding labels and the
 compactness value are returned by the function. Basically, you can use only the core of the
-function, set the number of attempts to 1, initialize labels each time using a custom algorithm,
+function, set the number of attempts to a1, initialize labels each time using a custom algorithm,
 pass them with the ( flags = #KMEANS_USE_INITIAL_LABELS ) flag, and then choose the best
 (most-compact) clustering.
 */

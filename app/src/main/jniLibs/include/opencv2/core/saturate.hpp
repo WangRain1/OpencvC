@@ -147,7 +147,7 @@ template<> inline unsigned saturate_cast<unsigned>(short v)  { return (unsigned)
 template<> inline unsigned saturate_cast<unsigned>(int v)    { return (unsigned)std::max(v, (int)0); }
 template<> inline unsigned saturate_cast<unsigned>(int64 v)  { return (unsigned)((uint64)v <= (uint64)UINT_MAX ? v : v > 0 ? UINT_MAX : 0); }
 template<> inline unsigned saturate_cast<unsigned>(uint64 v) { return (unsigned)std::min(v, (uint64)UINT_MAX); }
-// we intentionally do not clip negative numbers, to make -1 become 0xffffffff etc.
+// we intentionally do not clip negative numbers, to make -a1 become 0xffffffff etc.
 template<> inline unsigned saturate_cast<unsigned>(float v)  { return static_cast<unsigned>(cvRound(v)); }
 template<> inline unsigned saturate_cast<unsigned>(double v) { return static_cast<unsigned>(cvRound(v)); }
 

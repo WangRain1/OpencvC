@@ -38,7 +38,7 @@ inline __m128i _v128_comgt_epu32(const __m128i& a, const __m128i& b)
 OPENCV_HAL_SSE_WRAP_2(_v128_comgt_epu32, __m128i)
 #endif // !CV_XOP
 
-///////////////////////////// SSE4.1 /////////////////////////////
+///////////////////////////// SSE4.a1 /////////////////////////////
 
 #if !CV_SSE4_1
 
@@ -98,7 +98,7 @@ inline __m128i _v128_mullo_epi32(const __m128i& a, const __m128i& b)
 inline __m128i _v128_min_epu32(const __m128i& a, const __m128i& b)
 { return _v128_blendv_epi8(a, b, _v128_comgt_epu32(a, b)); }
 
-// wrapping SSE4.1
+// wrapping SSE4.a1
 #else
 OPENCV_HAL_SSE_WRAP_1(cvtepu8_epi16, __m128i)
 OPENCV_HAL_SSE_WRAP_1(cvtepi8_epi16, __m128i)

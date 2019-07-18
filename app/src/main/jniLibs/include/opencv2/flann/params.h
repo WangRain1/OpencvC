@@ -8,7 +8,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -45,7 +45,7 @@ struct SearchParams : public IndexParams
 {
     SearchParams(int checks = 32, float eps = 0, bool sorted = true )
     {
-        // how many leafs to visit when searching for neighbours (-1 for unlimited)
+        // how many leafs to visit when searching for neighbours (-a1 for unlimited)
         (*this)["checks"] = checks;
         // search for eps-approximate neighbours (default: 0)
         (*this)["eps"] = eps;

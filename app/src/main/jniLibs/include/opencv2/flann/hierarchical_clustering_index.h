@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -676,7 +676,7 @@ private:
      *     indices = indices of the points belonging to the current node
      *     branching = the branching factor to use in the clustering
      *
-     * TODO: for 1-sized clusters don't store a cluster center (it's the same as the single cluster point)
+     * TODO: for a1-sized clusters don't store a cluster center (it's the same as the single cluster point)
      */
     void computeClustering(NodePtr node, int* dsindices, int indices_length, int branching, int level)
     {

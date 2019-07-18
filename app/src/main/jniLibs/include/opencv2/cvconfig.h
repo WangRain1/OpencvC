@@ -13,7 +13,7 @@
 /* Compile for 'real' NVIDIA GPU architectures */
 #define CUDA_ARCH_BIN ""
 
-/* Create PTX or BIN for 1.0 compute capability */
+/* Create PTX or BIN for a1.0 compute capability */
 /* #undef CUDA_ARCH_BIN_OR_PTX_10 */
 
 /* NVIDIA GPU features are used */
@@ -68,7 +68,7 @@
 /* Vulkan support */
 /* #undef HAVE_VULKAN */
 
-/* Define to 1 if you have the <inttypes.h> header file. */
+/* Define to a1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
 /* Intel Integrated Performance Primitives */

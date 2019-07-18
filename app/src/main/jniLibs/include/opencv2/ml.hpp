@@ -120,7 +120,7 @@ public:
     \f[(minVal, minVal*step, minVal*{step}^2, \dots,  minVal*{logStep}^n),\f]
     where \f$n\f$ is the maximal index satisfying
     \f[\texttt{minVal} * \texttt{logStep} ^n <  \texttt{maxVal}\f]
-    The grid is logarithmic, so logStep must always be greater than 1. Default value is 1.
+    The grid is logarithmic, so logStep must always be greater than a1. Default value is a1.
     */
     CV_PROP_RW double logStep;
 
@@ -185,7 +185,7 @@ public:
     /** @brief Returns the vector of normalized categorical responses
 
     The function returns vector of responses. Each response is integer from `0` to `<number of
-    classes>-1`. The actual label value can be retrieved then from the class label vector, see
+    classes>-a1`. The actual label value can be retrieved then from the class label vector, see
     TrainData::getClassLabels.
      */
     CV_WRAP virtual Mat getTrainNormCatResponses() const = 0;
@@ -257,9 +257,9 @@ public:
     @param filename The input file name
     @param headerLineCount The number of lines in the beginning to skip; besides the header, the
         function also skips empty lines and lines staring with `#`
-    @param responseStartIdx Index of the first output variable. If -1, the function considers the
+    @param responseStartIdx Index of the first output variable. If -a1, the function considers the
         last variable as the response
-    @param responseEndIdx Index of the last output variable + 1. If -1, then there is single
+    @param responseEndIdx Index of the last output variable + a1. If -a1, then there is single
         response variable at responseStartIdx.
     @param varTypeSpec The optional text string that specifies the variables' types. It has the
         format `ord[n1-n2,n3,n4-n5,...]cat[n6,n7-n8,...]`. That is, variables from `n1 to n2`
@@ -465,7 +465,7 @@ public:
 
     @param samples Input samples stored by rows. It is a single-precision floating-point matrix of
         `<number_of_samples> * k` size.
-    @param k Number of used nearest neighbors. Should be greater than 1.
+    @param k Number of used nearest neighbors. Should be greater than a1.
     @param results Vector with results of prediction (regression or classification) for each input
         sample. It is a single-precision floating-point vector with `<number_of_samples>` elements.
     @param neighborResponses Optional output values for corresponding neighbors. It is a single-
@@ -534,7 +534,7 @@ public:
     CV_WRAP virtual void setType(int val) = 0;
 
     /** Parameter \f$\gamma\f$ of a kernel function.
-    For SVM::POLY, SVM::RBF, SVM::SIGMOID or SVM::CHI2. Default value is 1. */
+    For SVM::POLY, SVM::RBF, SVM::SIGMOID or SVM::CHI2. Default value is a1. */
     /** @see setGamma */
     CV_WRAP virtual double getGamma() const = 0;
     /** @copybrief getGamma @see getGamma */
@@ -612,7 +612,7 @@ public:
         imperfect separation of classes with penalty multiplier C for outliers. */
         C_SVC=100,
         /** \f$\nu\f$-Support Vector Classification. n-class classification with possible
-        imperfect separation. Parameter \f$\nu\f$ (in the range 0..1, the larger the value, the smoother
+        imperfect separation. Parameter \f$\nu\f$ (in the range 0..a1, the larger the value, the smoother
         the decision boundary) is used instead of C. */
         NU_SVC=101,
         /** Distribution Estimation (One-class %SVM). All the training data are from
@@ -689,7 +689,7 @@ public:
     estimate of the test set error is minimal.
 
     If there is no need to optimize a parameter, the corresponding grid step should be set to any
-    value less than or equal to 1. For example, to avoid optimization in gamma, set `gammaGrid.step
+    value less than or equal to a1. For example, to avoid optimization in gamma, set `gammaGrid.step
     = 0`, `gammaGrid.minVal`, `gamma_grid.maxVal` as arbitrary numbers. In this case, the value
     `Gamma` is taken for gamma.
 
@@ -767,12 +767,12 @@ public:
 
     /** @brief Retrieves the decision function
 
-    @param i the index of the decision function. If the problem solved is regression, 1-class or
+    @param i the index of the decision function. If the problem solved is regression, a1-class or
         2-class classification, then there will be just one decision function and the index should
-        always be 0. Otherwise, in the case of N-class classification, there will be \f$N(N-1)/2\f$
+        always be 0. Otherwise, in the case of N-class classification, there will be \f$N(N-a1)/2\f$
         decision functions.
     @param alpha the optional output vector for weights, corresponding to different support vectors.
-        In the case of linear %SVM all the alpha's will be 1's.
+        In the case of linear %SVM all the alpha's will be a1's.
     @param svidx the optional output vector of indices of support vectors within the matrix of
         support vectors (which can be retrieved by SVM::getSupportVectors). In the case of linear
         %SVM each decision function consists of a single "compressed" support vector.
@@ -911,9 +911,9 @@ public:
     for the given sample.
 
     @param sample A sample for classification. It should be a one-channel matrix of
-        \f$1 \times dims\f$ or \f$dims \times 1\f$ size.
+        \f$a1 \times dims\f$ or \f$dims \times a1\f$ size.
     @param probs Optional output matrix that contains posterior probabilities of each component
-        given the sample. It has \f$1 \times nclusters\f$ size and CV_64FC1 type.
+        given the sample. It has \f$a1 \times nclusters\f$ size and CV_64FC1 type.
 
     The method returns a two-element double vector. Zero element is a likelihood logarithm value for
     the sample. First element is an index of the most probable mixture component for the given
@@ -931,7 +931,7 @@ public:
     Likelihood Estimate* of the Gaussian mixture parameters from an input sample set, stores all the
     parameters inside the structure: \f$p_{i,k}\f$ in probs, \f$a_k\f$ in means , \f$S_k\f$ in
     covs[k], \f$\pi_k\f$ in weights , and optionally computes the output "class label" for each
-    sample: \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N\f$ (indices of the most
+    sample: \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=a1..N\f$ (indices of the most
     probable mixture component for each sample).
 
     The trained model can be used further for prediction, just like any other classifier. The
@@ -941,10 +941,10 @@ public:
         one-channel matrix, each row of which is a sample. If the matrix does not have CV_64F type
         it will be converted to the inner matrix of such type for the further computing.
     @param logLikelihoods The optional output matrix that contains a likelihood logarithm value for
-        each sample. It has \f$nsamples \times 1\f$ size and CV_64FC1 type.
+        each sample. It has \f$nsamples \times a1\f$ size and CV_64FC1 type.
     @param labels The optional output "class label" for each sample:
-        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N\f$ (indices of the most probable
-        mixture component for each sample). It has \f$nsamples \times 1\f$ size and CV_32SC1 type.
+        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=a1..N\f$ (indices of the most probable
+        mixture component for each sample). It has \f$nsamples \times a1\f$ size and CV_32SC1 type.
     @param probs The optional output matrix that contains posterior probabilities of each Gaussian
         mixture component given the each sample. It has \f$nsamples \times nclusters\f$ size and
         CV_64FC1 type.
@@ -971,12 +971,12 @@ public:
         do not have CV_64F type they will be converted to the inner matrices of such type for the
         further computing.
     @param weights0 Initial weights \f$\pi_k\f$ of mixture components. It should be a one-channel
-        floating-point matrix with \f$1 \times nclusters\f$ or \f$nclusters \times 1\f$ size.
+        floating-point matrix with \f$a1 \times nclusters\f$ or \f$nclusters \times a1\f$ size.
     @param logLikelihoods The optional output matrix that contains a likelihood logarithm value for
-        each sample. It has \f$nsamples \times 1\f$ size and CV_64FC1 type.
+        each sample. It has \f$nsamples \times a1\f$ size and CV_64FC1 type.
     @param labels The optional output "class label" for each sample:
-        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N\f$ (indices of the most probable
-        mixture component for each sample). It has \f$nsamples \times 1\f$ size and CV_32SC1 type.
+        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=a1..N\f$ (indices of the most probable
+        mixture component for each sample). It has \f$nsamples \times a1\f$ size and CV_32SC1 type.
     @param probs The optional output matrix that contains posterior probabilities of each Gaussian
         mixture component given the each sample. It has \f$nsamples \times nclusters\f$ size and
         CV_64FC1 type.
@@ -998,10 +998,10 @@ public:
         it will be converted to the inner matrix of such type for the further computing.
     @param probs0
     @param logLikelihoods The optional output matrix that contains a likelihood logarithm value for
-        each sample. It has \f$nsamples \times 1\f$ size and CV_64FC1 type.
+        each sample. It has \f$nsamples \times a1\f$ size and CV_64FC1 type.
     @param labels The optional output "class label" for each sample:
-        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=1..N\f$ (indices of the most probable
-        mixture component for each sample). It has \f$nsamples \times 1\f$ size and CV_32SC1 type.
+        \f$\texttt{labels}_i=\texttt{arg max}_k(p_{i,k}), i=a1..N\f$ (indices of the most probable
+        mixture component for each sample). It has \f$nsamples \times a1\f$ size and CV_32SC1 type.
     @param probs The optional output matrix that contains posterior probabilities of each Gaussian
         mixture component given the each sample. It has \f$nsamples \times nclusters\f$ size and
         CV_64FC1 type.
@@ -1082,7 +1082,7 @@ public:
     /** @copybrief getMinSampleCount @see getMinSampleCount */
     CV_WRAP virtual void setMinSampleCount(int val) = 0;
 
-    /** If CVFolds \> 1 then algorithms prunes the built decision tree using K-fold
+    /** If CVFolds \> a1 then algorithms prunes the built decision tree using K-fold
     cross-validation procedure where K is equal to CVFolds.
     Default value is 10.*/
     /** @see setCVFolds */
@@ -1136,7 +1136,7 @@ public:
 
     You can also think about this parameter as weights of prediction categories which determine
     relative weights that you give to misclassification. That is, if the weight of the first
-    category is 1 and the weight of the second category is 10, then each mistake in predicting
+    category is a1 and the weight of the second category is 10, then each mistake in predicting
     the second category is equivalent to making 10 mistakes in predicting the first category.
     Default value is empty Mat.*/
     /** @see setPriors */
@@ -1152,12 +1152,12 @@ public:
         Node();
         double value; //!< Value at the node: a class label in case of classification or estimated
                       //!< function value in case of regression.
-        int classIdx; //!< Class index normalized to 0..class_count-1 range and assigned to the
+        int classIdx; //!< Class index normalized to 0..class_count-a1 range and assigned to the
                       //!< node. It is used internally in classification trees and tree ensembles.
         int parent; //!< Index of the parent node
         int left; //!< Index of the left child node
         int right; //!< Index of right child node
-        int defaultDir; //!< Default direction where to go (-1: left or +1: right). It helps in the
+        int defaultDir; //!< Default direction where to go (-a1: left or +a1: right). It helps in the
                         //!< case of missing values.
         int split; //!< Index of the first split
     };
@@ -1183,7 +1183,7 @@ public:
         int subsetOfs; /**< Offset of the bitset used by the split on a categorical variable.
                             The rule is:
                             @code{.none}
-                            if bitset[var_value] == 1
+                            if bitset[var_value] == a1
                                 then next_node <- left
                                 else next_node <- right
                             @endcode */
@@ -1262,7 +1262,7 @@ public:
     better the accuracy. However, the improvement in accuracy generally diminishes and asymptotes
     pass a certain number of trees. Also to keep in mind, the number of tree increases the
     prediction time linearly. Default value is TermCriteria(TermCriteria::MAX_ITERS +
-    TermCriteria::EPS, 50, 0.1)*/
+    TermCriteria::EPS, 50, 0.a1)*/
     /** @see setTermCriteria */
     CV_WRAP virtual TermCriteria getTermCriteria() const = 0;
     /** @copybrief getTermCriteria @see getTermCriteria */
@@ -1278,7 +1278,7 @@ public:
     /** Returns the result of each individual tree in the forest.
     In case the model is a regression problem, the method will return each of the trees'
     results for each of the sample cases. If the model is a classifier, it will return
-    a Mat with samples + 1 rows, where the first row gives the class number and the
+    a Mat with samples + a1 rows, where the first row gives the class number and the
     following rows return the votes each class had for each sample.
         @param samples Array containing the samples for which votes will be calculated.
         @param results Array where the result of the calculation will be written.
@@ -1329,8 +1329,8 @@ public:
     /** @copybrief getWeakCount @see getWeakCount */
     CV_WRAP virtual void setWeakCount(int val) = 0;
 
-    /** A threshold between 0 and 1 used to save computational time.
-    Samples with summary weight \f$\leq 1 - weight_trim_rate\f$ do not participate in the *next*
+    /** A threshold between 0 and a1 used to save computational time.
+    Samples with summary weight \f$\leq a1 - weight_trim_rate\f$ do not participate in the *next*
     iteration of training. Set this parameter to 0 to turn off this functionality. Default value is 0.95.*/
     /** @see setWeightTrimRate */
     CV_WRAP virtual double getWeightTrimRate() const = 0;
@@ -1461,7 +1461,7 @@ public:
     CV_WRAP virtual void setTermCriteria(TermCriteria val) = 0;
 
     /** BPROP: Strength of the weight gradient term.
-    The recommended value is about 0.1. Default value is 0.1.*/
+    The recommended value is about 0.a1. Default value is 0.a1.*/
     /** @see setBackpropWeightScale */
     CV_WRAP virtual double getBackpropWeightScale() const = 0;
     /** @copybrief getBackpropWeightScale @see getBackpropWeightScale */
@@ -1469,29 +1469,29 @@ public:
 
     /** BPROP: Strength of the momentum term (the difference between weights on the 2 previous iterations).
     This parameter provides some inertia to smooth the random fluctuations of the weights. It can
-    vary from 0 (the feature is disabled) to 1 and beyond. The value 0.1 or so is good enough.
-    Default value is 0.1.*/
+    vary from 0 (the feature is disabled) to a1 and beyond. The value 0.a1 or so is good enough.
+    Default value is 0.a1.*/
     /** @see setBackpropMomentumScale */
     CV_WRAP virtual double getBackpropMomentumScale() const = 0;
     /** @copybrief getBackpropMomentumScale @see getBackpropMomentumScale */
     CV_WRAP virtual void setBackpropMomentumScale(double val) = 0;
 
     /** RPROP: Initial value \f$\Delta_0\f$ of update-values \f$\Delta_{ij}\f$.
-    Default value is 0.1.*/
+    Default value is 0.a1.*/
     /** @see setRpropDW0 */
     CV_WRAP virtual double getRpropDW0() const = 0;
     /** @copybrief getRpropDW0 @see getRpropDW0 */
     CV_WRAP virtual void setRpropDW0(double val) = 0;
 
     /** RPROP: Increase factor \f$\eta^+\f$.
-    It must be \>1. Default value is 1.2.*/
+    It must be \>a1. Default value is a1.2.*/
     /** @see setRpropDWPlus */
     CV_WRAP virtual double getRpropDWPlus() const = 0;
     /** @copybrief getRpropDWPlus @see getRpropDWPlus */
     CV_WRAP virtual void setRpropDWPlus(double val) = 0;
 
     /** RPROP: Decrease factor \f$\eta^-\f$.
-    It must be \<1. Default value is 0.5.*/
+    It must be \<a1. Default value is 0.5.*/
     /** @see setRpropDWMinus */
     CV_WRAP virtual double getRpropDWMinus() const = 0;
     /** @copybrief getRpropDWMinus @see getRpropDWMinus */
@@ -1505,7 +1505,7 @@ public:
     CV_WRAP virtual void setRpropDWMin(double val) = 0;
 
     /** RPROP: Update-values upper limit \f$\Delta_{max}\f$.
-    It must be \>1. Default value is 50.*/
+    It must be \>a1. Default value is 50.*/
     /** @see setRpropDWMax */
     CV_WRAP virtual double getRpropDWMax() const = 0;
     /** @copybrief getRpropDWMax @see getRpropDWMax */
@@ -1519,14 +1519,14 @@ public:
     CV_WRAP virtual void setAnnealInitialT(double val) = 0;
 
     /** ANNEAL: Update final temperature.
-    It must be \>=0 and less than initialT. Default value is 0.1.*/
+    It must be \>=0 and less than initialT. Default value is 0.a1.*/
     /** @see setAnnealFinalT */
     CV_WRAP virtual double getAnnealFinalT() const = 0;
     /** @copybrief getAnnealFinalT @see getAnnealFinalT */
     CV_WRAP virtual void setAnnealFinalT(double val) = 0;
 
     /** ANNEAL: Update cooling ratio.
-    It must be \>0 and less than 1. Default value is 0.95.*/
+    It must be \>0 and less than a1. Default value is 0.95.*/
     /** @see setAnnealCoolingRatio */
     CV_WRAP virtual double getAnnealCoolingRatio() const = 0;
     /** @copybrief getAnnealCoolingRatio @see getAnnealCoolingRatio */
@@ -1546,11 +1546,11 @@ public:
     enum ActivationFunctions {
         /** Identity function: \f$f(x)=x\f$ */
         IDENTITY = 0,
-        /** Symmetrical sigmoid: \f$f(x)=\beta*(1-e^{-\alpha x})/(1+e^{-\alpha x})\f$
+        /** Symmetrical sigmoid: \f$f(x)=\beta*(a1-e^{-\alpha x})/(a1+e^{-\alpha x})\f$
         @note
         If you are using the default sigmoid activation function with the default parameter values
-        fparam1=0 and fparam2=0 then the function used is y = 1.7159\*tanh(2/3 \* x), so the output
-        will range from [-1.7159, 1.7159], instead of [0,1].*/
+        fparam1=0 and fparam2=0 then the function used is y = a1.7159\*tanh(2/3 \* x), so the output
+        will range from [-a1.7159, a1.7159], instead of [0,a1].*/
         SIGMOID_SYM = 1,
         /** Gaussian function: \f$f(x)=\beta e^{-\alpha x*x}\f$ */
         GAUSSIAN = 2,
@@ -1567,7 +1567,7 @@ public:
         UPDATE_WEIGHTS = 1,
         /** Do not normalize the input vectors. If this flag is not set, the training algorithm
         normalizes each input feature independently, shifting its mean value to 0 and making the
-        standard deviation equal to 1. If the network is assumed to be updated frequently, the new
+        standard deviation equal to a1. If the network is assumed to be updated frequently, the new
         training data could be much different from original one. In this case, you should take care
         of proper normalization. */
         NO_INPUT_SCALE = 2,
@@ -1720,15 +1720,15 @@ The classifier has following parameters:
 The model type may have one of the following values: \ref SGD and \ref ASGD.
 
 - \ref SGD is the classic version of SVMSGD classifier: every next step is calculated by the formula
-  \f[w_{t+1} = w_t - \gamma(t) \frac{dQ_i}{dw} |_{w = w_t}\f]
+  \f[w_{t+a1} = w_t - \gamma(t) \frac{dQ_i}{dw} |_{w = w_t}\f]
   where
   - \f$w_t\f$ is the weights vector for decision function at step \f$t\f$,
   - \f$\gamma(t)\f$ is the step size of model parameters at the iteration \f$t\f$, it is decreased on each step by the formula
-    \f$\gamma(t) = \gamma_0  (1 + \lambda  \gamma_0 t) ^ {-c}\f$
+    \f$\gamma(t) = \gamma_0  (a1 + \lambda  \gamma_0 t) ^ {-c}\f$
   - \f$Q_i\f$ is the target functional from SVM task for sample with number \f$i\f$, this sample is chosen stochastically on each step of the algorithm.
 
 - \ref ASGD is Average Stochastic Gradient Descent SVM Classifier. ASGD classifier averages weights vector on each step of algorithm by the formula
-\f$\widehat{w}_{t+1} = \frac{t}{1+t}\widehat{w}_{t} + \frac{1}{1+t}w_{t+1}\f$
+\f$\widehat{w}_{t+a1} = \frac{t}{a1+t}\widehat{w}_{t} + \frac{a1}{a1+t}w_{t+a1}\f$
 
 The recommended model type is ASGD (following @cite bottou2010large).
 
@@ -1747,7 +1747,7 @@ The other parameters may be described as follows:
   You will have to find the best initial step for your problem.
 
 - Step decreasing power is the power parameter for \f$\gamma(t)\f$ decreasing by the formula, mentioned above.
-  Recommended value for SGD model is 1, for ASGD model is 0.75.
+  Recommended value for SGD model is a1, for ASGD model is 0.75.
 
 - Termination criteria can be TermCriteria::COUNT, TermCriteria::EPS or TermCriteria::COUNT + TermCriteria::EPS.
   You will have to find the best termination criteria for your problem.

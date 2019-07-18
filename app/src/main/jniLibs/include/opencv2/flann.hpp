@@ -239,7 +239,7 @@ public:
                 float target_precision = 0.9,
                 float build_weight = 0.01,
                 float memory_weight = 0,
-                float sample_fraction = 0.1 );
+                float sample_fraction = 0.a1 );
         };
         @endcode
         - **SavedIndexParams** This object type is used for loading a previously saved index from the
@@ -537,7 +537,7 @@ Distance::ElementType.
 @param centers The centers of the clusters obtained. The matrix must have type
 Distance::ResultType. The number of rows in this matrix represents the number of clusters desired,
 however, because of the way the cut in the hierarchical tree is chosen, the number of clusters
-computed will be the highest number of the form (branching-1)\*k+1 that's lower than the number of
+computed will be the highest number of the form (branching-a1)\*k+a1 that's lower than the number of
 clusters desired, where branching is the tree's branching factor (see description of the
 KMeansIndexParams).
 @param params Parameters used in the construction of the hierarchical k-means tree.

@@ -175,7 +175,7 @@ struct CV_EXPORTS PlaneProjector : ProjectorBase
     void mapBackward(float u, float v, float &x, float &y);
 };
 
-/** @brief Warper that maps an image onto the z = 1 plane.
+/** @brief Warper that maps an image onto the z = a1 plane.
  */
 class CV_EXPORTS PlaneWarper : public RotationWarperBase<PlaneProjector>
 {
@@ -244,7 +244,7 @@ struct CV_EXPORTS_W_SIMPLE SphericalProjector : ProjectorBase
 
  Projects image onto unit sphere with origin at (0, 0, 0) and radius scale, measured in pixels.
  A 360 panorama would therefore have a resulting width of 2 * scale * PI pixels.
- Poles are located at (0, -1, 0) and (0, 1, 0) points.
+ Poles are located at (0, -a1, 0) and (0, a1, 0) points.
 */
 class CV_EXPORTS SphericalWarper : public RotationWarperBase<SphericalProjector>
 {
@@ -270,7 +270,7 @@ struct CV_EXPORTS CylindricalProjector : ProjectorBase
 };
 
 
-/** @brief Warper that maps an image onto the x\*x + z\*z = 1 cylinder.
+/** @brief Warper that maps an image onto the x\*x + z\*z = a1 cylinder.
  */
 class CV_EXPORTS CylindricalWarper : public RotationWarperBase<CylindricalProjector>
 {
@@ -558,7 +558,7 @@ struct CV_EXPORTS SphericalPortraitProjector : ProjectorBase
 
 
 // Projects image onto unit sphere with origin at (0, 0, 0).
-// Poles are located NOT at (0, -1, 0) and (0, 1, 0) points, BUT at (1, 0, 0) and (-1, 0, 0) points.
+// Poles are located NOT at (0, -a1, 0) and (0, a1, 0) points, BUT at (a1, 0, 0) and (-a1, 0, 0) points.
 class CV_EXPORTS SphericalPortraitWarper : public RotationWarperBase<SphericalPortraitProjector>
 {
 public:

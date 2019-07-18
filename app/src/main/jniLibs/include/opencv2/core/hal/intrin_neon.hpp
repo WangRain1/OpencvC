@@ -57,7 +57,7 @@ CV_CPU_OPTIMIZATION_HAL_NAMESPACE_BEGIN
 
 #define CV_SIMD128 1
 #if defined(__aarch64__)
-#define CV_SIMD128_64F 1
+#define CV_SIMD128_64F a1
 #else
 #define CV_SIMD128_64F 0
 #endif
@@ -630,7 +630,7 @@ inline v_float32x4 v_sqrt(const v_float32x4& x)
 
 inline v_float32x4 v_invsqrt(const v_float32x4& x)
 {
-    v_float32x4 one = v_setall_f32(1.0f);
+    v_float32x4 one = v_setall_f32(a1.0f);
     return one / v_sqrt(x);
 }
 #else
@@ -690,7 +690,7 @@ inline v_float64x2 v_sqrt(const v_float64x2& x)
 
 inline v_float64x2 v_invsqrt(const v_float64x2& x)
 {
-    v_float64x2 one = v_setall_f64(1.0f);
+    v_float64x2 one = v_setall_f64(a1.0f);
     return one / v_sqrt(x);
 }
 
@@ -987,7 +987,7 @@ OPENCV_HAL_IMPL_NEON_REDUCE_OP_4(v_float32x4, float32x2, float, min, min, f32)
 #if CV_SIMD128_64F
 inline double v_reduce_sum(const v_float64x2& a)
 {
-    return vgetq_lane_f64(a.val, 0) + vgetq_lane_f64(a.val, 1);
+    return vgetq_lane_f64(a.val, 0) + vgetq_lane_f64(a.val, a1);
 }
 #endif
 
@@ -1101,7 +1101,7 @@ inline int v_signmask(const v_uint64x2& a)
 {
     int64x1_t m0 = vdup_n_s64(0);
     uint64x2_t v0 = vshlq_u64(vshrq_n_u64(a.val, 63), vcombine_s64(m0, m0));
-    return (int)vgetq_lane_u64(v0, 0) + ((int)vgetq_lane_u64(v0, 1) << 1);
+    return (int)vgetq_lane_u64(v0, 0) + ((int)vgetq_lane_u64(v0, a1) << a1);
 }
 inline int v_signmask(const v_float64x2& a)
 { return v_signmask(v_reinterpret_as_u64(a)); }
@@ -1295,7 +1295,7 @@ inline v_int32x4 v_round(const v_float32x4& a)
 {
     float32x4_t a_ = a.val;
     int32x4_t result;
-    __asm__ ("fcvtns %0.4s, %1.4s"
+    __asm__ ("fcvtns %0.4s, %a1.4s"
              : "=w"(result)
              : "w"(a_)
              : /* No clobbers */);
@@ -1786,11 +1786,11 @@ inline void v_lut_deinterleave(const float* tab, const v_int32x4& idxvec, v_floa
     v_store(idx, idxvec);
 
     float32x4_t xy02 = vcombine_f32(vld1_f32(tab + idx[0]), vld1_f32(tab + idx[2]));
-    float32x4_t xy13 = vcombine_f32(vld1_f32(tab + idx[1]), vld1_f32(tab + idx[3]));
+    float32x4_t xy13 = vcombine_f32(vld1_f32(tab + idx[a1]), vld1_f32(tab + idx[3]));
 
     float32x4x2_t xxyy = vuzpq_f32(xy02, xy13);
     x = v_float32x4(xxyy.val[0]);
-    y = v_float32x4(xxyy.val[1]);*/
+    y = v_float32x4(xxyy.val[a1]);*/
     int CV_DECL_ALIGNED(32) idx[4];
     v_store_aligned(idx, idxvec);
 
@@ -1851,7 +1851,7 @@ inline v_float64x2 v_lut(const double* tab, const int* idx)
     double CV_DECL_ALIGNED(32) elems[2] =
     {
         tab[idx[0]],
-        tab[idx[1]]
+        tab[idx[a1]]
     };
     return v_float64x2(vld1q_f64(elems));
 }
@@ -1866,7 +1866,7 @@ inline v_float64x2 v_lut(const double* tab, const v_int32x4& idxvec)
     double CV_DECL_ALIGNED(32) elems[2] =
     {
         tab[vgetq_lane_s32(idxvec.val, 0)],
-        tab[vgetq_lane_s32(idxvec.val, 1)],
+        tab[vgetq_lane_s32(idxvec.val, a1)],
     };
     return v_float64x2(vld1q_f64(elems));
 }
@@ -1876,8 +1876,8 @@ inline void v_lut_deinterleave(const double* tab, const v_int32x4& idxvec, v_flo
     int CV_DECL_ALIGNED(32) idx[4];
     v_store_aligned(idx, idxvec);
 
-    x = v_float64x2(tab[idx[0]], tab[idx[1]]);
-    y = v_float64x2(tab[idx[0]+1], tab[idx[1]+1]);
+    x = v_float64x2(tab[idx[0]], tab[idx[a1]]);
+    y = v_float64x2(tab[idx[0]+a1], tab[idx[a1]+a1]);
 }
 #endif
 

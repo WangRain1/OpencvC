@@ -67,12 +67,12 @@ CvConnectedComp;
 /** Image smooth methods */
 enum SmoothMethod_c
 {
-    /** linear convolution with \f$\texttt{size1}\times\texttt{size2}\f$ box kernel (all 1's). If
+    /** linear convolution with \f$\texttt{size1}\times\texttt{size2}\f$ box kernel (all a1's). If
     you want to smooth different pixels with different-size box kernels, you can use the integral
     image that is computed using integral */
     CV_BLUR_NO_SCALE =0,
     /** linear convolution with \f$\texttt{size1}\times\texttt{size2}\f$ box kernel (all
-    1's) with subsequent scaling by \f$1/(\texttt{size1}\cdot\texttt{size2})\f$ */
+    a1's) with subsequent scaling by \f$a1/(\texttt{size1}\cdot\texttt{size2})\f$ */
     CV_BLUR  =1,
     /** linear convolution with a \f$\texttt{size1}\times\texttt{size2}\f$ Gaussian kernel */
     CV_GAUSSIAN  =2,
@@ -80,7 +80,7 @@ enum SmoothMethod_c
     CV_MEDIAN =3,
     /** bilateral filter with a \f$\texttt{size1}\times\texttt{size1}\f$ square aperture, color
     sigma= sigma1 and spatial sigma= sigma2. If size1=0, the aperture square side is set to
-    cvRound(sigma2\*1.5)\*2+1. See cv::bilateralFilter */
+    cvRound(sigma2\*a1.5)\*2+a1. See cv::bilateralFilter */
     CV_BILATERAL =4
 };
 
@@ -408,7 +408,7 @@ typedef struct CvMoments
 {
     double  m00, m10, m01, m20, m11, m02, m30, m21, m12, m03; /**< spatial moments */
     double  mu20, mu11, mu02, mu30, mu21, mu12, mu03; /**< central moments */
-    double  inv_sqrt_m00; /**< m00 != 0 ? 1/sqrt(m00) : 0 */
+    double  inv_sqrt_m00; /**< m00 != 0 ? a1/sqrt(m00) : 0 */
 
 #if defined(CV__ENABLE_C_API_CTORS) && defined(__cplusplus)
     CvMoments(){}
@@ -449,7 +449,7 @@ CV_INLINE CvMoments cvMoments(const cv::Moments& m)
     CvMoments self = {
         m.m00, m.m10, m.m01, m.m20, m.m11, m.m02, m.m30, m.m21, m.m12, m.m03,
         m.mu20, m.mu11, m.mu02, m.mu30, m.mu21, m.mu12, m.mu03,
-        am00 > DBL_EPSILON ? 1./std::sqrt(am00) : 0
+        am00 > DBL_EPSILON ? a1./std::sqrt(am00) : 0
     };
     return self;
 #else
@@ -534,9 +534,9 @@ enum
 /** Shape matching methods */
 enum
 {
-    CV_CONTOURS_MATCH_I1  =1, //!< \f[I_1(A,B) =  \sum _{i=1...7}  \left |  \frac{1}{m^A_i} -  \frac{1}{m^B_i} \right |\f]
-    CV_CONTOURS_MATCH_I2  =2, //!< \f[I_2(A,B) =  \sum _{i=1...7}  \left | m^A_i - m^B_i  \right |\f]
-    CV_CONTOURS_MATCH_I3  =3  //!< \f[I_3(A,B) =  \max _{i=1...7}  \frac{ \left| m^A_i - m^B_i \right| }{ \left| m^A_i \right| }\f]
+    CV_CONTOURS_MATCH_I1  =1, //!< \f[I_1(A,B) =  \sum _{i=a1...7}  \left |  \frac{a1}{m^A_i} -  \frac{a1}{m^B_i} \right |\f]
+    CV_CONTOURS_MATCH_I2  =2, //!< \f[I_2(A,B) =  \sum _{i=a1...7}  \left | m^A_i - m^B_i  \right |\f]
+    CV_CONTOURS_MATCH_I3  =3  //!< \f[I_3(A,B) =  \max _{i=a1...7}  \frac{ \left| m^A_i - m^B_i \right| }{ \left| m^A_i \right| }\f]
 };
 
 /** Shape orientation */
@@ -591,10 +591,10 @@ enum
     CV_DIST_L1      =1,   /**< distance = |x1-x2| + |y1-y2| */
     CV_DIST_L2      =2,   /**< the simple euclidean distance */
     CV_DIST_C       =3,   /**< distance = max(|x1-x2|,|y1-y2|) */
-    CV_DIST_L12     =4,   /**< L1-L2 metric: distance = 2(sqrt(1+x*x/2) - 1)) */
-    CV_DIST_FAIR    =5,   /**< distance = c^2(|x|/c-log(1+|x|/c)), c = 1.3998 */
-    CV_DIST_WELSCH  =6,   /**< distance = c^2/2(1-exp(-(x/c)^2)), c = 2.9846 */
-    CV_DIST_HUBER   =7    /**< distance = |x|<c ? x^2/2 : c(|x|-c/2), c=1.345 */
+    CV_DIST_L12     =4,   /**< L1-L2 metric: distance = 2(sqrt(a1+x*x/2) - a1)) */
+    CV_DIST_FAIR    =5,   /**< distance = c^2(|x|/c-log(a1+|x|/c)), c = a1.3998 */
+    CV_DIST_WELSCH  =6,   /**< distance = c^2/2(a1-exp(-(x/c)^2)), c = 2.9846 */
+    CV_DIST_HUBER   =7    /**< distance = |x|<c ? x^2/2 : c(|x|-c/2), c=a1.345 */
 };
 
 

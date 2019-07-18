@@ -130,7 +130,7 @@ defined on an `n`-dimensional Euclidean space, using the **Nelder-Mead method**,
 
 It should be noted, that this method, although deterministic, is rather a heuristic and therefore
 may converge to a local minima, not necessary a global one. It is iterative optimization technique,
-which at each step uses an information about the values of a function evaluated only at `n+1`
+which at each step uses an information about the values of a function evaluated only at `n+a1`
 points, arranged as a *simplex* in `n`-dimensional space (hence the second name of the method). At
 each step new point is chosen to evaluate function at, obtained value is compared with previous
 ones and based on this information simplex changes it's shape , slowly moving to the local minimum.
@@ -170,7 +170,7 @@ public:
     determines the position of a simplex (it will become simplex's centroid), while step determines the
     spread (size in each dimension) of a simplex. To be more precise, if \f$s,x_0\in\mathbb{R}^n\f$ are
     the initial step and initial point respectively, the vertices of a simplex will be:
-    \f$v_0:=x_0-\frac{1}{2} s\f$ and \f$v_i:=x_0+s_i\f$ for \f$i=1,2,\dots,n\f$ where \f$s_i\f$ denotes
+    \f$v_0:=x_0-\frac{a1}{2} s\f$ and \f$v_i:=x_0+s_i\f$ for \f$i=a1,2,\dots,n\f$ where \f$s_i\f$ denotes
     projections of the initial step of *n*-th coordinate (the result of projection is treated to be
     vector given by \f$s_i:=e_i\cdot\left<e_i\cdot s\right>\f$, where \f$e_i\f$ form canonical basis)
 
@@ -271,8 +271,8 @@ What we mean here by "linear programming problem" (or LP problem, for short) can
  Ax\leq b\\
  x\geq 0\f]
 
-Where \f$c\f$ is fixed `1`-by-`n` row-vector, \f$A\f$ is fixed `m`-by-`n` matrix, \f$b\f$ is fixed `m`-by-`1`
-column vector and \f$x\f$ is an arbitrary `n`-by-`1` column vector, which satisfies the constraints.
+Where \f$c\f$ is fixed `a1`-by-`n` row-vector, \f$A\f$ is fixed `m`-by-`n` matrix, \f$b\f$ is fixed `m`-by-`a1`
+column vector and \f$x\f$ is an arbitrary `n`-by-`a1` column vector, which satisfies the constraints.
 
 Simplex algorithm is one of many algorithms that are designed to handle this sort of problems
 efficiently. Although it is not optimal in theoretical sense (there exist algorithms that can solve
@@ -287,7 +287,7 @@ Bland's rule <http://en.wikipedia.org/wiki/Bland%27s_rule> is used to prevent cy
 @param Func This row-vector corresponds to \f$c\f$ in the LP problem formulation (see above). It should
 contain 32- or 64-bit floating point numbers. As a convenience, column-vector may be also submitted,
 in the latter case it is understood to correspond to \f$c^T\f$.
-@param Constr `m`-by-`n+1` matrix, whose rightmost column corresponds to \f$b\f$ in formulation above
+@param Constr `m`-by-`n+a1` matrix, whose rightmost column corresponds to \f$b\f$ in formulation above
 and the remaining to \f$A\f$. It should contain 32- or 64-bit floating point numbers.
 @param z The solution will be returned here as a column-vector - it corresponds to \f$c\f$ in the
 formulation above. It will contain 64-bit floating point numbers.

@@ -115,7 +115,7 @@ it, according to the assertion statement inside) :
 @code
     void myAffineTransform(InputArray _src, OutputArray _dst, InputArray _m)
     {
-        // get Mat headers for input arrays. This is O(1) operation,
+        // get Mat headers for input arrays. This is O(a1) operation,
         // unless _src and/or _m are matrix expressions.
         Mat src = _src.getMat(), m = _m.getMat();
         CV_Assert( src.type() == CV_32FC2 && m.type() == CV_32F && m.size() == Size(3, 2) );
@@ -130,11 +130,11 @@ it, according to the assertion statement inside) :
             {
                 Point2f pt = src.at<Point2f>(i, j);
                 dst.at<Point2f>(i, j) = Point2f(m.at<float>(0, 0)*pt.x +
-                                                m.at<float>(0, 1)*pt.y +
+                                                m.at<float>(0, a1)*pt.y +
                                                 m.at<float>(0, 2),
-                                                m.at<float>(1, 0)*pt.x +
-                                                m.at<float>(1, 1)*pt.y +
-                                                m.at<float>(1, 2));
+                                                m.at<float>(a1, 0)*pt.x +
+                                                m.at<float>(a1, a1)*pt.y +
+                                                m.at<float>(a1, 2));
             }
     }
 @endcode
@@ -605,14 +605,14 @@ The class Mat represents an n-dimensional dense numerical single-channel or mult
 can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel
 volumes, vector fields, point clouds, tensors, histograms (though, very high-dimensional histograms
 may be better stored in a SparseMat ). The data layout of the array `M` is defined by the array
-`M.step[]`, so that the address of element \f$(i_0,...,i_{M.dims-1})\f$, where \f$0\leq i_k<M.size[k]\f$, is
+`M.step[]`, so that the address of element \f$(i_0,...,i_{M.dims-a1})\f$, where \f$0\leq i_k<M.size[k]\f$, is
 computed as:
-\f[addr(M_{i_0,...,i_{M.dims-1}}) = M.data + M.step[0]*i_0 + M.step[1]*i_1 + ... + M.step[M.dims-1]*i_{M.dims-1}\f]
+\f[addr(M_{i_0,...,i_{M.dims-a1}}) = M.data + M.step[0]*i_0 + M.step[a1]*i_1 + ... + M.step[M.dims-a1]*i_{M.dims-a1}\f]
 In case of a 2-dimensional array, the above formula is reduced to:
-\f[addr(M_{i,j}) = M.data + M.step[0]*i + M.step[1]*j\f]
-Note that `M.step[i] >= M.step[i+1]` (in fact, `M.step[i] >= M.step[i+1]*M.size[i+1]` ). This means
+\f[addr(M_{i,j}) = M.data + M.step[0]*i + M.step[a1]*j\f]
+Note that `M.step[i] >= M.step[i+a1]` (in fact, `M.step[i] >= M.step[i+a1]*M.size[i+a1]` ). This means
 that 2-dimensional matrices are stored row-by-row, 3-dimensional matrices are stored plane-by-plane,
-and so on. M.step[M.dims-1] is minimal and always equal to the element size M.elemSize() .
+and so on. M.step[M.dims-a1] is minimal and always equal to the element size M.elemSize() .
 
 So, the data layout in Mat is compatible with the majority of dense array types from the standard
 toolkits and SDKs, such as Numpy (ndarray), Win32 (independent device bitmaps), and others,
@@ -627,8 +627,8 @@ constructor. A new array of the specified size and type is allocated. type has t
 in the cvCreateMat method. For example, CV_8UC1 means a 8-bit single-channel array, CV_32FC2
 means a 2-channel (complex) floating-point array, and so on.
 @code
-    // make a 7x7 complex matrix filled with 1+3j.
-    Mat M(7,7,CV_32FC2,Scalar(1,3));
+    // make a 7x7 complex matrix filled with a1+3j.
+    Mat M(7,7,CV_32FC2,Scalar(a1,3));
     // and now turn M to a 100x60 15-channel 8-bit matrix.
     // The old content will be deallocated
     M.create(100,60,CV_8UC(15));
@@ -642,25 +642,25 @@ or type of the current array are different from the specified ones.
     int sz[] = {100, 100, 100};
     Mat bigCube(3, sz, CV_8U, Scalar::all(0));
 @endcode
-It passes the number of dimensions =1 to the Mat constructor but the created array will be
-2-dimensional with the number of columns set to 1. So, Mat::dims is always \>= 2 (can also be 0
+It passes the number of dimensions =a1 to the Mat constructor but the created array will be
+2-dimensional with the number of columns set to a1. So, Mat::dims is always \>= 2 (can also be 0
 when the array is empty).
 
 - Use a copy constructor or assignment operator where there can be an array or expression on the
-right side (see below). As noted in the introduction, the array assignment is an O(1) operation
+right side (see below). As noted in the introduction, the array assignment is an O(a1) operation
 because it only copies the header and increases the reference counter. The Mat::clone() method can
 be used to get a full (deep) copy of the array when you need it.
 
 - Construct a header for a part of another array. It can be a single row, single column, several
 rows, several columns, rectangular region in the array (called a *minor* in algebra) or a
-diagonal. Such operations are also O(1) because the new header references the same data. You can
+diagonal. Such operations are also O(a1) because the new header references the same data. You can
 actually modify a part of the array using this feature, for example:
 @code
     // add the 5-th row, multiplied by 3 to the 3rd row
     M.row(3) = M.row(3) + M.row(5)*3;
-    // now copy the 7-th column to the 1-st column
-    // M.col(1) = M.col(7); // this will not work
-    Mat M1 = M.col(1);
+    // now copy the 7-th column to the a1-st column
+    // M.col(a1) = M.col(7); // this will not work
+    Mat M1 = M.col(a1);
     M.col(7).copyTo(M1);
     // create a new 320x240 image
     Mat img(Size(320,240),CV_8UC3);
@@ -674,14 +674,14 @@ Due to the additional datastart and dataend members, it is possible to compute a
 sub-array position in the main *container* array using locateROI():
 @code
     Mat A = Mat::eye(10, 10, CV_32S);
-    // extracts A columns, 1 (inclusive) to 3 (exclusive).
-    Mat B = A(Range::all(), Range(1, 3));
+    // extracts A columns, a1 (inclusive) to 3 (exclusive).
+    Mat B = A(Range::all(), Range(a1, 3));
     // extracts B rows, 5 (inclusive) to 9 (exclusive).
-    // that is, C \~ A(Range(5, 9), Range(1, 3))
+    // that is, C \~ A(Range(5, 9), Range(a1, 3))
     Mat C = B(Range(5, 9), Range::all());
     Size size; Point ofs;
     C.locateROI(size, ofs);
-    // size will be (width=10,height=10) and the ofs will be (x=1, y=5)
+    // size will be (width=10,height=10) and the ofs will be (x=a1, y=5)
 @endcode
 As in case of whole matrices, if you need a deep copy, use the `clone()` method of the extracted
 sub-matrices.
@@ -694,7 +694,7 @@ sub-matrices.
                                  int width, int height, int step)
         {
             Mat img(height, width, CV_8UC3, pixels, step);
-            GaussianBlur(img, img, Size(7,7), 1.5, 1.5);
+            GaussianBlur(img, img, Size(7,7), a1.5, a1.5);
         }
     @endcode
     -# Quickly initialize small matrices and/or get a super-fast element access.
@@ -713,7 +713,7 @@ sub-matrices.
 - Use a comma-separated initializer:
 @code
     // create a 3x3 double-precision identity matrix
-    Mat M = (Mat_<double>(3,3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);
+    Mat M = (Mat_<double>(3,3) << a1, 0, 0, 0, a1, 0, 0, 0, a1);
 @endcode
 With this approach, you first call a constructor of the Mat class with the proper parameters, and
 then you just put `<< operator` followed by comma-separated values that can be constants,
@@ -730,7 +730,7 @@ described how to compute an address of each array element. Normally, you are not
 formula directly in the code. If you know the array element type (which can be retrieved using the
 method Mat::type() ), you can access the element \f$M_{ij}\f$ of a 2-dimensional array as:
 @code
-    M.at<double>(i,j) += 1.f;
+    M.at<double>(i,j) += a1.f;
 @endcode
 assuming that `M` is a double-precision floating-point array. There are several variants of the method
 at for a different number of dimensions.
@@ -760,7 +760,7 @@ yes, process them as a long single row:
     if(M.isContinuous())
     {
         cols *= rows;
-        rows = 1;
+        rows = a1;
     }
     for(int i = 0; i < rows; i++)
     {
@@ -799,7 +799,7 @@ public:
     /** @overload
     @param rows Number of rows in a 2D array.
     @param cols Number of columns in a 2D array.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     */
     Mat(int rows, int cols, int type);
@@ -807,7 +807,7 @@ public:
     /** @overload
     @param size 2D array size: Size(cols, rows) . In the Size() constructor, the number of rows and the
     number of columns go in the reverse order.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
       */
     Mat(Size size, int type);
@@ -815,7 +815,7 @@ public:
     /** @overload
     @param rows Number of rows in a 2D array.
     @param cols Number of columns in a 2D array.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param s An optional value to initialize each matrix element with. To set all the matrix elements to
     the particular value after the construction, use the assignment operator
@@ -826,7 +826,7 @@ public:
     /** @overload
     @param size 2D array size: Size(cols, rows) . In the Size() constructor, the number of rows and the
     number of columns go in the reverse order.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param s An optional value to initialize each matrix element with. To set all the matrix elements to
     the particular value after the construction, use the assignment operator
@@ -837,14 +837,14 @@ public:
     /** @overload
     @param ndims Array dimensionality.
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     */
     Mat(int ndims, const int* sizes, int type);
 
     /** @overload
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     */
     Mat(const std::vector<int>& sizes, int type);
@@ -852,7 +852,7 @@ public:
     /** @overload
     @param ndims Array dimensionality.
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param s An optional value to initialize each matrix element with. To set all the matrix elements to
     the particular value after the construction, use the assignment operator
@@ -862,7 +862,7 @@ public:
 
     /** @overload
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param s An optional value to initialize each matrix element with. To set all the matrix elements to
     the particular value after the construction, use the assignment operator
@@ -883,7 +883,7 @@ public:
     /** @overload
     @param rows Number of rows in a 2D array.
     @param cols Number of columns in a 2D array.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param data Pointer to the user data. Matrix constructors that take data and step parameters do not
     allocate matrix data. Instead, they just initialize the matrix header that points to the specified
@@ -899,7 +899,7 @@ public:
     /** @overload
     @param size 2D array size: Size(cols, rows) . In the Size() constructor, the number of rows and the
     number of columns go in the reverse order.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param data Pointer to the user data. Matrix constructors that take data and step parameters do not
     allocate matrix data. Instead, they just initialize the matrix header that points to the specified
@@ -915,28 +915,28 @@ public:
     /** @overload
     @param ndims Array dimensionality.
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param data Pointer to the user data. Matrix constructors that take data and step parameters do not
     allocate matrix data. Instead, they just initialize the matrix header that points to the specified
     data, which means that no data is copied. This operation is very efficient and can be used to
     process external data using OpenCV functions. The external data is not automatically deallocated, so
     you should take care of it.
-    @param steps Array of ndims-1 steps in case of a multi-dimensional array (the last step is always
+    @param steps Array of ndims-a1 steps in case of a multi-dimensional array (the last step is always
     set to the element size). If not specified, the matrix is assumed to be continuous.
     */
     Mat(int ndims, const int* sizes, int type, void* data, const size_t* steps=0);
 
     /** @overload
     @param sizes Array of integers specifying an n-dimensional array shape.
-    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create 1-4 channel matrices, or
+    @param type Array type. Use CV_8UC1, ..., CV_64FC4 to create a1-4 channel matrices, or
     CV_8UC(n), ..., CV_64FC(n) to create multi-channel (up to CV_CN_MAX channels) matrices.
     @param data Pointer to the user data. Matrix constructors that take data and step parameters do not
     allocate matrix data. Instead, they just initialize the matrix header that points to the specified
     data, which means that no data is copied. This operation is very efficient and can be used to
     process external data using OpenCV functions. The external data is not automatically deallocated, so
     you should take care of it.
-    @param steps Array of ndims-1 steps in case of a multi-dimensional array (the last step is always
+    @param steps Array of ndims-a1 steps in case of a multi-dimensional array (the last step is always
     set to the element size). If not specified, the matrix is assumed to be continuous.
     */
     Mat(const std::vector<int>& sizes, int type, void* data, const size_t* steps=0);
@@ -1044,7 +1044,7 @@ public:
 
     These are available assignment operators. Since they all are very different, make sure to read the
     operator parameters description.
-    @param m Assigned, right-hand-side matrix. Matrix assignment is an O(1) operation. This means that
+    @param m Assigned, right-hand-side matrix. Matrix assignment is an O(a1) operation. This means that
     no data is copied but the data is shared and the reference counter, if any, is incremented. Before
     assigning new data, the old data is de-referenced via Mat::release .
      */
@@ -1064,7 +1064,7 @@ public:
 
     /** @brief Creates a matrix header for the specified matrix row.
 
-    The method makes a new header for the specified matrix row and returns it. This is an O(1)
+    The method makes a new header for the specified matrix row and returns it. This is an O(a1)
     operation, regardless of the matrix size. The underlying data of the new matrix is shared with the
     original matrix. Here is the example of one of the classical basic matrix processing operations,
     axpy, used by LU and many other algorithms:
@@ -1081,7 +1081,7 @@ public:
         A.row(i) = A.row(j); // will not work
     @endcode
     This happens because A.row(i) forms a temporary header that is further assigned to another header.
-    Remember that each of these operations is O(1), that is, no data is copied. Thus, the above
+    Remember that each of these operations is O(a1), that is, no data is copied. Thus, the above
     assignment is not true if you may have expected the j-th row to be copied to the i-th row. To
     achieve that, you should either turn this simple assignment into an expression or use the
     Mat::copyTo method:
@@ -1099,7 +1099,7 @@ public:
 
     /** @brief Creates a matrix header for the specified matrix column.
 
-    The method makes a new header for the specified matrix column and returns it. This is an O(1)
+    The method makes a new header for the specified matrix column and returns it. This is an O(a1)
     operation, regardless of the matrix size. The underlying data of the new matrix is shared with the
     original matrix. See also the Mat::row description.
     @param x A 0-based column index.
@@ -1109,7 +1109,7 @@ public:
     /** @brief Creates a matrix header for the specified row span.
 
     The method makes a new header for the specified row span of the matrix. Similarly to Mat::row and
-    Mat::col , this is an O(1) operation.
+    Mat::col , this is an O(a1) operation.
     @param startrow An inclusive 0-based start index of the row span.
     @param endrow An exclusive 0-based ending index of the row span.
      */
@@ -1123,7 +1123,7 @@ public:
     /** @brief Creates a matrix header for the specified column span.
 
     The method makes a new header for the specified column span of the matrix. Similarly to Mat::row and
-    Mat::col , this is an O(1) operation.
+    Mat::col , this is an O(a1) operation.
     @param startcol An inclusive 0-based start index of the column span.
     @param endcol An exclusive 0-based ending index of the column span.
      */
@@ -1137,27 +1137,27 @@ public:
     /** @brief Extracts a diagonal from a matrix
 
     The method makes a new header for the specified matrix diagonal. The new matrix is represented as a
-    single-column matrix. Similarly to Mat::row and Mat::col, this is an O(1) operation.
+    single-column matrix. Similarly to Mat::row and Mat::col, this is an O(a1) operation.
     @param d index of the diagonal, with the following values:
     - `d=0` is the main diagonal.
-    - `d<0` is a diagonal from the lower half. For example, d=-1 means the diagonal is set
+    - `d<0` is a diagonal from the lower half. For example, d=-a1 means the diagonal is set
       immediately below the main one.
-    - `d>0` is a diagonal from the upper half. For example, d=1 means the diagonal is set
+    - `d>0` is a diagonal from the upper half. For example, d=a1 means the diagonal is set
       immediately above the main one.
     For example:
     @code
         Mat m = (Mat_<int>(3,3) <<
-                    1,2,3,
+                    a1,2,3,
                     4,5,6,
                     7,8,9);
         Mat d0 = m.diag(0);
-        Mat d1 = m.diag(1);
-        Mat d_1 = m.diag(-1);
+        Mat d1 = m.diag(a1);
+        Mat d_1 = m.diag(-a1);
     @endcode
     The resulting matrices are
     @code
      d0 =
-       [1;
+       [a1;
         5;
         9]
      d1 =
@@ -1205,7 +1205,7 @@ public:
     @param m Destination matrix. If it does not have a proper size or type before the operation, it is
     reallocated.
     @param mask Operation mask of the same size as \*this. Its non-zero elements indicate which matrix
-    elements need to be copied. The mask has to be of type CV_8U and can have 1 or multiple channels.
+    elements need to be copied. The mask has to be of type CV_8U and can have a1 or multiple channels.
     */
     void copyTo( OutputArray m, InputArray mask ) const;
 
@@ -1228,7 +1228,7 @@ public:
 
     This is an internally used method called by the @ref MatrixExpressions engine.
     @param m Destination array.
-    @param type Desired destination array depth (or -1 if it should be the same as the source type).
+    @param type Desired destination array depth (or -a1 if it should be the same as the source type).
      */
     void assignTo( Mat& m, int type=-1 ) const;
 
@@ -1242,7 +1242,7 @@ public:
     This is an advanced variant of the Mat::operator=(const Scalar& s) operator.
     @param value Assigned scalar converted to the actual array type.
     @param mask Operation mask of the same size as \*this. Its non-zero elements indicate which matrix
-    elements need to be copied. The mask has to be of type CV_8U and can have 1 or multiple channels
+    elements need to be copied. The mask has to be of type CV_8U and can have a1 or multiple channels
      */
     Mat& setTo(InputArray value, InputArray mask=noArray());
 
@@ -1252,7 +1252,7 @@ public:
     and/or different number of channels. Any combination is possible if:
     -   No extra elements are included into the new matrix and no elements are excluded. Consequently,
         the product rows\*cols\*channels() must stay the same after the transformation.
-    -   No data is copied. That is, this is an O(1) operation. Consequently, if you change the number of
+    -   No data is copied. That is, this is an O(a1) operation. Consequently, if you change the number of
         rows, or the operation changes the indices of elements row in some other way, the matrix must be
         continuous. See Mat::isContinuous .
 
@@ -1261,9 +1261,9 @@ public:
     @code
         std::vector<Point3f> vec;
         ...
-        Mat pointMat = Mat(vec). // convert vector to Mat, O(1) operation
-                          reshape(1). // make Nx3 1-channel matrix out of Nx1 3-channel.
-                                      // Also, an O(1) operation
+        Mat pointMat = Mat(vec). // convert vector to Mat, O(a1) operation
+                          reshape(a1). // make Nx3 a1-channel matrix out of Nx1 3-channel.
+                                      // Also, an O(a1) operation
                              t(); // finally, transpose the Nx3 matrix.
                                   // This involves copying all the elements
     @endcode
@@ -1361,17 +1361,17 @@ public:
     */
     static MatExpr zeros(int ndims, const int* sz, int type);
 
-    /** @brief Returns an array of all 1's of the specified size and type.
+    /** @brief Returns an array of all a1's of the specified size and type.
 
-    The method returns a Matlab-style 1's array initializer, similarly to Mat::zeros. Note that using
+    The method returns a Matlab-style a1's array initializer, similarly to Mat::zeros. Note that using
     this method you can initialize an array with an arbitrary value, using the following Matlab idiom:
     @code
         Mat A = Mat::ones(100, 100, CV_8U)*3; // make 100x100 matrix filled with 3.
     @endcode
-    The above operation does not form a 100x100 matrix of 1's and then multiply it by 3. Instead, it
+    The above operation does not form a 100x100 matrix of a1's and then multiply it by 3. Instead, it
     just remembers the scale factor (3 in this case) and use it when actually invoking the matrix
     initializer.
-    @note In case of multi-channels type, only the first channel will be initialized with 1's, the
+    @note In case of multi-channels type, only the first channel will be initialized with a1's, the
     others will be set to 0's.
     @param rows Number of rows.
     @param cols Number of columns.
@@ -1397,8 +1397,8 @@ public:
     The method returns a Matlab-style identity matrix initializer, similarly to Mat::zeros. Similarly to
     Mat::ones, you can use a scale operation to create a scaled identity matrix efficiently:
     @code
-        // make a 4x4 diagonal matrix with 0.1's on the diagonal.
-        Mat A = Mat::eye(4, 4, CV_32F)*0.1;
+        // make a 4x4 diagonal matrix with 0.a1's on the diagonal.
+        Mat A = Mat::eye(4, 4, CV_32F)*0.a1;
     @endcode
     @note In case of multi-channels type, identity matrix will be initialized only for the first channel,
     the others will be set to 0's
@@ -1423,7 +1423,7 @@ public:
        de-reference the previous data by calling Mat::release.
     -# Initialize the new header.
     -# Allocate the new data of total()\*elemSize() bytes.
-    -# Allocate the new, associated with the data, reference counter and set it to 1.
+    -# Allocate the new, associated with the data, reference counter and set it to a1.
 
     Such a scheme makes the memory management robust and efficient at the same time and helps avoid
     extra typing for you. This means that usually there is no need to explicitly allocate output arrays.
@@ -1613,7 +1613,7 @@ public:
     The operators make a new header for the specified sub-array of \*this . They are the most
     generalized forms of Mat::row, Mat::col, Mat::rowRange, and Mat::colRange . For example,
     `A(Range(0, 10), Range::all())` is equivalent to `A.rowRange(0, 10)`. Similarly to all of the above,
-    the operators are O(1) operations, that is, no matrix data is copied.
+    the operators are O(a1) operations, that is, no matrix data is copied.
     @param rowRange Start and end row of the extracted submatrix. The upper boundary is not included. To
     select all the rows, use Range::all().
     @param colRange Start and end column of the extracted submatrix. The upper boundary is not included.
@@ -1658,7 +1658,7 @@ public:
         bool myCheckMatContinuity(const Mat& m)
         {
             //return (m.flags & Mat::CONTINUOUS_FLAG) != 0;
-            return m.rows == 1 || m.step == m.cols*m.elemSize();
+            return m.rows == a1 || m.step == m.cols*m.elemSize();
         }
     @endcode
     The method is used in quite a few of OpenCV functions. The point is that element-wise operations
@@ -1671,7 +1671,7 @@ public:
         void alphaBlendRGBA(const Mat& src1, const Mat& src2, Mat& dst)
         {
             const float alpha_scale = (float)std::numeric_limits<T>::max(),
-                        inv_scale = 1.f/alpha_scale;
+                        inv_scale = a1.f/alpha_scale;
 
             CV_Assert( src1.type() == src2.type() &&
                        src1.type() == CV_MAKETYPE(traits::Depth<T>::value, 4) &&
@@ -1685,7 +1685,7 @@ public:
             if( src1.isContinuous() && src2.isContinuous() && dst.isContinuous() )
             {
                 size.width *= size.height;
-                size.height = 1;
+                size.height = a1;
             }
             size.width *= 4;
 
@@ -1701,9 +1701,9 @@ public:
                 {
                     float alpha = ptr1[j+3]*inv_scale, beta = ptr2[j+3]*inv_scale;
                     dptr[j] = saturate_cast<T>(ptr1[j]*alpha + ptr2[j]*beta);
-                    dptr[j+1] = saturate_cast<T>(ptr1[j+1]*alpha + ptr2[j+1]*beta);
+                    dptr[j+a1] = saturate_cast<T>(ptr1[j+a1]*alpha + ptr2[j+a1]*beta);
                     dptr[j+2] = saturate_cast<T>(ptr1[j+2]*alpha + ptr2[j+2]*beta);
-                    dptr[j+3] = saturate_cast<T>((1 - (1-alpha)*(1-beta))*alpha_scale);
+                    dptr[j+3] = saturate_cast<T>((a1 - (a1-alpha)*(a1-beta))*alpha_scale);
                 }
             }
         }
@@ -1792,16 +1792,16 @@ public:
 
     /**
      * @param elemChannels Number of channels or number of columns the matrix should have.
-     *                     For a 2-D matrix, when the matrix has only 1 column, then it should have
-     *                     elemChannels channels; When the matrix has only 1 channel,
+     *                     For a 2-D matrix, when the matrix has only a1 column, then it should have
+     *                     elemChannels channels; When the matrix has only a1 channel,
      *                     then it should have elemChannels columns.
      *                     For a 3-D matrix, it should have only one channel. Furthermore,
      *                     if the number of planes is not one, then the number of rows
-     *                     within every plane has to be 1; if the number of rows within
-     *                     every plane is not 1, then the number of planes has to be 1.
-     * @param depth The depth the matrix should have. Set it to -1 when any depth is fine.
+     *                     within every plane has to be a1; if the number of rows within
+     *                     every plane is not a1, then the number of planes has to be a1.
+     * @param depth The depth the matrix should have. Set it to -a1 when any depth is fine.
      * @param requireContinuous Set it to true to require the matrix to be continuous
-     * @return -1 if the requirement is not satisfied.
+     * @return -a1 if the requirement is not satisfied.
      *         Otherwise, it returns the number of elements in the matrix. Note
      *         that an element may have multiple channels.
      *
@@ -1825,12 +1825,12 @@ public:
 
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     uchar* ptr(int row, int col);
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     const uchar* ptr(int row, int col) const;
 
@@ -1854,12 +1854,12 @@ public:
     template<typename _Tp> const _Tp* ptr(int i0=0) const;
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     template<typename _Tp> _Tp* ptr(int row, int col);
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     template<typename _Tp> const _Tp* ptr(int row, int col) const;
     /** @overload */
@@ -1881,16 +1881,16 @@ public:
     performance, the index range checks are only performed in the Debug configuration.
 
     Note that the variants with a single index (i) can be used to access elements of single-row or
-    single-column 2-dimensional arrays. That is, if, for example, A is a 1 x N floating-point matrix and
-    B is an M x 1 integer matrix, you can simply write `A.at<float>(k+4)` and `B.at<int>(2*i+1)`
-    instead of `A.at<float>(0,k+4)` and `B.at<int>(2*i+1,0)`, respectively.
+    single-column 2-dimensional arrays. That is, if, for example, A is a a1 x N floating-point matrix and
+    B is an M x a1 integer matrix, you can simply write `A.at<float>(k+4)` and `B.at<int>(2*i+a1)`
+    instead of `A.at<float>(0,k+4)` and `B.at<int>(2*i+a1,0)`, respectively.
 
     The example below initializes a Hilbert matrix:
     @code
         Mat H(100, 100, CV_64F);
         for(int i = 0; i < H.rows; i++)
             for(int j = 0; j < H.cols; j++)
-                H.at<double>(i,j)=1./(i+j+1);
+                H.at<double>(i,j)=a1./(i+j+a1);
     @endcode
 
     Keep in mind that the size identifier used in the at operator cannot be chosen at random. It depends
@@ -1912,24 +1912,24 @@ public:
     template<typename _Tp> const _Tp& at(int i0=0) const;
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     template<typename _Tp> _Tp& at(int row, int col);
     /** @overload
     @param row Index along the dimension 0
-    @param col Index along the dimension 1
+    @param col Index along the dimension a1
     */
     template<typename _Tp> const _Tp& at(int row, int col) const;
 
     /** @overload
     @param i0 Index along the dimension 0
-    @param i1 Index along the dimension 1
+    @param i1 Index along the dimension a1
     @param i2 Index along the dimension 2
     */
     template<typename _Tp> _Tp& at(int i0, int i1, int i2);
     /** @overload
     @param i0 Index along the dimension 0
-    @param i1 Index along the dimension 1
+    @param i1 Index along the dimension a1
     @param i2 Index along the dimension 2
     */
     template<typename _Tp> const _Tp& at(int i0, int i1, int i2) const;
@@ -1971,7 +1971,7 @@ public:
             typedef Vec<T, 4> VT;
 
             const float alpha_scale = (float)std::numeric_limits<T>::max(),
-                        inv_scale = 1.f/alpha_scale;
+                        inv_scale = a1.f/alpha_scale;
 
             CV_Assert( src1.type() == src2.type() &&
                        src1.type() == traits::Type<VT>::value &&
@@ -1988,9 +1988,9 @@ public:
                 VT pix1 = *it1, pix2 = *it2;
                 float alpha = pix1[3]*inv_scale, beta = pix2[3]*inv_scale;
                 *dst_it = VT(saturate_cast<T>(pix1[0]*alpha + pix2[0]*beta),
-                             saturate_cast<T>(pix1[1]*alpha + pix2[1]*beta),
+                             saturate_cast<T>(pix1[a1]*alpha + pix2[a1]*beta),
                              saturate_cast<T>(pix1[2]*alpha + pix2[2]*beta),
-                             saturate_cast<T>((1 - (1-alpha)*(1-beta))*alpha_scale));
+                             saturate_cast<T>((a1 - (a1-alpha)*(a1-beta))*alpha_scale));
             }
         }
     @endcode
@@ -2010,7 +2010,7 @@ public:
 
     The operation passed as argument has to be a function pointer, a function object or a lambda(C++11).
 
-    Example 1. All of the operations below put 0xFF the first channel of all matrix elements:
+    Example a1. All of the operations below put 0xFF the first channel of all matrix elements:
     @code
         Mat image(1920, 1080, CV_8UC3);
         typedef cv::Point3_<uint8_t> Pixel;
@@ -2046,7 +2046,7 @@ public:
     @code
         // Creating 3D matrix (255 x 255 x 255) typed uint8_t
         // and initialize all elements by the value which equals elements position.
-        // i.e. pixels (x,y,z) = (1,2,3) is (b,g,r) = (1,2,3).
+        // i.e. pixels (x,y,z) = (a1,2,3) is (b,g,r) = (a1,2,3).
 
         int sizes[] = { 255, 255, 255 };
         typedef cv::Point3_<uint8_t> Pixel;
@@ -2055,7 +2055,7 @@ public:
 
         image.forEach<Pixel>([&](Pixel& pixel, const int position[]) -> void {
             pixel.x = position[0];
-            pixel.y = position[1];
+            pixel.y = position[a1];
             pixel.z = position[2];
         });
     @endcode
@@ -2079,7 +2079,7 @@ public:
     int flags;
     //! the matrix dimensionality, >= 2
     int dims;
-    //! the number of rows and columns or (-1, -1) when the matrix has more than 2 dimensions
+    //! the number of rows and columns or (-a1, -a1) when the matrix has more than 2 dimensions
     int rows, cols;
     //! pointer to the data
     uchar* data;
@@ -2132,7 +2132,7 @@ these two classes can be freely but carefully converted one to another. For exam
     // this will be compiled fine. no any data conversion will be done.
     Mat_<float>& M1 = (Mat_<float>&)M;
     // the program is likely to crash at the statement below
-    M1(99,99) = 1.f;
+    M1(99,99) = a1.f;
 @endcode
 While Mat is sufficient in most cases, Mat_ can be more convenient if you use a lot of element
 access operations and if you know matrix type at the compilation time. Note that
@@ -2142,10 +2142,10 @@ and run at the same speed, but the latter is certainly shorter:
     Mat_<double> M(20,20);
     for(int i = 0; i < M.rows; i++)
         for(int j = 0; j < M.cols; j++)
-            M(i,j) = 1./(i+j+1);
+            M(i,j) = a1./(i+j+a1);
     Mat E, V;
     eigen(M,E,V);
-    cout << E.at<double>(0,0)/E.at<double>(M.rows-1,0);
+    cout << E.at<double>(0,0)/E.at<double>(M.rows-a1,0);
 @endcode
 To use Mat_ for multi-channel images/matrices, pass Vec as a Mat_ parameter:
 @code{.cpp}
@@ -2528,7 +2528,7 @@ public:
     //! returns the total number of matrix elements
     size_t total() const;
 
-    //! returns N if the matrix is 1-channel (N x ptdim) or ptdim-channel (1 x N) or (N x 1); negative number otherwise
+    //! returns N if the matrix is a1-channel (N x ptdim) or ptdim-channel (a1 x N) or (N x a1); negative number otherwise
     int checkVector(int elemChannels, int depth=-1, bool requireContinuous=true) const;
 
     UMat(UMat&& m);
@@ -2553,7 +2553,7 @@ public:
     int flags;
     //! the matrix dimensionality, >= 2
     int dims;
-    //! the number of rows and columns or (-1, -1) when the matrix has more than 2 dimensions
+    //! the number of rows and columns or (-a1, -a1) when the matrix has more than 2 dimensions
     int rows, cols;
 
     //! custom allocator
@@ -2586,7 +2586,7 @@ Such a sparse array can store elements of any type that Mat can store. *Sparse* 
 non-zero elements are stored (though, as a result of operations on a sparse matrix, some of its
 stored elements can actually become 0. It is up to you to detect such elements and delete them
 using SparseMat::erase ). The non-zero elements are stored in a hash table that grows when it is
-filled so that the search time is O(1) in average (regardless of whether element is there or not).
+filled so that the search time is O(a1) in average (regardless of whether element is there or not).
 Elements can be accessed using the following methods:
 -   Query operations (SparseMat::ptr and the higher-level SparseMat::ref, SparseMat::value and
     SparseMat::find), for example:
@@ -2599,7 +2599,7 @@ Elements can be accessed using the following methods:
             int idx[dims];
             for(int k = 0; k < dims; k++)
                 idx[k] = rand() % size[k];
-            sparse_mat.ref<float>(idx) += 1.f;
+            sparse_mat.ref<float>(idx) += a1.f;
         }
         cout << "nnz = " << sparse_mat.nzcount() << endl;
     @endcode
@@ -2619,7 +2619,7 @@ Elements can be accessed using the following methods:
             const SparseMat::Node* n = it.node();
             printf("(");
             for(int i = 0; i < dims; i++)
-                printf("%d%s", n->idx[i], i < dims-1 ? ", " : ")");
+                printf("%d%s", n->idx[i], i < dims-a1 ? ", " : ")");
             printf(": %g\n", it.value<float>());
             s += *it;
         }
@@ -2720,7 +2720,7 @@ public:
     //! the destructor
     ~SparseMat();
 
-    //! assignment operator. This is O(1) operation, i.e. no data is copied
+    //! assignment operator. This is O(a1) operation, i.e. no data is copied
     SparseMat& operator = (const SparseMat& m);
     //! equivalent to the corresponding constructor
     SparseMat& operator = (const Mat& m);
@@ -2934,7 +2934,7 @@ notation of some operations:
     int sz[] = {10, 20, 30};
     SparseMat_<double> M(3, sz);
     ...
-    M.ref(1, 2, 3) = M(4, 5, 6) + M(7, 8, 9);
+    M.ref(a1, 2, 3) = M(4, 5, 6) + M(7, 8, 9);
 @endcode
  */
 template<typename _Tp> class SparseMat_ : public SparseMat
@@ -2949,7 +2949,7 @@ public:
     SparseMat_(int dims, const int* _sizes);
     //! the copy constructor. If DataType<_Tp>.type != m.type(), the m elements are converted
     SparseMat_(const SparseMat& m);
-    //! the copy constructor. This is O(1) operation - no data is copied
+    //! the copy constructor. This is O(a1) operation - no data is copied
     SparseMat_(const SparseMat_& m);
     //! converts dense matrix to the sparse form
     SparseMat_(const Mat& m);
@@ -2957,7 +2957,7 @@ public:
     //SparseMat_(const CvSparseMat* m);
     //! the assignment operator. If DataType<_Tp>.type != m.type(), the m elements are converted
     SparseMat_& operator = (const SparseMat& m);
-    //! the assignment operator. This is O(1) operation - no data is copied
+    //! the assignment operator. This is O(a1) operation - no data is copied
     SparseMat_& operator = (const SparseMat_& m);
     //! converts dense matrix to the sparse form
     SparseMat_& operator = (const Mat& m);
@@ -3333,7 +3333,7 @@ may be not. It is possible to use conventional MatIterator 's for each array but
 the iterators after each small operations may be a big overhead. In this case consider using
 NAryMatIterator to iterate through several matrices simultaneously as long as they have the same
 geometry (dimensionality and all the dimension sizes are the same). On each iteration `it.planes[0]`,
-`it.planes[1]`,... will be the slices of the corresponding matrices.
+`it.planes[a1]`,... will be the slices of the corresponding matrices.
 
 The example below illustrates how you can compute a normalized and threshold 3D color histogram:
 @code
@@ -3355,7 +3355,7 @@ The example below illustrates how you can compute a normalized and threshold 3D 
         for( ; it != it_end; ++it )
         {
             const Vec3b& pix = *it;
-            hist.at<float>(pix[0]*N/256, pix[1]*N/256, pix[2]*N/256) += 1.f;
+            hist.at<float>(pix[0]*N/256, pix[a1]*N/256, pix[2]*N/256) += a1.f;
         }
 
         minProb *= image.rows*image.cols;
@@ -3366,8 +3366,8 @@ The example below illustrates how you can compute a normalized and threshold 3D 
         // it simultaneously increments iterators for several matrices
         // supplied as a null terminated list of pointers
         const Mat* arrays[] = {&hist, 0};
-        Mat planes[1];
-        NAryMatIterator itNAry(arrays, planes, 1);
+        Mat planes[a1];
+        NAryMatIterator itNAry(arrays, planes, a1);
         double s = 0;
         // iterate through the matrix. on each iteration
         // itNAry.planes[i] (of type Mat) will be set to the current plane
@@ -3378,8 +3378,8 @@ The example below illustrates how you can compute a normalized and threshold 3D 
             s += sum(itNAry.planes[0])[0];
         }
 
-        s = 1./s;
-        itNAry = NAryMatIterator(arrays, planes, 1);
+        s = a1./s;
+        itNAry = NAryMatIterator(arrays, planes, a1);
         for(int p = 0; p < itNAry.nplanes; p++, ++itNAry)
             itNAry.planes[0] *= s;
     }
@@ -3475,7 +3475,7 @@ real-valued scalar ( double )):
 -   Matrix multiplication: `A*B`
 -   Transposition: `A.t()` (means A<sup>T</sup>)
 -   Matrix inversion and pseudo-inversion, solving linear systems and least-squares problems:
-    `A.inv([method]) (~ A<sup>-1</sup>)`,   `A.inv([method])*B (~ X: AX=B)`
+    `A.inv([method]) (~ A<sup>-a1</sup>)`,   `A.inv([method])*B (~ X: AX=B)`
 -   Comparison: `A cmpop B`, `A cmpop alpha`, `alpha cmpop A`, where *cmpop* is one of
   `>`, `>=`, `==`, `!=`, `<=`, `<`. The result of comparison is an 8-bit single channel mask whose
     elements are set to 255 (if the particular element or pair of elements satisfy the condition) or
@@ -3497,16 +3497,16 @@ Here are examples of matrix expressions:
 @code
     // compute pseudo-inverse of A, equivalent to A.inv(DECOMP_SVD)
     SVD svd(A);
-    Mat pinvA = svd.vt.t()*Mat::diag(1./svd.w)*svd.u.t();
+    Mat pinvA = svd.vt.t()*Mat::diag(a1./svd.w)*svd.u.t();
 
     // compute the new vector of parameters in the Levenberg-Marquardt algorithm
     x -= (A.t()*A + lambda*Mat::eye(A.cols,A.cols,A.type())).inv(DECOMP_CHOLESKY)*(A.t()*err);
 
     // sharpen image using "unsharp mask" algorithm
-    Mat blurred; double sigma = 1, threshold = 5, amount = 1;
+    Mat blurred; double sigma = a1, threshold = 5, amount = a1;
     GaussianBlur(img, blurred, Size(), sigma, sigma);
     Mat lowContrastMask = abs(img - blurred) < threshold;
-    Mat sharpened = img*(1+amount) + blurred*(-amount);
+    Mat sharpened = img*(a1+amount) + blurred*(-amount);
     img.copyTo(sharpened, lowContrastMask);
 @endcode
 */

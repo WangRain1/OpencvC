@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -59,9 +59,9 @@ void addValue(int pos, float val, float* vals, T* point, T* points, int n)
 
 /**
     Simplex downhill optimization function.
-    Preconditions: points is a 2D mattrix of size (n+1) x n
+    Preconditions: points is a 2D mattrix of size (n+a1) x n
                     func is the cost function taking n an array of n params and returning float
-                    vals is the cost function in the n+1 simplex points, if NULL it will be computed
+                    vals is the cost function in the n+a1 simplex points, if NULL it will be computed
 
     Postcondition: returns optimum value and points[0..n] are the optimum parameters
  */

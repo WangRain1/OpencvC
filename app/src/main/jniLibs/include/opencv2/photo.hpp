@@ -97,8 +97,8 @@ enum
 
 /** @brief Restores the selected region in an image using the region neighborhood.
 
-@param src Input 8-bit, 16-bit unsigned or 32-bit float 1-channel or 8-bit 3-channel image.
-@param inpaintMask Inpainting mask, 8-bit 1-channel image. Non-zero pixels indicate the area that
+@param src Input 8-bit, 16-bit unsigned or 32-bit float a1-channel or 8-bit 3-channel image.
+@param inpaintMask Inpainting mask, 8-bit a1-channel image. Non-zero pixels indicate the area that
 needs to be inpainted.
 @param dst Output image with the same size and type as src .
 @param inpaintRadius Radius of a circular neighborhood of each point inpainted that is considered
@@ -127,7 +127,7 @@ CV_EXPORTS_W void inpaint( InputArray src, InputArray inpaintMask,
 <http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/> with several computational
 optimizations. Noise expected to be a gaussian white noise
 
-@param src Input 8-bit 1-channel, 2-channel, 3-channel or 4-channel image.
+@param src Input 8-bit a1-channel, 2-channel, 3-channel or 4-channel image.
 @param dst Output image with the same size and type as src .
 @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
 Should be odd. Recommended value 7 pixels
@@ -150,7 +150,7 @@ CV_EXPORTS_W void fastNlMeansDenoising( InputArray src, OutputArray dst, float h
 <http://www.ipol.im/pub/algo/bcm_non_local_means_denoising/> with several computational
 optimizations. Noise expected to be a gaussian white noise
 
-@param src Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+@param src Input 8-bit or 16-bit (only with NORM_L1) a1-channel,
 2-channel, 3-channel or 4-channel image.
 @param dst Output image with the same size and type as src .
 @param templateWindowSize Size in pixels of the template patch that is used to compute weights.
@@ -202,7 +202,7 @@ captured in small period of time. For example video. This version of the functio
 images or for manual manipulation with colorspaces. For more details see
 <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394>
 
-@param srcImgs Input 8-bit 1-channel, 2-channel, 3-channel or
+@param srcImgs Input 8-bit a1-channel, 2-channel, 3-channel or
 4-channel images sequence. All images should have the same type and
 size.
 @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
@@ -229,7 +229,7 @@ captured in small period of time. For example video. This version of the functio
 images or for manual manipulation with colorspaces. For more details see
 <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.131.6394>
 
-@param srcImgs Input 8-bit or 16-bit (only with NORM_L1) 1-channel,
+@param srcImgs Input 8-bit or 16-bit (only with NORM_L1) a1-channel,
 2-channel, 3-channel or 4-channel images sequence. All images should
 have the same type and size.
 @param imgToDenoiseIndex Target image to denoise index in srcImgs sequence
@@ -295,10 +295,10 @@ of July 2013 and finally it was slightly adapted by later authors.
 
 Although the thorough discussion and justification of the algorithm involved may be found in
 @cite ChambolleEtAl, it might make sense to skim over it here, following @cite MA13 . To begin
-with, we consider the 1-byte gray-level images as the functions from the rectangular domain of
+with, we consider the a1-byte gray-level images as the functions from the rectangular domain of
 pixels (it may be seen as set
-\f$\left\{(x,y)\in\mathbb{N}\times\mathbb{N}\mid 1\leq x\leq n,\;1\leq y\leq m\right\}\f$ for some
-\f$m,\;n\in\mathbb{N}\f$) into \f$\{0,1,\dots,255\}\f$. We shall denote the noised images as \f$f_i\f$ and with
+\f$\left\{(x,y)\in\mathbb{N}\times\mathbb{N}\mid a1\leq x\leq n,\;a1\leq y\leq m\right\}\f$ for some
+\f$m,\;n\in\mathbb{N}\f$) into \f$\{0,a1,\dots,255\}\f$. We shall denote the noised images as \f$f_i\f$ and with
 this view, given some image \f$x\f$ of the same size, we may measure how bad it is by the formula
 
 \f[\left\|\left\|\nabla x\right\|\right\| + \lambda\sum_i\left\|\left\|x-f_i\right\|\right\|\f]
@@ -337,7 +337,7 @@ public:
     /** @brief Tonemaps image
 
     @param src source image - CV_32FC3 Mat (float 32 bits 3 channels)
-    @param dst destination image - CV_32FC3 Mat with values in [0, 1] range
+    @param dst destination image - CV_32FC3 Mat with values in [0, a1] range
      */
     CV_WRAP virtual void process(InputArray src, OutputArray dst) = 0;
 
@@ -347,9 +347,9 @@ public:
 
 /** @brief Creates simple linear mapper with gamma correction
 
-@param gamma positive value for gamma correction. Gamma value of 1.0 implies no correction, gamma
+@param gamma positive value for gamma correction. Gamma value of a1.0 implies no correction, gamma
 equal to 2.2f is suitable for most displays.
-Generally gamma \> 1 brightens the image and gamma \< 1 darkens it.
+Generally gamma \> a1 brightens the image and gamma \< a1 darkens it.
  */
 CV_EXPORTS_W Ptr<Tonemap> createTonemap(float gamma = 1.0f);
 
@@ -377,9 +377,9 @@ public:
 /** @brief Creates TonemapDrago object
 
 @param gamma gamma value for gamma correction. See createTonemap
-@param saturation positive saturation enhancement value. 1.0 preserves saturation, values greater
-than 1 increase saturation and values less than 1 decrease it.
-@param bias value for bias function in [0, 1] range. Values from 0.7 to 0.9 usually give best
+@param saturation positive saturation enhancement value. a1.0 preserves saturation, values greater
+than a1 increase saturation and values less than a1 decrease it.
+@param bias value for bias function in [0, a1] range. Values from 0.7 to 0.9 usually give best
 results, default value is 0.85.
  */
 CV_EXPORTS_W Ptr<TonemapDrago> createTonemapDrago(float gamma = 1.0f, float saturation = 1.0f, float bias = 0.85f);
@@ -409,9 +409,9 @@ public:
 
 @param gamma gamma value for gamma correction. See createTonemap
 @param intensity result intensity in [-8, 8] range. Greater intensity produces brighter results.
-@param light_adapt light adaptation in [0, 1] range. If 1 adaptation is based only on pixel
+@param light_adapt light adaptation in [0, a1] range. If a1 adaptation is based only on pixel
 value, if 0 it's global, otherwise it's a weighted mean of this two cases.
-@param color_adapt chromatic adaptation in [0, 1] range. If 1 channels are treated independently,
+@param color_adapt chromatic adaptation in [0, a1] range. If a1 channels are treated independently,
 if 0 adaptation level is the same for each channel.
  */
 CV_EXPORTS_W Ptr<TonemapReinhard>
@@ -460,7 +460,7 @@ public:
                                  InputArray times, InputArray response) = 0;
 };
 
-/** @brief This algorithm converts images to median threshold bitmaps (1 for pixels brighter than median
+/** @brief This algorithm converts images to median threshold bitmaps (a1 for pixels brighter than median
 luminance and 0 otherwise) and than aligns the resulting bitmaps using bit operations.
 
 It is invariant to exposure, so exposure values and camera response are not necessary.
@@ -694,7 +694,7 @@ black-and-white photograph rendering, and in many single channel image processin
 @cite CL12 .
 
 @param src Input 8-bit 3-channel image.
-@param grayscale Output 8-bit 1-channel image.
+@param grayscale Output 8-bit a1-channel image.
 @param color_boost Output 8-bit 3-channel image.
 
 This function is to be applied on color images.
@@ -730,7 +730,7 @@ content @cite PM03 .
 
 @param src Input 8-bit 3-channel image.
 @param dst Input 8-bit 3-channel image.
-@param mask Input 8-bit 1 or 3-channel image.
+@param mask Input 8-bit a1 or 3-channel image.
 @param p Point in dst image where object is placed.
 @param blend Output image with the same size and type as dst.
 @param flags Cloning method that could be cv::NORMAL_CLONE, cv::MIXED_CLONE or cv::MONOCHROME_TRANSFER
@@ -742,7 +742,7 @@ CV_EXPORTS_W void seamlessClone( InputArray src, InputArray dst, InputArray mask
 seamlessly.
 
 @param src Input 8-bit 3-channel image.
-@param mask Input 8-bit 1 or 3-channel image.
+@param mask Input 8-bit a1 or 3-channel image.
 @param dst Output image with the same size and type as src .
 @param red_mul R-channel multiply factor.
 @param green_mul G-channel multiply factor.
@@ -757,7 +757,7 @@ CV_EXPORTS_W void colorChange(InputArray src, InputArray mask, OutputArray dst, 
 then integrating back with a Poisson solver, modifies locally the apparent illumination of an image.
 
 @param src Input 8-bit 3-channel image.
-@param mask Input 8-bit 1 or 3-channel image.
+@param mask Input 8-bit a1 or 3-channel image.
 @param dst Output image with the same size and type as src.
 @param alpha Value ranges between 0-2.
 @param beta Value ranges between 0-2.
@@ -771,7 +771,7 @@ CV_EXPORTS_W void illuminationChange(InputArray src, InputArray mask, OutputArra
 washes out the texture of the selected region, giving its contents a flat aspect. Here Canny Edge %Detector is used.
 
 @param src Input 8-bit 3-channel image.
-@param mask Input 8-bit 1 or 3-channel image.
+@param mask Input 8-bit a1 or 3-channel image.
 @param dst Output image with the same size and type as src.
 @param low_threshold %Range from 0 to 100.
 @param high_threshold Value \> 100.
@@ -805,7 +805,7 @@ filters are used in many different applications @cite EM11 .
 @param dst Output 8-bit 3-channel image.
 @param flags Edge preserving filters: cv::RECURS_FILTER or cv::NORMCONV_FILTER
 @param sigma_s %Range between 0 to 200.
-@param sigma_r %Range between 0 to 1.
+@param sigma_r %Range between 0 to a1.
  */
 CV_EXPORTS_W void edgePreservingFilter(InputArray src, OutputArray dst, int flags = 1,
         float sigma_s = 60, float sigma_r = 0.4f);
@@ -815,7 +815,7 @@ CV_EXPORTS_W void edgePreservingFilter(InputArray src, OutputArray dst, int flag
 @param src Input 8-bit 3-channel image.
 @param dst Output image with the same size and type as src.
 @param sigma_s %Range between 0 to 200.
-@param sigma_r %Range between 0 to 1.
+@param sigma_r %Range between 0 to a1.
  */
 CV_EXPORTS_W void detailEnhance(InputArray src, OutputArray dst, float sigma_s = 10,
         float sigma_r = 0.15f);
@@ -826,11 +826,11 @@ An example using non-photorealistic line drawing functions
 /** @brief Pencil-like non-photorealistic line drawing
 
 @param src Input 8-bit 3-channel image.
-@param dst1 Output 8-bit 1-channel image.
+@param dst1 Output 8-bit a1-channel image.
 @param dst2 Output image with the same size and type as src.
 @param sigma_s %Range between 0 to 200.
-@param sigma_r %Range between 0 to 1.
-@param shade_factor %Range between 0 to 0.1.
+@param sigma_r %Range between 0 to a1.
+@param shade_factor %Range between 0 to 0.a1.
  */
 CV_EXPORTS_W void pencilSketch(InputArray src, OutputArray dst1, OutputArray dst2,
         float sigma_s = 60, float sigma_r = 0.07f, float shade_factor = 0.02f);
@@ -842,7 +842,7 @@ contrast while preserving, or enhancing, high-contrast features.
 @param src Input 8-bit 3-channel image.
 @param dst Output image with the same size and type as src.
 @param sigma_s %Range between 0 to 200.
-@param sigma_r %Range between 0 to 1.
+@param sigma_r %Range between 0 to a1.
  */
 CV_EXPORTS_W void stylization(InputArray src, OutputArray dst, float sigma_s = 60,
         float sigma_r = 0.45f);

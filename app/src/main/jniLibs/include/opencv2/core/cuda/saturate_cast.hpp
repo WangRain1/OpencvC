@@ -66,37 +66,37 @@ namespace cv { namespace cuda { namespace device
     {
         uint res = 0;
         int vi = v;
-        asm("cvt.sat.u8.s8 %0, %1;" : "=r"(res) : "r"(vi));
+        asm("cvt.sat.u8.s8 %0, %a1;" : "=r"(res) : "r"(vi));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(short v)
     {
         uint res = 0;
-        asm("cvt.sat.u8.s16 %0, %1;" : "=r"(res) : "h"(v));
+        asm("cvt.sat.u8.s16 %0, %a1;" : "=r"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(ushort v)
     {
         uint res = 0;
-        asm("cvt.sat.u8.u16 %0, %1;" : "=r"(res) : "h"(v));
+        asm("cvt.sat.u8.u16 %0, %a1;" : "=r"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(int v)
     {
         uint res = 0;
-        asm("cvt.sat.u8.s32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.u8.s32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(uint v)
     {
         uint res = 0;
-        asm("cvt.sat.u8.u32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.u8.u32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(float v)
     {
         uint res = 0;
-        asm("cvt.rni.sat.u8.f32 %0, %1;" : "=r"(res) : "f"(v));
+        asm("cvt.rni.sat.u8.f32 %0, %a1;" : "=r"(res) : "f"(v));
         return res;
     }
     template<> __device__ __forceinline__ uchar saturate_cast<uchar>(double v)
@@ -114,37 +114,37 @@ namespace cv { namespace cuda { namespace device
     {
         uint res = 0;
         uint vi = v;
-        asm("cvt.sat.s8.u8 %0, %1;" : "=r"(res) : "r"(vi));
+        asm("cvt.sat.s8.u8 %0, %a1;" : "=r"(res) : "r"(vi));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(short v)
     {
         uint res = 0;
-        asm("cvt.sat.s8.s16 %0, %1;" : "=r"(res) : "h"(v));
+        asm("cvt.sat.s8.s16 %0, %a1;" : "=r"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(ushort v)
     {
         uint res = 0;
-        asm("cvt.sat.s8.u16 %0, %1;" : "=r"(res) : "h"(v));
+        asm("cvt.sat.s8.u16 %0, %a1;" : "=r"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(int v)
     {
         uint res = 0;
-        asm("cvt.sat.s8.s32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.s8.s32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(uint v)
     {
         uint res = 0;
-        asm("cvt.sat.s8.u32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.s8.u32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(float v)
     {
         uint res = 0;
-        asm("cvt.rni.sat.s8.f32 %0, %1;" : "=r"(res) : "f"(v));
+        asm("cvt.rni.sat.s8.f32 %0, %a1;" : "=r"(res) : "f"(v));
         return res;
     }
     template<> __device__ __forceinline__ schar saturate_cast<schar>(double v)
@@ -162,31 +162,31 @@ namespace cv { namespace cuda { namespace device
     {
         ushort res = 0;
         int vi = v;
-        asm("cvt.sat.u16.s8 %0, %1;" : "=h"(res) : "r"(vi));
+        asm("cvt.sat.u16.s8 %0, %a1;" : "=h"(res) : "r"(vi));
         return res;
     }
     template<> __device__ __forceinline__ ushort saturate_cast<ushort>(short v)
     {
         ushort res = 0;
-        asm("cvt.sat.u16.s16 %0, %1;" : "=h"(res) : "h"(v));
+        asm("cvt.sat.u16.s16 %0, %a1;" : "=h"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ ushort saturate_cast<ushort>(int v)
     {
         ushort res = 0;
-        asm("cvt.sat.u16.s32 %0, %1;" : "=h"(res) : "r"(v));
+        asm("cvt.sat.u16.s32 %0, %a1;" : "=h"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ ushort saturate_cast<ushort>(uint v)
     {
         ushort res = 0;
-        asm("cvt.sat.u16.u32 %0, %1;" : "=h"(res) : "r"(v));
+        asm("cvt.sat.u16.u32 %0, %a1;" : "=h"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ ushort saturate_cast<ushort>(float v)
     {
         ushort res = 0;
-        asm("cvt.rni.sat.u16.f32 %0, %1;" : "=h"(res) : "f"(v));
+        asm("cvt.rni.sat.u16.f32 %0, %a1;" : "=h"(res) : "f"(v));
         return res;
     }
     template<> __device__ __forceinline__ ushort saturate_cast<ushort>(double v)
@@ -203,25 +203,25 @@ namespace cv { namespace cuda { namespace device
     template<> __device__ __forceinline__ short saturate_cast<short>(ushort v)
     {
         short res = 0;
-        asm("cvt.sat.s16.u16 %0, %1;" : "=h"(res) : "h"(v));
+        asm("cvt.sat.s16.u16 %0, %a1;" : "=h"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ short saturate_cast<short>(int v)
     {
         short res = 0;
-        asm("cvt.sat.s16.s32 %0, %1;" : "=h"(res) : "r"(v));
+        asm("cvt.sat.s16.s32 %0, %a1;" : "=h"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ short saturate_cast<short>(uint v)
     {
         short res = 0;
-        asm("cvt.sat.s16.u32 %0, %1;" : "=h"(res) : "r"(v));
+        asm("cvt.sat.s16.u32 %0, %a1;" : "=h"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ short saturate_cast<short>(float v)
     {
         short res = 0;
-        asm("cvt.rni.sat.s16.f32 %0, %1;" : "=h"(res) : "f"(v));
+        asm("cvt.rni.sat.s16.f32 %0, %a1;" : "=h"(res) : "f"(v));
         return res;
     }
     template<> __device__ __forceinline__ short saturate_cast<short>(double v)
@@ -238,7 +238,7 @@ namespace cv { namespace cuda { namespace device
     template<> __device__ __forceinline__ int saturate_cast<int>(uint v)
     {
         int res = 0;
-        asm("cvt.sat.s32.u32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.s32.u32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ int saturate_cast<int>(float v)
@@ -258,19 +258,19 @@ namespace cv { namespace cuda { namespace device
     {
         uint res = 0;
         int vi = v;
-        asm("cvt.sat.u32.s8 %0, %1;" : "=r"(res) : "r"(vi));
+        asm("cvt.sat.u32.s8 %0, %a1;" : "=r"(res) : "r"(vi));
         return res;
     }
     template<> __device__ __forceinline__ uint saturate_cast<uint>(short v)
     {
         uint res = 0;
-        asm("cvt.sat.u32.s16 %0, %1;" : "=r"(res) : "h"(v));
+        asm("cvt.sat.u32.s16 %0, %a1;" : "=r"(res) : "h"(v));
         return res;
     }
     template<> __device__ __forceinline__ uint saturate_cast<uint>(int v)
     {
         uint res = 0;
-        asm("cvt.sat.u32.s32 %0, %1;" : "=r"(res) : "r"(v));
+        asm("cvt.sat.u32.s32 %0, %a1;" : "=r"(res) : "r"(v));
         return res;
     }
     template<> __device__ __forceinline__ uint saturate_cast<uint>(float v)

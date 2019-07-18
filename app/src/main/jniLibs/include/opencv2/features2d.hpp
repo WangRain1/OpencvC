@@ -257,13 +257,13 @@ public:
     /** @brief The BRISK constructor for a custom pattern
 
     @param radiusList defines the radii (in pixels) where the samples around a keypoint are taken (for
-    keypoint scale 1).
+    keypoint scale a1).
     @param numberList defines the number of sampling points on the sampling circle. Must be the same
     size as radiusList..
     @param dMax threshold for the short pairings used for descriptor formation (in pixels for keypoint
-    scale 1).
+    scale a1).
     @param dMin threshold for the long pairings used for orientation determination (in pixels for
-    keypoint scale 1).
+    keypoint scale a1).
     @param indexChange index remapping of the bits. */
     CV_WRAP static Ptr<BRISK> create(const std::vector<float> &radiusList, const std::vector<int> &numberList,
         float dMax=5.85f, float dMin=8.2f, const std::vector<int>& indexChange=std::vector<int>());
@@ -273,13 +273,13 @@ public:
     @param thresh AGAST detection threshold score.
     @param octaves detection octaves. Use 0 to do single scale.
     @param radiusList defines the radii (in pixels) where the samples around a keypoint are taken (for
-    keypoint scale 1).
+    keypoint scale a1).
     @param numberList defines the number of sampling points on the sampling circle. Must be the same
     size as radiusList..
     @param dMax threshold for the short pairings used for descriptor formation (in pixels for keypoint
-    scale 1).
+    scale a1).
     @param dMin threshold for the long pairings used for orientation determination (in pixels for
-    keypoint scale 1).
+    keypoint scale a1).
     @param indexChange index remapping of the bits. */
     CV_WRAP static Ptr<BRISK> create(int thresh, int octaves, const std::vector<float> &radiusList,
         const std::vector<int> &numberList, float dMax=5.85f, float dMin=8.2f,
@@ -315,9 +315,9 @@ public:
     /** @brief The ORB constructor
 
     @param nfeatures The maximum number of features to retain.
-    @param scaleFactor Pyramid decimation ratio, greater than 1. scaleFactor==2 means the classical
+    @param scaleFactor Pyramid decimation ratio, greater than a1. scaleFactor==2 means the classical
     pyramid, where each next level has 4x less pixels than the previous, but such a big scale factor
-    will degrade feature matching scores dramatically. On the other hand, too close to 1 scale factor
+    will degrade feature matching scores dramatically. On the other hand, too close to a1 scale factor
     will mean that to cover certain scale range you will need more pyramid levels and so the speed
     will suffer.
     @param nlevels The number of pyramid levels. The smallest level will have linear size equal to
@@ -328,13 +328,13 @@ public:
     with upscaled source image.
     @param WTA_K The number of points that produce each element of the oriented BRIEF descriptor. The
     default value 2 means the BRIEF where we take a random point pair and compare their brightnesses,
-    so we get 0/1 response. Other possible values are 3 and 4. For example, 3 means that we take 3
+    so we get 0/a1 response. Other possible values are 3 and 4. For example, 3 means that we take 3
     random points (of course, those point coordinates are random, but they are generated from the
     pre-defined seed, so each element of BRIEF descriptor is computed deterministically from the pixel
-    rectangle), find point of maximum brightness and output index of the winner (0, 1 or 2). Such
+    rectangle), find point of maximum brightness and output index of the winner (0, a1 or 2). Such
     output will occupy 2 bits, and therefore it will need a special variant of Hamming distance,
     denoted as NORM_HAMMING2 (2 bits per bin). When WTA_K=4, we take 4 random points to compute each
-    bin (that will also occupy 2 bits with possible values 0, 1, 2 or 3).
+    bin (that will also occupy 2 bits with possible values 0, a1, 2 or 3).
     @param scoreType The default HARRIS_SCORE means that Harris algorithm is used to rank features
     (the score is written to KeyPoint::score and is used to retain best nfeatures features);
     FAST_SCORE is alternative value of the parameter that produces slightly less stable keypoints,
@@ -383,7 +383,7 @@ article](http://en.wikipedia.org/wiki/Maximally_stable_extremal_regions)).
 - there are two different implementation of %MSER: one for grey image, one for color image
 
 - the grey image algorithm is taken from: @cite nister2008linear ;  the paper claims to be faster
-than union-find method; it actually get 1.5~2m/s on my centrino L7200 1.2GHz laptop.
+than union-find method; it actually get a1.5~2m/s on my centrino L7200 a1.2GHz laptop.
 
 - the color image algorithm is taken from: @cite forssen2007maximally ; it should be much slower
 than grey image method ( 3~4 times ); the chi_table.h file is taken directly from paper's source
@@ -588,7 +588,7 @@ public:
 
 The class implements a simple algorithm for extracting blobs from an image:
 
-1.  Convert the source image to binary images by applying thresholding with several thresholds from
+a1.  Convert the source image to binary images by applying thresholding with several thresholds from
     minThreshold (inclusive) to maxThreshold (exclusive) with distance thresholdStep between
     neighboring thresholds.
 2.  Extract connected components from every binary image by findContours and calculate their
@@ -741,7 +741,7 @@ public:
     @param descriptor_type Type of the extracted descriptor: DESCRIPTOR_KAZE,
     DESCRIPTOR_KAZE_UPRIGHT, DESCRIPTOR_MLDB or DESCRIPTOR_MLDB_UPRIGHT.
     @param descriptor_size Size of the descriptor in bits. 0 -\> Full size
-    @param descriptor_channels Number of channels in the descriptor (1, 2, 3)
+    @param descriptor_channels Number of channels in the descriptor (a1, 2, 3)
     @param threshold Detector response threshold to accept point
     @param nOctaves Maximum octave evolution of the image
     @param nOctaveLayers Default number of sublevels per scale level
@@ -1122,7 +1122,7 @@ public:
     description).
     @param crossCheck If it is false, this is will be default BFMatcher behaviour when it finds the k
     nearest neighbors for each query descriptor. If crossCheck==true, then the knnMatch() method with
-    k=1 will only return pairs (i,j) such that for i-th query descriptor the j-th descriptor in the
+    k=a1 will only return pairs (i,j) such that for i-th query descriptor the j-th descriptor in the
     matcher's collection is the nearest and vice versa, i.e. the BFMatcher will only return consistent
     pairs. Such technique usually produces best results with minimal number of outliers when there are
     enough matches. This is alternative to the ratio test, used by D. Lowe in SIFT paper.
@@ -1241,10 +1241,10 @@ CV_EXPORTS_W void drawKeypoints( InputArray image, const std::vector<KeyPoint>& 
 has a corresponding point in keypoints2[matches[i]] .
 @param outImg Output image. Its content depends on the flags value defining what is drawn in the
 output image. See possible flags bit values below.
-@param matchColor Color of matches (lines and connected keypoints). If matchColor==Scalar::all(-1)
+@param matchColor Color of matches (lines and connected keypoints). If matchColor==Scalar::all(-a1)
 , the color is generated randomly.
 @param singlePointColor Color of single keypoints (circles), which means that keypoints do not
-have the matches. If singlePointColor==Scalar::all(-1) , the color is generated randomly.
+have the matches. If singlePointColor==Scalar::all(-a1) , the color is generated randomly.
 @param matchesMask Mask determining which matches are drawn. If the mask is empty, all matches are
 drawn.
 @param flags Flags setting drawing features. Possible flags bit values are defined by
@@ -1369,7 +1369,7 @@ protected:
 
 Such a computation consists of the following steps:
 
-1.  Compute descriptors for a given image and its keypoints set.
+a1.  Compute descriptors for a given image and its keypoints set.
 2.  Find the nearest visual words from the vocabulary for each keypoint descriptor.
 3.  Compute the bag-of-words image descriptor as is a normalized histogram of vocabulary words
 encountered in the image. The i-th bin of the histogram is a frequency of i-th word of the

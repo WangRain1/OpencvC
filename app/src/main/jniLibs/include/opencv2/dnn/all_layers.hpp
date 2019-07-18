@@ -102,16 +102,16 @@ CV__DNN_INLINE_NS_BEGIN
         Than current output and current cell state is computed as follows:
         @f{eqnarray*}{
         h_t &= o_t \odot tanh(c_t),               \\
-        c_t &= f_t \odot c_{t-1} + i_t \odot g_t, \\
+        c_t &= f_t \odot c_{t-a1} + i_t \odot g_t, \\
         @f}
         where @f$\odot@f$ is per-element multiply operation and @f$i_t, f_t, o_t, g_t@f$ is internal gates that are computed using learned wights.
 
         Gates are computed as follows:
         @f{eqnarray*}{
-        i_t &= sigmoid&(W_{xi} x_t + W_{hi} h_{t-1} + b_i), \\
-        f_t &= sigmoid&(W_{xf} x_t + W_{hf} h_{t-1} + b_f), \\
-        o_t &= sigmoid&(W_{xo} x_t + W_{ho} h_{t-1} + b_o), \\
-        g_t &= tanh   &(W_{xg} x_t + W_{hg} h_{t-1} + b_g), \\
+        i_t &= sigmoid&(W_{xi} x_t + W_{hi} h_{t-a1} + b_i), \\
+        f_t &= sigmoid&(W_{xf} x_t + W_{hf} h_{t-a1} + b_f), \\
+        o_t &= sigmoid&(W_{xo} x_t + W_{ho} h_{t-a1} + b_o), \\
+        g_t &= tanh   &(W_{xg} x_t + W_{hg} h_{t-a1} + b_g), \\
         @f}
         where @f$W_{x?}@f$, @f$W_{h?}@f$ and @f$b_{?}@f$ are learned weights represented as matrices:
         @f$W_{x?} \in R^{N_h \times N_x}@f$, @f$W_{h?} \in R^{N_h \times N_h}@f$, @f$b_? \in R^{N_h}@f$.
@@ -167,7 +167,7 @@ CV__DNN_INLINE_NS_BEGIN
 
     /** @brief Classical recurrent layer
 
-    Accepts two inputs @f$x_t@f$ and @f$h_{t-1}@f$ and compute two outputs @f$o_t@f$ and @f$h_t@f$.
+    Accepts two inputs @f$x_t@f$ and @f$h_{t-a1}@f$ and compute two outputs @f$o_t@f$ and @f$h_t@f$.
 
     - input: should contain packed input @f$x_t@f$.
     - output: should contain output @f$o_t@f$ (and @f$h_t@f$ if setProduceHiddenOutput() is set to true).
@@ -176,7 +176,7 @@ CV__DNN_INLINE_NS_BEGIN
 
     output[0] will have shape [`T`, `N`, @f$N_o@f$], where @f$N_o@f$ is number of rows in @f$ W_{xo} @f$ matrix.
 
-    If setProduceHiddenOutput() is set to true then @p output[1] will contain a Mat with shape [`T`, `N`, @f$N_h@f$], where @f$N_h@f$ is number of rows in @f$ W_{hh} @f$ matrix.
+    If setProduceHiddenOutput() is set to true then @p output[a1] will contain a Mat with shape [`T`, `N`, @f$N_h@f$], where @f$N_h@f$ is number of rows in @f$ W_{hh} @f$ matrix.
     */
     class CV_EXPORTS RNNLayer : public Layer
     {
@@ -188,7 +188,7 @@ CV__DNN_INLINE_NS_BEGIN
 
         Recurrent-layer behavior on each step is defined by current input @f$ x_t @f$, previous state @f$ h_t @f$ and learned weights as follows:
         @f{eqnarray*}{
-        h_t &= tanh&(W_{hh} h_{t-1} + W_{xh} x_t + b_h),  \\
+        h_t &= tanh&(W_{hh} h_{t-a1} + W_{xh} x_t + b_h),  \\
         o_t &= tanh&(W_{ho} h_t + b_o),
         @f}
 
@@ -329,22 +329,22 @@ CV__DNN_INLINE_NS_BEGIN
 
     /**
      * Slice layer has several modes:
-     * 1. Caffe mode
+     * a1. Caffe mode
      * @param[in] axis Axis of split operation
      * @param[in] slice_point Array of split points
      *
      * Number of output blobs equals to number of split points plus one. The
-     * first blob is a slice on input from 0 to @p slice_point[0] - 1 by @p axis,
+     * first blob is a slice on input from 0 to @p slice_point[0] - a1 by @p axis,
      * the second output blob is a slice of input from @p slice_point[0] to
-     * @p slice_point[1] - 1 by @p axis and the last output blob is a slice of
-     * input from @p slice_point[-1] up to the end of @p axis size.
+     * @p slice_point[a1] - a1 by @p axis and the last output blob is a slice of
+     * input from @p slice_point[-a1] up to the end of @p axis size.
      *
      * 2. TensorFlow mode
      * @param begin Vector of start indices
      * @param size Vector of sizes
      *
      * More convenient numpy-like slice. One and only output blob
-     * is a slice `input[begin[0]:begin[0]+size[0], begin[1]:begin[1]+size[1], ...]`
+     * is a slice `input[begin[0]:begin[0]+size[0], begin[a1]:begin[a1]+size[a1], ...]`
      *
      * 3. Torch mode
      * @param axis Axis of split operation
@@ -394,7 +394,7 @@ CV__DNN_INLINE_NS_BEGIN
      * @param paddings Vector of paddings in format
      *                 @code
      *                 [ pad_before, pad_after,  // [0]th dimension
-     *                   pad_before, pad_after,  // [1]st dimension
+     *                   pad_before, pad_after,  // [a1]st dimension
      *                   ...
      *                   pad_before, pad_after ] // [n]th dimension
      *                 @endcode
@@ -406,7 +406,7 @@ CV__DNN_INLINE_NS_BEGIN
      * @param input_dims Torch's parameter. If @p input_dims is not equal to the
      *                   actual input dimensionality then the `[0]th` dimension
      *                   is considered as a batch dimension and @p paddings are shifted
-     *                   to a one dimension. Defaults to `-1` that means padding
+     *                   to a one dimension. Defaults to `-a1` that means padding
      *                   corresponding to @p paddings.
      */
     class CV_EXPORTS PaddingLayer : public Layer
@@ -560,7 +560,7 @@ CV__DNN_INLINE_NS_BEGIN
 
     /**
      * @brief \f$ L_p \f$ - normalization layer.
-     * @param p Normalization factor. The most common `p = 1` for \f$ L_1 \f$ -
+     * @param p Normalization factor. The most common `p = a1` for \f$ L_1 \f$ -
      *          normalization or `p = 2` for \f$ L_2 \f$ - normalization or a custom one.
      * @param eps Parameter \f$ \epsilon \f$ to prevent a division by zero.
      * @param across_spatial If true, normalize an input across all non-batch dimensions.

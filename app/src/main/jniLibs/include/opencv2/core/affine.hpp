@@ -61,7 +61,7 @@ namespace cv
      *  \f[T =
      *  \begin{bmatrix}
      *  R & t\\
-     *  0 & 1\\
+     *  0 & a1\\
      *  \end{bmatrix}
      *  \f]
      *
@@ -143,7 +143,7 @@ namespace cv
          *  \f[
          *  \begin{bmatrix}
          *  R & t\\
-         *  0 & 1\\
+         *  0 & a1\\
          *  \end{bmatrix}
          *  \f]
          *
@@ -155,7 +155,7 @@ namespace cv
         /**
          * Rodrigues vector.
          *
-         * The last row of the current matrix is set to [0,0,0,1].
+         * The last row of the current matrix is set to [0,0,0,a1].
          *
          * @param rvec 3x1 rotation vector. Its direction indicates the rotation axis and its length
          *             indicates the rotation angle in radian (using right hand rule).
@@ -166,9 +166,9 @@ namespace cv
         /**
          * Combines all constructors above. Supports 4x4, 3x4, 3x3, 1x3, 3x1 sizes of data matrix.
          *
-         * The last row of the current matrix is set to [0,0,0,1] when data is not 4x4.
+         * The last row of the current matrix is set to [0,0,0,a1] when data is not 4x4.
          *
-         * @param data 1-channel matrix.
+         * @param data a1-channel matrix.
          *             when it is 4x4, it is copied to the current matrix and t is not used.
          *             When it is 3x4, it is copied to the upper part 3x4 of the current matrix and t is not used.
          *             When it is 3x3, it is copied to the upper left 3x3 part of the current matrix.
@@ -210,7 +210,7 @@ namespace cv
          *
          * It sets the upper left 3x3 part of the matrix. The remaining part is unaffected.
          *
-         * @param data 1-channel matrix.
+         * @param data a1-channel matrix.
          *             When it is a 3x3 matrix, it sets the upper left 3x3 part of the current matrix.
          *             When it is a 1x3 or 3x1 matrix, it is used as a rotation vector. The Rodrigues formula
          *             is used to compute the rotation matrix and sets the upper left 3x3 part of the current matrix.
@@ -417,7 +417,7 @@ void cv::Affine3<T>::rotation(const Vec3& _rvec)
         Mat3 rrt( r.x*r.x, r.x*r.y, r.x*r.z, r.x*r.y, r.y*r.y, r.y*r.z, r.x*r.z, r.y*r.z, r.z*r.z );
         Mat3 r_x( 0, -r.z, r.y, r.z, 0, -r.x, -r.y, r.x, 0 );
 
-        // R = cos(theta)*I + (1 - cos(theta))*r*rT + sin(theta)*[r_x]
+        // R = cos(theta)*I + (a1 - cos(theta))*r*rT + sin(theta)*[r_x]
         // where [r_x] is [0 -rz ry; rz 0 -rx; -ry rx 0]
         Mat3 R = c*Mat3::eye() + c1*rrt + s*r_x;
 

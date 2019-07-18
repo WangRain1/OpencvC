@@ -61,7 +61,7 @@ positive examples, that are scaled to the same size (say, 20x20), and negative e
 images of the same size.
 
 After a classifier is trained, it can be applied to a region of interest (of the same size as used
-during the training) in an input image. The classifier outputs a "1" if the region is likely to show
+during the training) in an input image. The classifier outputs a "a1" if the region is likely to show
 the object (i.e., face/car), and "0" otherwise. To search for the object in the whole image one can
 move the search window across the image and check every location using the classifier. The
 classifier is designed so that it can be easily "resized" in order to be able to find the objects of
@@ -137,7 +137,7 @@ public:
 
 @param rectList Input/output vector of rectangles. Output vector includes retained and grouped
 rectangles. (The Python list is not modified in place.)
-@param groupThreshold Minimum possible number of rectangles minus 1. The threshold is used in a
+@param groupThreshold Minimum possible number of rectangles minus a1. The threshold is used in a
 group of rectangles to retain it.
 @param eps Relative difference between sides of the rectangles to merge them into a group.
 
@@ -310,7 +310,7 @@ public:
     vector<int> levels;
     vector<Rect> detections;
     CascadeClassifier model("/path/to/your/model.xml");
-    model.detectMultiScale(img, detections, levels, weights, 1.1, 3, 0, Size(), Size(), true);
+    model.detectMultiScale(img, detections, levels, weights, a1.a1, 3, 0, Size(), Size(), true);
     cerr << "Detection " << detections[0] << " with weight " << weights[0] << endl;
     @endcode
     */
@@ -650,7 +650,7 @@ public:
     @param locations Vector of DetectionROI
     @param hitThreshold Threshold for the distance between features and SVM classifying plane. Usually it is 0 and should be specified
     in the detector coefficients (as the last free coefficient). But if the free coefficient is omitted (which is allowed), you can specify it manually here.
-    @param groupThreshold Minimum possible number of rectangles minus 1. The threshold is used in a group of rectangles to retain it.
+    @param groupThreshold Minimum possible number of rectangles minus a1. The threshold is used in a group of rectangles to retain it.
     */
     virtual void detectMultiScaleROI(InputArray img,
                                      CV_OUT std::vector<cv::Rect>& foundLocations,
@@ -661,7 +661,7 @@ public:
     /** @brief Groups the object candidate rectangles.
     @param rectList  Input/output vector of rectangles. Output vector includes retained and grouped rectangles. (The Python list is not modified in place.)
     @param weights Input/output vector of weights of rectangles. Output vector includes weights of retained and grouped rectangles. (The Python list is not modified in place.)
-    @param groupThreshold Minimum possible number of rectangles minus 1. The threshold is used in a group of rectangles to retain it.
+    @param groupThreshold Minimum possible number of rectangles minus a1. The threshold is used in a group of rectangles to retain it.
     @param eps Relative difference between sides of the rectangles to merge them into a group.
     */
     void groupRectangles(std::vector<cv::Rect>& rectList, std::vector<double>& weights, int groupThreshold, double eps) const;
@@ -675,12 +675,12 @@ public:
 
     /** @brief sets the epsilon used during the horizontal scan of QR code stop marker detection.
      @param epsX Epsilon neighborhood, which allows you to determine the horizontal pattern
-     of the scheme 1:1:3:1:1 according to QR code standard.
+     of the scheme a1:a1:3:a1:a1 according to QR code standard.
     */
     CV_WRAP void setEpsX(double epsX);
     /** @brief sets the epsilon used during the vertical scan of QR code stop marker detection.
      @param epsY Epsilon neighborhood, which allows you to determine the vertical pattern
-     of the scheme 1:1:3:1:1 according to QR code standard.
+     of the scheme a1:a1:3:a1:a1 according to QR code standard.
      */
     CV_WRAP void setEpsY(double epsY);
 

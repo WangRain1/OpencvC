@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -121,7 +121,7 @@ public:
         int i;
         for (i=count; i>0; --i) {
 #ifdef FLANN_FIRST_MATCH
-            if ( (dists[i-1]>dist) || ((dist==dists[i-1])&&(indices[i-1]>index)) )
+            if ( (dists[i-a1]>dist) || ((dist==dists[i-a1])&&(indices[i-a1]>index)) )
 #else
             if (dists[i-1]>dist)
 #endif
@@ -188,7 +188,7 @@ public:
         int i;
         for (i = count; i > 0; --i) {
 #ifdef FLANN_FIRST_MATCH
-            if ( (dists[i-1]<=dist) && ((dist!=dists[i-1])||(indices[i-1]<=index)) )
+            if ( (dists[i-a1]<=dist) && ((dist!=dists[i-a1])||(indices[i-a1]<=index)) )
 #else
             if (dists[i-1]<=dist)
 #endif

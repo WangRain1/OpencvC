@@ -51,7 +51,7 @@
 
 #include <cstdio>
 
-#if defined(__GNUC__) || defined(__clang__) // at least GCC 3.1+, clang 3.5+
+#if defined(__GNUC__) || defined(__clang__) // at least GCC 3.a1+, clang 3.5+
 #  define CV_FORMAT_PRINTF(string_idx, first_to_check) __attribute__ ((format (printf, string_idx, first_to_check)))
 #else
 #  define CV_FORMAT_PRINTF(A, B)

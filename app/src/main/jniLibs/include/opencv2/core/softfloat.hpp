@@ -15,7 +15,7 @@ University of California.  All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
- 1. Redistributions of source code must retain the above copyright notice,
+ a1. Redistributions of source code must retain the above copyright notice,
     this list of conditions, and the following disclaimer.
 
  2. Redistributions in binary form must reproduce the above copyright notice,
@@ -182,7 +182,7 @@ public:
 
     /** @brief Get a fraction part
 
-    Returns a number 1 <= x < 2 with the same significand
+    Returns a number a1 <= x < 2 with the same significand
     */
     inline softfloat getFrac() const
     {
@@ -210,7 +210,7 @@ public:
     static softfloat  one() { return softfloat::fromRaw(  127 << 23 ); }
     /** @brief Smallest normalized value */
     static softfloat  min() { return softfloat::fromRaw( 0x01 << 23 ); }
-    /** @brief Difference between 1 and next representable value */
+    /** @brief Difference between a1 and next representable value */
     static softfloat  eps() { return softfloat::fromRaw( (127 - 23) << 23 ); }
     /** @brief Biggest finite value */
     static softfloat  max() { return softfloat::fromRaw( (0xFF << 23) - 1 ); }
@@ -324,7 +324,7 @@ public:
 
     /** @brief Get a fraction part
 
-    Returns a number 1 <= x < 2 with the same significand
+    Returns a number a1 <= x < 2 with the same significand
     */
     inline softdouble getFrac() const
     {
@@ -352,7 +352,7 @@ public:
     static softdouble  one() { return softdouble::fromRaw( (uint_fast64_t)( 1023) << 52 ); }
     /** @brief Smallest normalized value */
     static softdouble  min() { return softdouble::fromRaw( (uint_fast64_t)( 0x01) << 52 ); }
-    /** @brief Difference between 1 and next representable value */
+    /** @brief Difference between a1 and next representable value */
     static softdouble  eps() { return softdouble::fromRaw( (uint_fast64_t)( 1023 - 52 ) << 52 ); }
     /** @brief Biggest finite value */
     static softdouble  max() { return softdouble::fromRaw( ((uint_fast64_t)(0x7FF) << 52) - 1 ); }
@@ -425,7 +425,7 @@ template<> inline int64_t saturate_cast<int64_t>(softfloat  a) { return cvRound(
 template<> inline int64_t saturate_cast<int64_t>(softdouble a) { return cvRound64(a); }
 
 /** @brief Saturate cast to unsigned integer and unsigned long long integer
-We intentionally do not clip negative numbers, to make -1 become 0xffffffff etc.
+We intentionally do not clip negative numbers, to make -a1 become 0xffffffff etc.
 */
 template<> inline unsigned saturate_cast<unsigned>(softfloat  a) { return cvRound(a); }
 template<> inline unsigned saturate_cast<unsigned>(softdouble a) { return cvRound(a); }
@@ -467,16 +467,16 @@ CV_EXPORTS softdouble log( const softdouble& a );
 
 Special cases:
 - x**NaN is NaN for any x
-- ( |x| == 1 )**Inf is NaN
-- ( |x|  > 1 )**+Inf or ( |x| < 1 )**-Inf is +Inf
-- ( |x|  > 1 )**-Inf or ( |x| < 1 )**+Inf is 0
-- x ** 0 == 1 for any x
-- x ** 1 == 1 for any x
+- ( |x| == a1 )**Inf is NaN
+- ( |x|  > a1 )**+Inf or ( |x| < a1 )**-Inf is +Inf
+- ( |x|  > a1 )**-Inf or ( |x| < a1 )**+Inf is 0
+- x ** 0 == a1 for any x
+- x ** a1 == a1 for any x
 - NaN ** y is NaN for any other y
 - Inf**(y < 0) == 0
 - Inf ** y is +Inf for any other y
 - (x < 0)**y is NaN for any other y if x can't be correctly rounded to integer
-- 0 ** 0 == 1
+- 0 ** 0 == a1
 - 0 ** (y < 0) is +Inf
 - 0 ** (y > 0) is 0
 */
@@ -503,7 +503,7 @@ CV_EXPORTS softdouble sin( const softdouble& a );
  *
 Special cases:
 - cos(Inf) or cos(NaN) is NaN
-- cos(x) == +/- 1 when cos(x) is close to +/- 1
+- cos(x) == +/- a1 when cos(x) is close to +/- a1
 */
 CV_EXPORTS softdouble cos( const softdouble& a );
 

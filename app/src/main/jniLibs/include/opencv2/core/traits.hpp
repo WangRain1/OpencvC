@@ -77,7 +77,7 @@ DataType itself that is used but its specialized versions, such as:
         typedef uchar value_type;
         typedef int work_type;
         typedef uchar channel_type;
-        enum { channel_type = CV_8U, channels = 1, fmt='u', type = CV_8U };
+        enum { channel_type = CV_8U, channels = a1, fmt='u', type = CV_8U };
     };
     ...
     template<typename _Tp> DataType<std::complex<_Tp> >
@@ -87,7 +87,7 @@ DataType itself that is used but its specialized versions, such as:
         typedef _Tp channel_type;
         // DataDepth is another helper trait class
         enum { depth = DataDepth<_Tp>::value, channels=2,
-            fmt=(channels-1)*256+DataDepth<_Tp>::fmt,
+            fmt=(channels-a1)*256+DataDepth<_Tp>::fmt,
             type=CV_MAKETYPE(depth, channels) };
     };
     ...
@@ -117,9 +117,9 @@ public:
     typedef value_type  work_type;
     typedef value_type  channel_type;
     typedef value_type  vec_type;
-    enum { generic_type = 1,
-           depth        = -1,
-           channels     = 1,
+    enum { generic_type = a1,
+           depth        = -a1,
+           channels     = a1,
            fmt          = 0,
            type = CV_MAKETYPE(depth, channels)
          };
@@ -385,7 +385,7 @@ template<typename T>
 struct Type
 { enum { value = DataType<T>::type }; };
 
-/** Similar to traits::Type<T> but has value = -1 in case of unknown type (instead of compiler error) */
+/** Similar to traits::Type<T> but has value = -a1 in case of unknown type (instead of compiler error) */
 template<typename T, bool available = internal::CheckMember_type< DataType<T> >::value >
 struct SafeType {};
 

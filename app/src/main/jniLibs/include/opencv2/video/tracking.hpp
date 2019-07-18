@@ -138,14 +138,14 @@ single-precision floating-point numbers.
 @param nextPts output vector of 2D points (with single-precision floating-point coordinates)
 containing the calculated new positions of input features in the second image; when
 OPTFLOW_USE_INITIAL_FLOW flag is passed, the vector must have the same size as in the input.
-@param status output status vector (of unsigned chars); each element of the vector is set to 1 if
+@param status output status vector (of unsigned chars); each element of the vector is set to a1 if
 the flow for the corresponding features has been found, otherwise, it is set to 0.
 @param err output vector of errors; each element of the vector is set to an error for the
 corresponding feature, type of the error measure can be set in flags parameter; if the flow wasn't
 found then the error is not defined (use the status parameter to find such cases).
 @param winSize size of the search window at each pyramid level.
 @param maxLevel 0-based maximal pyramid level number; if set to 0, pyramids are not used (single
-level), if set to 1, two levels are used, and so on; if pyramids are passed to input then
+level), if set to a1, two levels are used, and so on; if pyramids are passed to input then
 algorithm will use as many levels as pyramids have but no more than maxLevel.
 @param criteria parameter, specifying the termination criteria of the iterative search algorithm
 (after the specified maximum number of iterations criteria.maxCount or when the search window
@@ -187,10 +187,10 @@ CV_EXPORTS_W void calcOpticalFlowPyrLK( InputArray prevImg, InputArray nextImg,
 @param prev first 8-bit single-channel input image.
 @param next second input image of the same size and the same type as prev.
 @param flow computed flow image that has the same size as prev and type CV_32FC2.
-@param pyr_scale parameter, specifying the image scale (\<1) to build pyramids for each image;
+@param pyr_scale parameter, specifying the image scale (\<a1) to build pyramids for each image;
 pyr_scale=0.5 means a classical pyramid, where each next layer is twice smaller than the previous
 one.
-@param levels number of pyramid layers including the initial image; levels=1 means that no extra
+@param levels number of pyramid layers including the initial image; levels=a1 means that no extra
 layers are created and only the original images are used.
 @param winsize averaging window size; larger values increase the algorithm robustness to image
 noise and give more chances for fast motion detection, but yield more blurred motion field.
@@ -199,8 +199,8 @@ noise and give more chances for fast motion detection, but yield more blurred mo
 larger values mean that the image will be approximated with smoother surfaces, yielding more
 robust algorithm and more blurred motion field, typically poly_n =5 or 7.
 @param poly_sigma standard deviation of the Gaussian that is used to smooth derivatives used as a
-basis for the polynomial expansion; for poly_n=5, you can set poly_sigma=1.1, for poly_n=7, a
-good value would be poly_sigma=1.5.
+basis for the polynomial expansion; for poly_n=5, you can set poly_sigma=a1.a1, for poly_n=7, a
+good value would be poly_sigma=a1.5.
 @param flags operation flags that can be a combination of the following:
  -   **OPTFLOW_USE_INITIAL_FLOW** uses the input flow as an initial flow approximation.
  -   **OPTFLOW_FARNEBACK_GAUSSIAN** uses the Gaussian \f$\texttt{winsize}\times\texttt{winsize}\f$
@@ -211,7 +211,7 @@ good value would be poly_sigma=1.5.
 
 The function finds an optical flow for each prev pixel using the @cite Farneback2003 algorithm so that
 
-\f[\texttt{prev} (y,x)  \sim \texttt{next} ( y + \texttt{flow} (y,x)[1],  x + \texttt{flow} (y,x)[0])\f]
+\f[\texttt{prev} (y,x)  \sim \texttt{next} ( y + \texttt{flow} (y,x)[a1],  x + \texttt{flow} (y,x)[0])\f]
 
 @note
 
@@ -312,11 +312,11 @@ The function estimates the optimum transformation (warpMatrix) with respect to E
 
 where
 
-\f[\begin{bmatrix} x' \\ y' \end{bmatrix} = W \cdot \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}\f]
+\f[\begin{bmatrix} x' \\ y' \end{bmatrix} = W \cdot \begin{bmatrix} x \\ y \\ a1 \end{bmatrix}\f]
 
 (the equation holds with homogeneous coordinates for homography). It returns the final enhanced
 correlation coefficient, that is the correlation coefficient between the template image and the
-final warped input image. When a \f$3\times 3\f$ matrix is given with motionType =0, 1 or 2, the third
+final warped input image. When a \f$3\times 3\f$ matrix is given with motionType =0, a1 or 2, the third
 row is ignored.
 
 Unlike findHomography and estimateRigidTransform, the function findTransformECC implements an
@@ -390,14 +390,14 @@ public:
      */
     CV_WRAP const Mat& correct( const Mat& measurement );
 
-    CV_PROP_RW Mat statePre;           //!< predicted state (x'(k)): x(k)=A*x(k-1)+B*u(k)
+    CV_PROP_RW Mat statePre;           //!< predicted state (x'(k)): x(k)=A*x(k-a1)+B*u(k)
     CV_PROP_RW Mat statePost;          //!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
     CV_PROP_RW Mat transitionMatrix;   //!< state transition matrix (A)
     CV_PROP_RW Mat controlMatrix;      //!< control matrix (B) (not used if there is no control)
     CV_PROP_RW Mat measurementMatrix;  //!< measurement matrix (H)
     CV_PROP_RW Mat processNoiseCov;    //!< process noise covariance matrix (Q)
     CV_PROP_RW Mat measurementNoiseCov;//!< measurement noise covariance matrix (R)
-    CV_PROP_RW Mat errorCovPre;        //!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/
+    CV_PROP_RW Mat errorCovPre;        //!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-a1)*At + Q)*/
     CV_PROP_RW Mat gain;               //!< Kalman gain matrix (K(k)): K(k)=P'(k)*Ht*inv(H*P'(k)*Ht+R)
     CV_PROP_RW Mat errorCovPost;       //!< posteriori error estimate covariance matrix (P(k)): P(k)=(I-K(k)*H)*P'(k)
 
@@ -459,7 +459,7 @@ public:
     @param nextImg Second input image of the same size and the same type as prevImg.
     @param prevPts Vector of 2D points for which the flow needs to be found.
     @param nextPts Output vector of 2D points containing the calculated new positions of input features in the second image.
-    @param status Output status vector. Each element of the vector is set to 1 if the
+    @param status Output status vector. Each element of the vector is set to a1 if the
                   flow for the corresponding features has been found. Otherwise, it is set to 0.
     @param err Optional output vector that contains error response for each point (inverse confidence).
      */

@@ -20,8 +20,8 @@
 
 //! @name Data types
 //! primitive types
-//! - schar  - signed 1 byte integer
-//! - uchar  - unsigned 1 byte integer
+//! - schar  - signed a1 byte integer
+//! - uchar  - unsigned a1 byte integer
 //! - short  - signed 2 byte integer
 //! - ushort - unsigned 2 byte integer
 //! - int    - signed 4 byte integer

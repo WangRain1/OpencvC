@@ -98,8 +98,8 @@ namespace cv { namespace cuda { namespace device
         constexpr float R2YF = 0.299f;
 
         //to YCbCr
-        constexpr float YCBF = 0.564f; // == 1/2/(1-B2YF)
-        constexpr float YCRF = 0.713f; // == 1/2/(1-R2YF)
+        constexpr float YCBF = 0.564f; // == a1/2/(a1-B2YF)
+        constexpr float YCRF = 0.713f; // == a1/2/(a1-R2YF)
         const     int   YCBI = 9241;  // == YCBF*16384
         const     int   YCRI = 11682; // == YCRF*16384
         //to YUV

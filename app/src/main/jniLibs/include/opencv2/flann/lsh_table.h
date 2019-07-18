@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -267,7 +267,7 @@ private:
     void initialize(size_t key_size)
     {
         const size_t key_size_lower_bound = 1;
-        //a value (size_t(1) << key_size) must fit the size_t type so key_size has to be strictly less than size of size_t
+        //a value (size_t(a1) << key_size) must fit the size_t type so key_size has to be strictly less than size of size_t
         const size_t key_size_upper_bound = (std::min)(sizeof(BucketKey) * CHAR_BIT + 1, sizeof(size_t) * CHAR_BIT);
         if (key_size < key_size_lower_bound || key_size >= key_size_upper_bound)
         {
@@ -297,7 +297,7 @@ private:
             return;
         }
 
-        // If the bitset is going to use less than 10% of the RAM of the hash map (at least 1 size_t for the key and two
+        // If the bitset is going to use less than 10% of the RAM of the hash map (at least a1 size_t for the key and two
         // for the vector) or less than 512MB (key_size_ <= 30)
         if (((std::max(buckets_space_.size(), buckets_speed_.size()) * CHAR_BIT * 3 * sizeof(BucketKey)) / 10
              >= (size_t(1) << key_size_)) || (key_size_ <= 32)) {
@@ -372,7 +372,7 @@ inline LshTable<unsigned char>::LshTable(unsigned int feature_size, unsigned int
         mask_[idx] |= size_t(1) << (index % divisor); //use modulo to find the bit offset
     }
 
-    // Set to 1 if you want to display the mask for debug
+    // Set to a1 if you want to display the mask for debug
 #if 0
     {
         size_t bcount = 0;

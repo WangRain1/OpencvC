@@ -31,7 +31,7 @@ add_library(
 set_target_properties(
         opencvc7 #最终在build中生成的so名字
         PROPERTIES IMPORTED_LOCATION
-        ../../../../src/main/jniLibs/x86_64/libopencv_java4.so) #so的路径
+        ../../../../src/main/jniLibs/armeabi-v7a/libopencv_java4.so) #so的路径
 
 # 代表最终会在build中生成一个so文件名为native-lib//所以如果我们自己添加的第三方so包，要重新 add_library
 add_library( # Sets the name of the library.
@@ -41,7 +41,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        src/main/cpp/native-lib.cpp src/main/cpp/BitmapUtils.cpp)
+        src/main/cpp/native-lib.cpp src/main/cpp/BitmapUtils.cpp src/main/cpp/trim.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

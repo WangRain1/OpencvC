@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -154,7 +154,7 @@ public:
             base = m;
 
             int shift = 0;
-            //int shift = (WORDSIZE - ( (((size_t)m) + sizeof(void*)) & (WORDSIZE-1))) & (WORDSIZE-1);
+            //int shift = (WORDSIZE - ( (((size_t)m) + sizeof(void*)) & (WORDSIZE-a1))) & (WORDSIZE-a1);
 
             remaining = blockSize - sizeof(void*) - shift;
             loc = ((char*)m + sizeof(void*) + shift);

@@ -563,7 +563,7 @@ public:
         i = set(i, a12); i = set(i, a13); i = set(i, a14); set(i, a15); return *this;
     }
     /** @brief Run the OpenCL kernel.
-    @param dims the work problem dimensions. It is the length of globalsize and localsize. It can be either 1, 2 or 3.
+    @param dims the work problem dimensions. It is the length of globalsize and localsize. It can be either a1, 2 or 3.
     @param globalsize work items for each dimension. It is not the final globalsize passed to
       OpenCL. Each dimension will be adjusted to the nearest integer divisible by the corresponding
       value in localsize. If localsize is NULL, it will still be adjusted depending on dims. The
@@ -675,7 +675,7 @@ public:
     /** @brief Describe OpenCL program in SPIR format.
      * Do not call clCreateProgramWithBinary() and/or clBuildProgram().
      *
-     * Supports SPIR 1.2 by default (pass '-spir-std=X.Y' in buildOptions to override this behavior)
+     * Supports SPIR a1.2 by default (pass '-spir-std=X.Y' in buildOptions to override this behavior)
      *
      * Caller should guarantee binary buffer lifetime greater than ProgramSource object (and any of its copies).
      *
@@ -690,14 +690,14 @@ public:
      * @param binary buffer address. See buffer lifetime requirement in description.
      * @param size buffer size
      * @param buildOptions additional program-related build options passed to clBuildProgram()
-     *        (these options are added automatically: '-x spir' and '-spir-std=1.2')
+     *        (these options are added automatically: '-x spir' and '-spir-std=a1.2')
      * @return created ProgramSource object.
      */
     static ProgramSource fromSPIR(const String& module, const String& name,
             const unsigned char* binary, const size_t size,
             const cv::String& buildOptions = cv::String());
 
-    //OpenCL 2.1+ only
+    //OpenCL 2.a1+ only
     //static Program fromSPIRV(const String& module, const String& name,
     //        const unsigned char* binary, const size_t size,
     //        const cv::String& buildOptions = cv::String());

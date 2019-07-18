@@ -10,7 +10,7 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright
+ * a1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
@@ -252,7 +252,7 @@ void test_index_precisions(NNIndex<Distance>& index, const Matrix<typename Dista
 
     p2 = search_with_ground_truth(index, inputData, testData, matches, nn, c2, time, dist, distance, skipMatches);
 
-    // if precision for 1 run down the tree is already
+    // if precision for a1 run down the tree is already
     // better then some of the requested precisions, then
     // skip those
     while (precisions[pindex]<p2 && pindex<precisions_length) {

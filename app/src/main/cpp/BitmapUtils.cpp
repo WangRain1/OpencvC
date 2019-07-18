@@ -14,8 +14,7 @@ BitmapUtils::BitmapUtils() {
 
 }
 
-int BitmapUtils::Bitmap2mat(JNIEnv *env,
-                             jobject bitmap, Mat *mat) {
+int BitmapUtils::Bitmap2mat(JNIEnv *env, jobject bitmap, Mat *mat) {
     void *addrPtr;
     AndroidBitmap_lockPixels(env, bitmap, &addrPtr);
 
@@ -80,6 +79,8 @@ void BitmapUtils::findCardArea(const Mat& mat,Rect& card_rect) {
     Mat blur;
     GaussianBlur(mat, blur, Size(5, 5), BORDER_DEFAULT, BORDER_DEFAULT);
 
+    imwrite("/storage/emulated/0/blur.jpg",blur);
+
     // 梯度增强 , x 轴和 y 轴
     Mat grad_x, grad_y;
     Scharr(blur, grad_x, CV_32F, 1, 0);
@@ -90,11 +91,15 @@ void BitmapUtils::findCardArea(const Mat& mat,Rect& card_rect) {
     Mat grad;
     addWeighted(grad_abs_x, 0.5, grad_abs_y, 0.5, 0, grad);
 
+    imwrite("/storage/emulated/0/grad.jpg",grad);
+
     // 二值化，进行轮廓查找
     Mat gray;
     cvtColor(grad, gray, COLOR_BGRA2GRAY);
     Mat binary;
     threshold(gray, binary, 40, 255, THRESH_BINARY);
+
+    imwrite("/storage/emulated/0/binary.jpg",binary);
 
     // 轮廓查找
     vector<vector<Point> > contours;

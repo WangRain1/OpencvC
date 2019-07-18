@@ -73,7 +73,7 @@ CVAPI(void)  cvSquareAcc( const CvArr* image, CvArr* sqsum,
 CVAPI(void)  cvMultiplyAcc( const CvArr* image1, const CvArr* image2, CvArr* acc,
                            const CvArr* mask CV_DEFAULT(NULL) );
 
-/** @brief Adds image to accumulator with weights: acc = acc*(1-alpha) + image*alpha
+/** @brief Adds image to accumulator with weights: acc = acc*(a1-alpha) + image*alpha
 @see cv::accumulateWeighted
 */
 CVAPI(void)  cvRunningAvg( const CvArr* image, CvArr* acc, double alpha,
@@ -94,13 +94,13 @@ CVAPI(void) cvCopyMakeBorder( const CvArr* src, CvArr* dst, CvPoint offset,
 @param dst The destination image
 @param smoothtype Type of the smoothing, see SmoothMethod_c
 @param size1 The first parameter of the smoothing operation, the aperture width. Must be a
-positive odd number (1, 3, 5, ...)
+positive odd number (a1, 3, 5, ...)
 @param size2 The second parameter of the smoothing operation, the aperture height. Ignored by
 CV_MEDIAN and CV_BILATERAL methods. In the case of simple scaled/non-scaled and Gaussian blur if
 size2 is zero, it is set to size1. Otherwise it must be a positive odd number.
 @param sigma1 In the case of a Gaussian parameter this parameter may specify Gaussian \f$\sigma\f$
 (standard deviation). If it is zero, it is calculated from the kernel size:
-\f[\sigma  = 0.3 (n/2 - 1) + 0.8  \quad   \text{where}   \quad  n= \begin{array}{l l} \mbox{\texttt{size1} for horizontal kernel} \\ \mbox{\texttt{size2} for vertical kernel} \end{array}\f]
+\f[\sigma  = 0.3 (n/2 - a1) + 0.8  \quad   \text{where}   \quad  n= \begin{array}{l l} \mbox{\texttt{size1} for horizontal kernel} \\ \mbox{\texttt{size2} for vertical kernel} \end{array}\f]
 Using standard sigma for small kernels ( \f$3\times 3\f$ to \f$7\times 7\f$ ) gives better speed. If
 sigma1 is not zero, while size1 and size2 are zeros, the kernel size is calculated from the
 sigma (to provide accurate enough operation).
@@ -123,7 +123,7 @@ CVAPI(void) cvSmooth( const CvArr* src, CvArr* dst,
 matrix; if you want to apply different kernels to different channels, split the image into
 separate color planes using split and process them individually.
 @param anchor anchor of the kernel that indicates the relative position of a filtered point within
-the kernel; the anchor should lie within the kernel; default value (-1,-1) means that the anchor
+the kernel; the anchor should lie within the kernel; default value (-a1,-a1) means that the anchor
 is at the kernel center.
 
 @see cv::filter2D
@@ -140,8 +140,8 @@ CVAPI(void) cvIntegral( const CvArr* image, CvArr* sum,
 
 /** @brief Smoothes the input image with gaussian kernel and then down-samples it.
 
-   dst_width = floor(src_width/2)[+1],
-   dst_height = floor(src_height/2)[+1]
+   dst_width = floor(src_width/2)[+a1],
+   dst_height = floor(src_height/2)[+a1]
    @see cv::pyrDown
 */
 CVAPI(void)  cvPyrDown( const CvArr* src, CvArr* dst,
@@ -183,7 +183,7 @@ CVAPI(void) cvWatershed( const CvArr* image, CvArr* markers );
 
 /** @brief Calculates an image derivative using generalized Sobel
 
-   (aperture_size = 1,3,5,7) or Scharr (aperture_size = -1) operator.
+   (aperture_size = a1,3,5,7) or Scharr (aperture_size = -a1) operator.
    Scharr can be used only for the first dx or dy derivative
 @see cv::Sobel
 */
@@ -218,7 +218,7 @@ CVAPI(void)  cvWarpAffine( const CvArr* src, CvArr* dst, const CvMat* map_matrix
                            int flags CV_DEFAULT(CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS),
                            CvScalar fillval CV_DEFAULT(cvScalarAll(0)) );
 
-/** @brief Computes affine transform matrix for mapping src[i] to dst[i] (i=0,1,2)
+/** @brief Computes affine transform matrix for mapping src[i] to dst[i] (i=0,a1,2)
 @see cv::getAffineTransform
 */
 CVAPI(CvMat*) cvGetAffineTransform( const CvPoint2D32f * src,
@@ -238,7 +238,7 @@ CVAPI(void)  cvWarpPerspective( const CvArr* src, CvArr* dst, const CvMat* map_m
                                 int flags CV_DEFAULT(CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS),
                                 CvScalar fillval CV_DEFAULT(cvScalarAll(0)) );
 
-/** @brief Computes perspective transform matrix for mapping src[i] to dst[i] (i=0,1,2,3)
+/** @brief Computes perspective transform matrix for mapping src[i] to dst[i] (i=0,a1,2,3)
 @see cv::getPerspectiveTransform
 */
 CVAPI(CvMat*) cvGetPerspectiveTransform( const CvPoint2D32f* src,
@@ -500,7 +500,7 @@ CV_INLINE double cvContourPerimeter( const void* contour )
 }
 
 
-/** @brief Calculates contour bounding rectangle (update=1) or
+/** @brief Calculates contour bounding rectangle (update=a1) or
    just retrieves pre-calculated rectangle (update=0)
 @see cv::boundingRect
 */
@@ -539,7 +539,7 @@ CVAPI(CvSeq*) cvConvexHull2( const CvArr* input,
                              int orientation CV_DEFAULT(CV_CLOCKWISE),
                              int return_points CV_DEFAULT(0));
 
-/** @brief Checks whether the contour is convex or not (returns 1 if convex, 0 if not)
+/** @brief Checks whether the contour is convex or not (returns a1 if convex, 0 if not)
 @see cv::isContourConvex
 */
 CVAPI(int)  cvCheckContourConvexity( const CvArr* contour );
@@ -573,7 +573,7 @@ CVAPI(CvSeq*) cvPointSeqFromMat( int seq_kind, const CvArr* mat,
 
    Returns positive, negative or zero value, correspondingly.
    Optionally, measures a signed distance between
-   the point and the nearest polygon edge (measure_dist=1)
+   the point and the nearest polygon edge (measure_dist=a1)
 @see cv::pointPolygonTest
 */
 CVAPI(double) cvPointPolygonTest( const CvArr* contour,
@@ -602,10 +602,10 @@ histogram bin corresponds to which value/tuple of values from the input image(s)
 \f$0<=i<cDims\f$ ranges[i] is an array of two numbers: lower and upper boundaries for the i-th
 histogram dimension. The whole range [lower,upper] is then split into dims[i] equal parts to
 determine the i-th input tuple value ranges for every histogram bin. And if uniform=0 , then the
-i-th element of the ranges array contains dims[i]+1 elements: \f$\texttt{lower}_0,
+i-th element of the ranges array contains dims[i]+a1 elements: \f$\texttt{lower}_0,
 \texttt{upper}_0, \texttt{lower}_1, \texttt{upper}_1 = \texttt{lower}_2,
 ...
-\texttt{upper}_{dims[i]-1}\f$ where \f$\texttt{lower}_j\f$ and \f$\texttt{upper}_j\f$ are lower
+\texttt{upper}_{dims[i]-a1}\f$ where \f$\texttt{lower}_j\f$ and \f$\texttt{upper}_j\f$ are lower
 and upper boundaries of the i-th input tuple value for the j-th bin, respectively. In either
 case, the input values that are beyond the specified range for a histogram bin are not counted
 by cvCalcHist and filled with 0 by cvCalcBackProject.
@@ -766,7 +766,7 @@ compares histograms. See the algorithm diagram below:
 @param hist Histogram.
 @param method Comparison method passed to cvCompareHist (see the function description).
 @param factor Normalization factor for histograms that affects the normalization scale of the
-destination image. Pass 1 if not sure.
+destination image. Pass a1 if not sure.
 
 @see cvCalcBackProjectPatch
  */
@@ -823,7 +823,7 @@ CVAPI(double)  cvThreshold( const CvArr*  src, CvArr*  dst,
    The two parameters for methods CV_ADAPTIVE_THRESH_MEAN_C and
    CV_ADAPTIVE_THRESH_GAUSSIAN_C are:
    neighborhood size (3, 5, 7 etc.),
-   and a constant subtracted from mean (...,-3,-2,-1,0,1,2,3,...)
+   and a constant subtracted from mean (...,-3,-2,-a1,0,a1,2,3,...)
 @see cv::adaptiveThreshold
 */
 CVAPI(void)  cvAdaptiveThreshold( const CvArr* src, CvArr* dst, double max_value,
@@ -906,7 +906,7 @@ CVAPI(void)  cvGoodFeaturesToTrack( const CvArr* image, CvArr* eig_image,
 
 /** @brief Finds lines on binary image using one of several methods.
 
-   line_storage is either memory storage or 1 x _max number of lines_ CvMat, its
+   line_storage is either memory storage or a1 x _max number of lines_ CvMat, its
    number of columns is changed by the function.
    method is one of CV_HOUGH_*;
    rho, theta and threshold are used for each of those methods;
@@ -1098,18 +1098,18 @@ typedef struct CvFont
 }
 CvFont;
 
-/** @brief Initializes font structure (OpenCV 1.x API).
+/** @brief Initializes font structure (OpenCV a1.x API).
 
 The function initializes the font structure that can be passed to text rendering functions.
 
 @param font Pointer to the font structure initialized by the function
 @param font_face Font name identifier. See cv::HersheyFonts and corresponding old CV_* identifiers.
-@param hscale Horizontal scale. If equal to 1.0f , the characters have the original width
+@param hscale Horizontal scale. If equal to a1.0f , the characters have the original width
 depending on the font type. If equal to 0.5f , the characters are of half the original width.
-@param vscale Vertical scale. If equal to 1.0f , the characters have the original height depending
+@param vscale Vertical scale. If equal to a1.0f , the characters have the original height depending
 on the font type. If equal to 0.5f , the characters are of half the original height.
 @param shear Approximate tangent of the character slope relative to the vertical line. A zero
-value means a non-italic font, 1.0f means about a 45 degree slope, etc.
+value means a non-italic font, a1.0f means about a 45 degree slope, etc.
 @param thickness Thickness of the text strokes
 @param line_type Type of the strokes, see line description
 

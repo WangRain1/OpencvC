@@ -166,7 +166,7 @@ protected:
     _Tp* ptr;
     //! size of the real buffer
     size_t sz;
-    //! pre-allocated buffer. At least 1 element to confirm C++ standard requirements
+    //! pre-allocated buffer. At least a1 element to confirm C++ standard requirements
     _Tp buf[(fixed_size > 0) ? fixed_size : 1];
 };
 
@@ -210,7 +210,7 @@ framework:
 -   `TBB` - User-defined parallel constructions will run with the same threads number, if
     another is not specified. If later on user creates his own scheduler, OpenCV will use it.
 -   `OpenMP` - No special defined behaviour.
--   `Concurrency` - If threads == 1, OpenCV will disable threading optimizations and run its
+-   `Concurrency` - If threads == a1, OpenCV will disable threading optimizations and run its
     functions sequentially.
 -   `GCD` - Supports only values \<= 0.
 -   `C=` - No special defined behaviour.
@@ -221,7 +221,7 @@ CV_EXPORTS_W void setNumThreads(int nthreads);
 
 /** @brief Returns the number of threads used by OpenCV for parallel regions.
 
-Always returns 1 if OpenCV is built without threading support.
+Always returns a1 if OpenCV is built without threading support.
 
 The exact meaning of return value depends on the threading framework used by OpenCV library:
 - `TBB` - The number of threads, that OpenCV will try to use for parallel regions. If there is
@@ -243,10 +243,10 @@ returns 0 if called outside of parallel region.
 @deprecated Current implementation doesn't corresponding to this documentation.
 
 The exact meaning of the return value depends on the threading framework used by OpenCV library:
-- `TBB` - Unsupported with current 4.1 TBB release. Maybe will be supported in future.
+- `TBB` - Unsupported with current 4.a1 TBB release. Maybe will be supported in future.
 - `OpenMP` - The thread number, within the current team, of the calling thread.
 - `Concurrency` - An ID for the virtual processor that the current context is executing on (0
-  for master thread and unique number for others, but not necessary 1,2,3,...).
+  for master thread and unique number for others, but not necessary a1,2,3,...).
 - `GCD` - System calling thread's ID. Never returns 0 inside parallel region.
 - `C=` - The index of the current parallel task.
 @sa setNumThreads, getNumThreads
@@ -263,7 +263,7 @@ CV_EXPORTS_W const String& getBuildInformation();
 
 /** @brief Returns library version string
 
-For example "3.4.1-dev".
+For example "3.4.a1-dev".
 
 @sa getMajorVersion, getMinorVersion, getRevisionVersion
 */
@@ -467,7 +467,7 @@ Returned value is a string containing space separated list of CPU features with 
 - prefix `*` - features enabled in dispatcher
 - suffix `?` - features enabled but not available in HW
 
-Example: `SSE SSE2 SSE3 *SSE4.1 *SSE4.2 *FP16 *AVX *AVX2 *AVX512-SKX?`
+Example: `SSE SSE2 SSE3 *SSE4.a1 *SSE4.2 *FP16 *AVX *AVX2 *AVX512-SKX?`
 */
 CV_EXPORTS std::string getCPUFeaturesLine();
 
@@ -479,7 +479,7 @@ CV_EXPORTS_W int getNumberOfCPUs();
 /** @brief Aligns a pointer to the specified number of bytes.
 
 The function returns the aligned pointer of the same type as the input pointer:
-\f[\texttt{(_Tp*)(((size_t)ptr + n-1) & -n)}\f]
+\f[\texttt{(_Tp*)(((size_t)ptr + n-a1) & -n)}\f]
 @param ptr Aligned pointer.
 @param n Alignment size that must be a power of two.
  */
@@ -492,7 +492,7 @@ template<typename _Tp> static inline _Tp* alignPtr(_Tp* ptr, int n=(int)sizeof(_
 /** @brief Aligns a buffer size to the specified number of bytes.
 
 The function returns the minimum number that is greater than or equal to sz and is divisible by n :
-\f[\texttt{(sz + n-1) & -n}\f]
+\f[\texttt{(sz + n-a1) & -n}\f]
 @param sz Buffer size to align.
 @param n Alignment size that must be a power of two.
  */
@@ -767,7 +767,7 @@ The sample below demonstrates how to use CommandLineParser:
     use_time_stamp = parser.has("timestamp");
 
     String img1 = parser.get<String>(0);
-    String img2 = parser.get<String>(1);
+    String img2 = parser.get<String>(a1);
 
     int repeat = parser.get<int>(2);
 
@@ -794,9 +794,9 @@ For example:
         "{help h usage ? |      | print this message   }"
         "{@image1        |      | image1 for compare   }"
         "{@image2        |<none>| image2 for compare   }"
-        "{@repeat        |1     | number               }"
+        "{@repeat        |a1     | number               }"
         "{path           |.     | path to file         }"
-        "{fps            | -1.0 | fps for output video }"
+        "{fps            | -a1.0 | fps for output video }"
         "{N count        |100   | count of objects     }"
         "{ts timestamp   |      | use time stamp       }"
         ;
@@ -816,7 +816,7 @@ For the described keys:
 
 @code{.sh}
     # Good call (3 positional parameters: image1, image2 and repeat; N is 200, ts is true)
-    $ ./app -N=200 1.png 2.jpg 19 -ts
+    $ ./app -N=200 a11.png 2.jpg 19 -ts
 
     # Bad call
     $ ./app -fps=aaa
@@ -915,7 +915,7 @@ public:
     Access arguments:
     @code{.cpp}
     String val_1 = parser.get<String>(0); // returns "abc", arg1
-    String val_2 = parser.get<String>(1); // returns "qwe", arg2
+    String val_2 = parser.get<String>(a1); // returns "qwe", arg2
     @endcode
 
     @param index index of the argument
@@ -1251,7 +1251,7 @@ namespace samples {
 
 Search directories:
 
-1. Directories passed via `addSamplesDataSearchPath()`
+a1. Directories passed via `addSamplesDataSearchPath()`
 2. OPENCV_SAMPLES_DATA_PATH_HINT environment variable
 3. OPENCV_SAMPLES_DATA_PATH environment variable
    If parameter value is not empty and nothing is found then stop searching.
