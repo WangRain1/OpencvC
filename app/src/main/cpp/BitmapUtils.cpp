@@ -160,7 +160,7 @@ void BitmapUtils::findNumber(Mat &srcImg) {
     cR.x = srcImg.cols/20;
     cR.y = srcImg.rows/2;
     cR.width = srcImg.cols*18/20;
-    cR.height = srcImg.rows/5;
+    cR.height = srcImg.rows/6;
 
 //    cR.x = srcImg.cols/20;
 //    cR.y = srcImg.rows/3;
@@ -194,7 +194,7 @@ void BitmapUtils::findNumber(Mat &srcImg) {
     threshold(erodeOut, th, 39, 255, THRESH_OTSU);
     imwrite("/storage/emulated/0/th.jpg", th);
     //膨胀
-    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(10, 10));
+    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(8, 8));
     Mat dilate_erodeOut;
     dilate(th, dilate_erodeOut, dilate_element);
     imwrite("/storage/emulated/0/dilate_erodeOut.jpg", dilate_erodeOut);
@@ -207,6 +207,9 @@ void BitmapUtils::findNumber(Mat &srcImg) {
     findContours(dilate_erodeOut, contours, hierarcy, RETR_TREE, CHAIN_APPROX_NONE); //查找所有轮廓
     vector<Rect> boundRect(contours.size()); //定义外接矩形集合
     int x0 = 0, y0 = 0, w0 = 0, h0 = 0;
+    int dilate_area = dilate_erodeOut.cols * dilate_erodeOut.rows;
+    __android_log_print(ANDROID_LOG_ERROR,"--contours1------" ,"%d", contours.size());
+
     for (int i = 0; i < contours.size(); i++) {
         boundRect[i] = boundingRect(contours[i]); //查找每个轮廓的外接矩形
         x0 = boundRect[i].x;
@@ -214,13 +217,42 @@ void BitmapUtils::findNumber(Mat &srcImg) {
         w0 = boundRect[i].width;
         h0 = boundRect[i].height;
         //绘制第i个外接矩形
-        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+//        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
 
+        int area = boundRect[i].area();
+        __android_log_print(ANDROID_LOG_ERROR,"--面积---a---","%d,%d",area,dilate_area/200);
+        if(h0<dilate_erodeOut.rows*2/5){
+            __android_log_print(ANDROID_LOG_ERROR,"--a---","--高度------");
+            drawContours(dilate_erodeOut,contours,i,Scalar(0),1);
+            contours.erase(contours.begin()+i);
+        } else if(area<dilate_area/200) {
+            __android_log_print(ANDROID_LOG_ERROR,"--a---","---面积-----");
+            drawContours(dilate_erodeOut,contours,i,Scalar(0),1);
+            contours.erase(contours.begin()+i);
+        }
         // TODO : 根据高度和面积 处理腐蚀，伐值化，膨胀 不掉的干扰点。大面积的干扰点。
     }
+    __android_log_print(ANDROID_LOG_ERROR,"--contours2------","%d",contours.size());
+    vector<Rect> rr(contours.size());
+    for (int i = 0; i < contours.size(); i++) {
+        rr[i] = boundingRect(contours[i]);
+        x0 = rr[i].x;
+        y0 = rr[i].y;
+        w0 = rr[i].width;
+        h0 = rr[i].height;
+        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+
+        if (rr[i].area()<dilate_area/200){
+            continue;
+        }
+        Mat sp(dilate_erodeOut,rr[i]);
+        char name[50];
+        sprintf(name,"/storage/emulated/0/dstImg_%d.jpg",i);
+
+        imwrite(name, sp);
+    }
+
     imwrite("/storage/emulated/0/dstImg.jpg", dstImg);
-
-
 }
 
 BitmapUtils::~BitmapUtils() {
