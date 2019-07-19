@@ -21,6 +21,9 @@ public:
                            jobject bitmap,Mat& mat);
 
     void findCardArea(const Mat& mat,Rect& rect);
+
+    void findNumber(Mat& mat);
+
     ~BitmapUtils();
 };
 

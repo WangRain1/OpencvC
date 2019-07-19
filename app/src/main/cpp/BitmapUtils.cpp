@@ -20,25 +20,25 @@ int BitmapUtils::Bitmap2mat(JNIEnv *env, jobject bitmap, Mat *mat) {
 
     AndroidBitmapInfo bitmapInfo;
 
-    AndroidBitmap_getInfo(env,bitmap,&bitmapInfo);
+    AndroidBitmap_getInfo(env, bitmap, &bitmapInfo);
 
-    Mat createM(bitmapInfo.height,bitmapInfo.width,CV_8UC4);
+    Mat createM(bitmapInfo.height, bitmapInfo.width, CV_8UC4);
 
-    if (bitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888){
-        Mat tep(bitmapInfo.height,bitmapInfo.width,CV_8UC4,addrPtr);
+    if (bitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        Mat tep(bitmapInfo.height, bitmapInfo.width, CV_8UC4, addrPtr);
         tep.copyTo(createM);
-    } else if(bitmapInfo.format == ANDROID_BITMAP_FORMAT_RGB_565){
-        Mat tep(bitmapInfo.height,bitmapInfo.width,CV_8UC2,addrPtr);
-        cvtColor(tep,createM,COLOR_BGR5652RGBA);
+    } else if (bitmapInfo.format == ANDROID_BITMAP_FORMAT_RGB_565) {
+        Mat tep(bitmapInfo.height, bitmapInfo.width, CV_8UC2, addrPtr);
+        cvtColor(tep, createM, COLOR_BGR5652RGBA);
     }
     createM.copyTo(*mat);
     createM.release();
-    AndroidBitmap_unlockPixels(env,bitmap);
+    AndroidBitmap_unlockPixels(env, bitmap);
 
     return 0;
 }
 
-int BitmapUtils::Mat2Bitmap(JNIEnv *env, jobject bitmap, Mat& mat) {
+int BitmapUtils::Mat2Bitmap(JNIEnv *env, jobject bitmap, Mat &mat) {
 /**
  * RGBA_8888 -> CV_8UC4 四颜色通道
  * RGB_565   -> CV_8UC2 三颜色通道
@@ -47,39 +47,36 @@ int BitmapUtils::Mat2Bitmap(JNIEnv *env, jobject bitmap, Mat& mat) {
     AndroidBitmapInfo info;
     AndroidBitmap_getInfo(env, bitmap, &info);
 
-    void * pixels;
+    void *pixels;
     //锁定 bitmap
     AndroidBitmap_lockPixels(env, bitmap, &pixels);
-    __android_log_print(ANDROID_LOG_ERROR,"Mat2Bitmap-RECT-","%d",mat.cols);
-    if(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888){ //bitmap
+    __android_log_print(ANDROID_LOG_ERROR, "Mat2Bitmap-RECT-", "%d", mat.cols);
+    if (info.format == ANDROID_BITMAP_FORMAT_RGBA_8888) { //bitmap
         Mat tmp(info.height, info.width, CV_8UC4, pixels);
-        if(mat.type() == CV_8UC1){
-            cvtColor(mat, tmp,COLOR_GRAY2RGBA);
-        }else if(mat.type() == CV_8UC2){
-            cvtColor(mat, tmp,COLOR_BGR5652BGRA);
-        }else if(mat.type() == CV_8UC4){
+        if (mat.type() == CV_8UC1) {
+            cvtColor(mat, tmp, COLOR_GRAY2RGBA);
+        } else if (mat.type() == CV_8UC2) {
+            cvtColor(mat, tmp, COLOR_BGR5652BGRA);
+        } else if (mat.type() == CV_8UC4) {
             mat.copyTo(tmp);
         }
-    }else if(info.format == ANDROID_BITMAP_FORMAT_RGB_565){
+    } else if (info.format == ANDROID_BITMAP_FORMAT_RGB_565) {
         Mat tmp(info.height, info.width, CV_8UC2, pixels);
-        if(mat.type() == CV_8UC1){
-            cvtColor(mat, tmp,COLOR_GRAY2BGR565);
-        }else if(mat.type() == CV_8UC2){
+        if (mat.type() == CV_8UC1) {
+            cvtColor(mat, tmp, COLOR_GRAY2BGR565);
+        } else if (mat.type() == CV_8UC2) {
             mat.copyTo(tmp);
-        }else if(mat.type() == CV_8UC4){
-            cvtColor(mat, tmp,COLOR_RGBA2BGR565);
+        } else if (mat.type() == CV_8UC4) {
+            cvtColor(mat, tmp, COLOR_RGBA2BGR565);
         }
     }
     return 0;
 }
 
-void BitmapUtils::findCardArea(const Mat& mat,Rect& card_rect) {
+void BitmapUtils::findCardArea(const Mat &mat, Rect &card_rect) {
     // 首先降噪
-    __android_log_print(ANDROID_LOG_ERROR,"111-RECT-","%d",mat.cols);
     Mat blur;
     GaussianBlur(mat, blur, Size(5, 5), BORDER_DEFAULT, BORDER_DEFAULT);
-
-    imwrite("/storage/emulated/0/blur.jpg",blur);
 
     // 梯度增强 , x 轴和 y 轴
     Mat grad_x, grad_y;
@@ -91,29 +88,26 @@ void BitmapUtils::findCardArea(const Mat& mat,Rect& card_rect) {
     Mat grad;
     addWeighted(grad_abs_x, 0.5, grad_abs_y, 0.5, 0, grad);
 
-    imwrite("/storage/emulated/0/grad.jpg",grad);
-
     // 二值化，进行轮廓查找
     Mat gray;
     cvtColor(grad, gray, COLOR_BGRA2GRAY);
     Mat binary;
     threshold(gray, binary, 40, 255, THRESH_BINARY);
 
-    imwrite("/storage/emulated/0/binary.jpg",binary);
-
     // 轮廓查找
     vector<vector<Point> > contours;
     findContours(binary, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i) {
         Rect rect = boundingRect(contours[i]);
+//        drawContours(mat,contours,i,Scalar(255, 0, 0),1);
+//        __android_log_print(ANDROID_LOG_ERROR,"recr-","%d",rect.width);
         // 是不是符合规则
         if (rect.width > mat.cols / 2 && rect.width != mat.cols && rect.height > mat.rows / 2) {
             card_rect = rect;
-            __android_log_print(ANDROID_LOG_ERROR,"22-RECT-","%d",card_rect.width);
+            __android_log_print(ANDROID_LOG_ERROR, "rd_rect-", "%d", card_rect.width);
             break;
         }
     }
-
     // release source
     blur.release();
     grad_x.release();
@@ -123,6 +117,77 @@ void BitmapUtils::findCardArea(const Mat& mat,Rect& card_rect) {
     grad.release();
     gray.release();
     binary.release();
+
+}
+
+void BitmapUtils::findNumber(Mat &srcImg) {
+
+//    imwrite("/storage/emulated/0/card_number2.jpg",mat);
+
+
+//    adaptiveThreshold(gray, binary, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 5);
+
+
+    Rect cR;
+    cR.x = srcImg.cols/20;
+    cR.y = srcImg.rows/2;
+    cR.width = srcImg.cols*18/20;
+    cR.height = srcImg.rows/5;
+
+//    cR.x = srcImg.cols/20;
+//    cR.y = srcImg.rows/3;
+//    cR.width = srcImg.cols*18/20;
+//    cR.height = srcImg.rows/4;
+
+    Mat rectMat(srcImg,cR);
+
+    imwrite("/storage/emulated/0/rectMat2.jpg", rectMat);
+
+    Mat dstImg = rectMat.clone();  //原图备份
+
+    // 首先降噪 噪点可以选大一点
+    Mat blur;
+    GaussianBlur(rectMat, blur, Size(9, 9), BORDER_DEFAULT, BORDER_DEFAULT);
+//    medianBlur(srcImg, srcImg, 5);  //中值滤波
+    Mat g;
+    cvtColor(blur, g, COLOR_BGRA2GRAY); //转为灰度图
+
+    //获取自定义核
+    //第一个参数MORPH_RECT表示矩形的卷积核，当然还可以选择椭圆形的、交叉型的
+    Mat element = getStructuringElement(MORPH_RECT, Size(10, 10));
+    Mat erodeOut;
+    //腐蚀操作
+    erode(g, erodeOut, element);
+    imwrite("/storage/emulated/0/erodeOut.jpg", erodeOut);
+    //二值化 THRESH_OTSU自动阀值
+    Mat th;
+    // 自定义阀值
+    // adaptiveThreshold(g, th, 150, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 5);
+    threshold(erodeOut, th, 39, 255, THRESH_OTSU);
+    imwrite("/storage/emulated/0/th.jpg", th);
+    //膨胀
+    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(15, 15));
+    Mat dilate_erodeOut;
+    dilate(th, dilate_erodeOut, dilate_element);
+    imwrite("/storage/emulated/0/dilate_erodeOut.jpg", dilate_erodeOut);
+    //fan 二值化
+//    Mat bit;
+//    bitwise_not(dilate_erodeOut,bit);
+//    imwrite("/storage/emulated/0/bit.jpg", bit);
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarcy;
+    findContours(dilate_erodeOut, contours, hierarcy, RETR_TREE, CHAIN_APPROX_NONE); //查找所有轮廓
+    vector<Rect> boundRect(contours.size()); //定义外接矩形集合
+    int x0 = 0, y0 = 0, w0 = 0, h0 = 0;
+    for (int i = 0; i < contours.size(); i++) {
+        boundRect[i] = boundingRect(contours[i]); //查找每个轮廓的外接矩形
+        x0 = boundRect[i].x;
+        y0 = boundRect[i].y;
+        w0 = boundRect[i].width;
+        h0 = boundRect[i].height;
+        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8); //绘制第i个外接矩形
+    }
+    imwrite("/storage/emulated/0/dstImg.jpg", dstImg);
 
 }
 

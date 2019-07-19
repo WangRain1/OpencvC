@@ -31,15 +31,15 @@ Java_com_safe_silent_opencvc_MainActivity_findNumber(JNIEnv *env, jobject instan
     Mat mat;
     bitmapUtils->Bitmap2mat(env,bitmap,&mat);
 
+//    imwrite("/storage/emulated/0/card_number.jpg",mat);
     Rect rect;
     bitmapUtils->findCardArea(mat,rect);
 
     Mat cardRect(mat,rect);
+    imwrite("/storage/emulated/0/cardRect.jpg",cardRect);
+    bitmapUtils->findNumber(cardRect);
 
-//    imwrite("/storage/emulated/0/card_number.jpg",cardRect);
-
-
-    bitmapUtils->Mat2Bitmap(env,bitmap,cardRect);
+//    bitmapUtils->Mat2Bitmap(env,bitmap,cardRect);
 
     return bitmap;
 }

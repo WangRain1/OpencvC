@@ -27,11 +27,18 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         final TextView tv = (TextView) findViewById(R.id.sample_text);
 //        tv.setText(stringFromJNI());
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.card);
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.card);
 
         ImageView imageView = findViewById(R.id.dst);
-        //银行卡识别
-        Bitmap dst = findNumber(bitmap);
+            new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                //银行卡识别
+                Bitmap dst = findNumber(bitmap);
+            }
+        }.start();
+
 //        imageView.setImageBitmap(dst);
 
         //数据训练
