@@ -120,6 +120,34 @@ void BitmapUtils::findCardArea(const Mat &mat, Rect &card_rect) {
 
 }
 
+/**
+ *     // 首先降噪 噪点可以选大一点
+    Mat blur;
+    GaussianBlur(rectMat, blur, Size(9, 9), BORDER_DEFAULT, BORDER_DEFAULT);
+//    medianBlur(srcImg, srcImg, 5);  //中值滤波
+    Mat g;
+    cvtColor(blur, g, COLOR_BGRA2GRAY); //转为灰度图
+
+    //获取自定义核
+    //第一个参数MORPH_RECT表示矩形的卷积核，当然还可以选择椭圆形的、交叉型的
+    Mat element = getStructuringElement(MORPH_RECT, Size(10, 10));
+    Mat erodeOut;
+    //腐蚀操作
+    erode(g, erodeOut, element);
+    imwrite("/storage/emulated/0/erodeOut.jpg", erodeOut);
+    //二值化 THRESH_OTSU自动阀值
+    Mat th;
+    // 自定义阀值
+    // adaptiveThreshold(g, th, 150, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 5);
+    threshold(erodeOut, th, 39, 255, THRESH_OTSU);
+    imwrite("/storage/emulated/0/th.jpg", th);
+    //膨胀
+    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(15, 15));
+    Mat dilate_erodeOut;
+    dilate(th, dilate_erodeOut, dilate_element);
+    imwrite("/storage/emulated/0/dilate_erodeOut.jpg", dilate_erodeOut);
+ */
+
 void BitmapUtils::findNumber(Mat &srcImg) {
 
 //    imwrite("/storage/emulated/0/card_number2.jpg",mat);
@@ -154,7 +182,7 @@ void BitmapUtils::findNumber(Mat &srcImg) {
 
     //获取自定义核
     //第一个参数MORPH_RECT表示矩形的卷积核，当然还可以选择椭圆形的、交叉型的
-    Mat element = getStructuringElement(MORPH_RECT, Size(10, 10));
+    Mat element = getStructuringElement(MORPH_RECT, Size(5, 5));
     Mat erodeOut;
     //腐蚀操作
     erode(g, erodeOut, element);
@@ -166,7 +194,7 @@ void BitmapUtils::findNumber(Mat &srcImg) {
     threshold(erodeOut, th, 39, 255, THRESH_OTSU);
     imwrite("/storage/emulated/0/th.jpg", th);
     //膨胀
-    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(15, 15));
+    Mat dilate_element = getStructuringElement(MORPH_RECT, Size(10, 10));
     Mat dilate_erodeOut;
     dilate(th, dilate_erodeOut, dilate_element);
     imwrite("/storage/emulated/0/dilate_erodeOut.jpg", dilate_erodeOut);
@@ -185,9 +213,13 @@ void BitmapUtils::findNumber(Mat &srcImg) {
         y0 = boundRect[i].y;
         w0 = boundRect[i].width;
         h0 = boundRect[i].height;
-        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8); //绘制第i个外接矩形
+        //绘制第i个外接矩形
+        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+
+        // TODO : 根据高度和面积 处理腐蚀，伐值化，膨胀 不掉的干扰点。大面积的干扰点。
     }
     imwrite("/storage/emulated/0/dstImg.jpg", dstImg);
+
 
 }
 
