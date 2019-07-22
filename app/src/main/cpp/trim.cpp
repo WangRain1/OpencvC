@@ -21,19 +21,19 @@ using namespace std;
 using namespace cv;
 using namespace ml;
 
-void getBubble(vector<Mat> &trainingImages,vector<int> &trainingLabels,vector<Mat> &vMat);
+void getBubble(vector<Mat> &trainingImages,vector<int> &trainingLabels,vector<vector<Mat>>& vm);
 
-void getBubble_b(vector<Mat> &trainingImages,vector<int> &trainingLabels,vector<Mat> &vMat);
 
 vector<Mat> trainingImages; //用来存放训练图像信息的容器
 vector<int> trainingLabels;
 
 
-void TrimTest::startTrim(vector<Mat> &vMat,vector<Mat>& vMat_b) {
+void TrimTest::startTrim(vector<vector<Mat>>& vm) {
+
 
     Mat classes;
-    getBubble(trainingImages,trainingLabels,vMat);
-    getBubble_b(trainingImages,trainingLabels,vMat_b);
+
+    getBubble(trainingImages,trainingLabels,vm);
 
     Mat trainingData(trainingImages.size(),trainingImages[0].cols, CV_32FC1);
     for (int i = 0; i < trainingImages.size(); i++)
@@ -59,43 +59,41 @@ void TrimTest::startTrim(vector<Mat> &vMat,vector<Mat>& vMat_b) {
     imwrite("/storage/emulated/0/ccc.jpg",trainingData);
 
 //    model->train(trainingData, ROW_SAMPLE, classes);
-    model->trainAuto(tdata);
-    model->save("/storage/emulated/0/car.txt");
+    model->train(tdata);
+    model->save("/storage/emulated/0/number_svm.xml");
+
+    __android_log_print(ANDROID_LOG_ERROR,"训练完成...","over---");
 }
 
-void getBubble(vector<Mat> &tImages, vector<int> &tLabels,vector<Mat> &vMat)
+void getBubble(vector<Mat> &tImages, vector<int> &tLabels,vector<vector<Mat>>& vm)
 {
-    for (int i = 0; i < vMat.size(); ++i) {
 
-        Mat gray = vMat[i];
-        gray = gray.reshape(1, 1);
-        tImages.push_back(gray);
-        tLabels.push_back(1);//该样本为数字1
-    }
+    for (int j = 0; j < vm.size(); j++) {
+        int size = vm[j].size();
+        for (int i = 0; i < size; i++) {
 
-}
-
-void getBubble_b(vector<Mat> &traages,vector<int> &traels,vector<Mat> &vMat){
-    for (int i = 0; i < vMat.size(); ++i) {
-
-        Mat gray = vMat[i];
-        gray = gray.reshape(1, 1);
-        traages.push_back(gray);
-        traels.push_back(2);//该样本为数字2
+            Mat gray = vm[j][i];
+            Mat reshapeMat;
+            reshapeMat = gray.reshape(1,1);
+            tImages.push_back(reshapeMat);
+            tLabels.push_back(j);//该样本为数字1
+        }
     }
 }
 
-float TrimTest::checkMsg(JNIEnv *env,cv::Mat &mat) {
 
-    Ptr<ml::SVM>svm =SVM::load("/storage/emulated/0/car.txt");
-    Mat p = mat.reshape(1, 1);
+float TrimTest::checkMsg(cv::Mat &mat) {
+
+    Mat gray;
+    cvtColor(mat,gray,COLOR_BGRA2GRAY);
+    //大小尺寸一定要和训练的数据一致
+    __android_log_print(ANDROID_LOG_ERROR,"checkresutl--","%d,%d", mat.cols,mat.rows);
+    Ptr<ml::SVM>svm =SVM::load("/storage/emulated/0/number_svm.xml");
+    Mat p = gray.reshape(1, 1);
     p.convertTo(p, CV_32FC1);
-//    imwrite("/storage/emulated/0/resoo.jpg",p);
-
     Mat m;
 //    float x = svm->predict(p,m);
     float x = svm->predict(p);
-    __android_log_print(ANDROID_LOG_ERROR,"checkresutl--","%f", x);
     return x;
 }
 

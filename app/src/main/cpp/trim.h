@@ -22,9 +22,9 @@ class TrimTest{
 public:
     TrimTest();
 
-    void startTrim(std::vector<cv::Mat>& vMat,std::vector<cv::Mat>& vMat_b);
+    void startTrim(std:: vector<std::vector<cv::Mat>>& vm);
 
-    float checkMsg(JNIEnv *env,cv::Mat& mat);
+    float checkMsg(cv::Mat& mat);
 
     ~TrimTest();
 };

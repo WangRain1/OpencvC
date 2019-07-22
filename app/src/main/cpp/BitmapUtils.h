@@ -9,6 +9,7 @@
 #include <jni.h>
 
 using namespace cv;
+using namespace std;
 
 class BitmapUtils {
 public:
@@ -22,7 +23,7 @@ public:
 
     void findCardArea(const Mat& mat,Rect& rect);
 
-    void findNumber(Mat& mat);
+    void findNumber(Mat& mat,string& res);
 
     ~BitmapUtils();
 };
