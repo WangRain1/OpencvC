@@ -4,17 +4,16 @@
 
 package com.safe.silent.opencvc;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,13 +21,23 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("native-lib");
     }
-
+    TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageView d = findViewById(R.id.dst);
+
         // Example of a call to a native method
-        final TextView tv = (TextView) findViewById(R.id.sample_text);
+        tv = (TextView) findViewById(R.id.sample_text);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ScanActivity.class);
+                startActivityForResult(intent,1);
+            }
+        });
 //        tv.setText(stringFromJNI());
 //            new Thread(){
 //            @Override
@@ -121,4 +130,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public native void test(Bitmap bitmap);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //此处可以根据两个Code进行判断，本页面和结果页面跳过来的值
+        if (requestCode == 1 && resultCode == 3) {
+            String result = data.getStringExtra("result");
+            Log.e("findNumber","number - " + result);
+            String num = findNumber(BitmapCache.getBitmapCache().getBitamp());
+            tv.setText(num);
+        }
+    }
 }
