@@ -51,7 +51,6 @@ public class ScanActivity extends AppCompatActivity {
         SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
         surfaceHolder.addCallback(new TakePictureView(this));
 
-
         pic = findViewById(R.id.pic);
         findViewById(R.id.take).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,6 +234,15 @@ public class ScanActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != camera){
+            camera.release();
+            camera = null;
         }
     }
 }

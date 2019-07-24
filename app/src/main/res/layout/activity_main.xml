@@ -3,27 +3,58 @@
   ~ Copyright (c) 2019. Parrot Faurecia Automotive S.A.S. All rights reserved.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/sample_text"
+    <ImageView
+        android:id="@+id/src"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_above="@+id/dst"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        />
 
     <ImageView
         android:id="@+id/dst"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/number"
+        android:layout_marginBottom="50dp"
+        />
 
-    <ImageView
-        android:id="@+id/src"
-        android:src="@drawable/card"
+    <TextView
+        android:id="@+id/number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_above="@+id/sacn_btn"
+        android:textColor="#fff"
+        android:background="#767575"
+        android:layout_marginBottom="20dp"
+        android:text="-卡号-" />
+
+    <TextView
+        android:id="@+id/sacn_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textColor="#fff"
+        android:background="@color/colorAccent"
+        android:layout_marginBottom="100dp"
+        android:text="扫描银行卡-或-身份证" />
+
+</RelativeLayout>

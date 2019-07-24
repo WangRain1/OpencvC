@@ -30,7 +30,6 @@ vector<int> trainingLabels;
 
 void TrimTest::startTrim(vector<vector<Mat>>& vm) {
 
-
     Mat classes;
 
     getBubble(trainingImages,trainingLabels,vm);

@@ -41,7 +41,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        src/main/cpp/native-lib.cpp src/main/cpp/BitmapUtils.cpp src/main/cpp/trim.cpp)
+        src/main/cpp/native-lib.cpp src/main/cpp/BitmapUtils.cpp src/main/cpp/trim.cpp src/main/cpp/ScanNumber.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
