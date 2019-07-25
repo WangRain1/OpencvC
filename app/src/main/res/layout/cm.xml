@@ -5,7 +5,8 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#58f7c7c7">
 
     <com.safe.silent.opencvc.CardView
         android:id="@+id/surfaceview"
@@ -22,12 +23,16 @@
         />
 
 
-    <ImageView
+    <TextView
         android:id="@+id/take"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@mipmap/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="#6877a8ed"
+        android:textColor="#fff"
+        android:text="开始识别"
         android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="100dp"
         />
 
 </FrameLayout>

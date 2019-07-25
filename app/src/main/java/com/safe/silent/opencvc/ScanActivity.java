@@ -104,6 +104,7 @@ public class ScanActivity extends AppCompatActivity {
         public void surfaceCreated(SurfaceHolder holder) {
             getCameraInfo();
             openCamera();
+            camera.setDisplayOrientation(90);
             listener = new OrientationEventListener(mContext) {
                 @Override
                 public void onOrientationChanged(int orientation) {
