@@ -44,6 +44,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * 总结：
+         *  基于openCv NDK环境银行卡/身份证号识别
+         *
+         *  1.银行卡卡号识别(1)-opencv ndk项目集成
+         *  2.银行卡卡号识别(2)-bitmap 转 Mat，Mat的介绍
+         *  3.银行卡卡号识别(3)-.so文件，CMakeLists.txt和jar包是干吗的有啥关系
+         *  4.银行卡卡号识别(4)-银行卡/身份证图像处理和卡号区域剪切
+         *  5.银行卡卡号识别(5)-基于openCv SVM支持向量积的机械学习模型训练(ml=machine learn)
+         *  6.银行卡卡号识别(6)-银行卡/身份证卡号检测识别
+         *  7.银行卡卡号识别(7)-基于android相机的卡号区域提取
+         *  坑：
+         *  1.保存的时候图片尺寸不要太大(由于刚开始图片保存的是110：70的导致怎么训练都不成功)，最好格式是png.
+         *  2.BitmapFactory.decodeResource();返回的图片尺寸不等于原尺寸，由于开始为了方便就直接在drawable
+         *  下采集训练的图片，最后一直训练不成功，还好各种方式都尝试了，最终才发现是返回的bitmap的宽高变了。
+         */
+
 //        trainModle();
 //        scanCard(bitmap);
     }
@@ -74,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
     }
-
 
 
     public void trainModle(){
