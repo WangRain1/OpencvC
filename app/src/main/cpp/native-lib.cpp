@@ -70,7 +70,7 @@ Java_com_safe_silent_opencvc_MainActivity_train(JNIEnv *env, jobject instance,
                                                 jobjectArray bitmap_3, jobjectArray bitmap_4,
                                                 jobjectArray bitmap_5, jobjectArray bitmap_6,
                                                 jobjectArray bitmap_7, jobjectArray bitmap_8,
-                                                jobjectArray bitmap_9) {
+                                                jobjectArray bitmap_9, jobjectArray bitmap_10) {
 
     vector<Mat> vMat_0;
     vector<Mat> vMat_1;
@@ -82,6 +82,7 @@ Java_com_safe_silent_opencvc_MainActivity_train(JNIEnv *env, jobject instance,
     vector<Mat> vMat_7;
     vector<Mat> vMat_8;
     vector<Mat> vMat_9;
+    vector<Mat> vMat_10;
 
     vector<vector<Mat>> vm;
 
@@ -95,6 +96,7 @@ Java_com_safe_silent_opencvc_MainActivity_train(JNIEnv *env, jobject instance,
     vm.push_back(vMat_7);
     vm.push_back(vMat_8);
     vm.push_back(vMat_9);
+    vm.push_back(vMat_10);
 
     vector<jobjectArray> bim;
     bim.push_back(bitmap_0);
@@ -107,7 +109,7 @@ Java_com_safe_silent_opencvc_MainActivity_train(JNIEnv *env, jobject instance,
     bim.push_back(bitmap_7);
     bim.push_back(bitmap_8);
     bim.push_back(bitmap_9);
-
+    bim.push_back(bitmap_10);
 
     BitmapUtils *bitmapUtils = new BitmapUtils();
 

@@ -19,6 +19,8 @@ using namespace ml;
 
 void filterRect(Mat& gray,int thresh,string& number);
 bool isInErrorPosition(int i);
+void filterBackCard(Mat& mat,string& number);
+void findIdCard(Mat& gray,string& number);
 
 ScanNumber::ScanNumber() {
 
@@ -28,27 +30,140 @@ ScanNumber::ScanNumber() {
 Mat qm;
 // 结果调优参数
 bool optimizeGgain = false;
-
+// 先按照身份证识别
+bool isIDCard = false;
 
 void ScanNumber::cutNumberArea(Mat& mat,string& number) {
+    isIDCard = true;
+    Mat gray;
+    cvtColor(mat, gray, COLOR_BGRA2GRAY); //转为灰度图
+    qm=gray.clone();
+    filterBackCard(gray,number);
+}
+
+void filterBackCard(Mat& mat,string& number){
+
+    Mat c_mat = mat.clone();
+
+    if (isIDCard){
+        isIDCard = false;
+        findIdCard(c_mat,number);
+    } else {
+        optimizeGgain = false;
+        // 最大阀值限定在 40 - 100 之间查找卡号，超过了还没找到就结束识别
+
+        filterRect(c_mat,30,number);
+    }
+    c_mat.release();
+}
+
+void findIdCard(Mat& idC,string& number){
 
     //剪切矩形
     Rect cR;
-    cR.x = mat.cols / 20;
-    cR.y = mat.rows / 2;
-    cR.width = mat.cols * 18 / 20;
-    cR.height = mat.rows * 3 / 4-cR.y;
+    cR.x = idC.cols / 20;
+    cR.y = idC.rows *3 / 4;
+    cR.width = idC.cols * 18 / 20;
+    cR.height = idC.rows / 6;
+    Mat rm(idC,cR);
+    Rect c_R;
+    c_R.x = rm.cols *3/ 14;
+    c_R.y = 0;
+    c_R.width = rm.cols*11/14;
+    c_R.height = rm.rows;
+    Mat c_rm(rm,c_R);
+//    imwrite("/storage/emulated/0/c_rm.jpg", c_rm);
+    Mat c_th;
+    threshold(c_rm, c_th, 120, 255, THRESH_BINARY);
+//    imwrite("/storage/emulated/0/c_th.jpg", c_th);
+    Mat c_bitwis;
+    bitwise_not(c_th,c_bitwis);
+//    imwrite("/storage/emulated/0/c_bitwis.jpg",  c_bitwis);
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarcy;
+    findContours(c_bitwis, contours, hierarcy, RETR_TREE, CHAIN_APPROX_NONE); //查找所有轮廓
+    vector<Rect> boundRect(contours.size()); //定义外接矩形集合
+    vector<Rect> area_filter;
+    float area = c_bitwis.cols * c_bitwis.rows;
+    //获得所有矩形
+    for (int i = 0; i < contours.size(); i++) {
+        boundRect[i] = boundingRect(contours[i]); //查找每个轮廓的外接矩形
 
-    imwrite("/storage/emulated/0/mat.jpg", mat);
-    Mat rm(mat,cR);
-    Mat dstImg = rm.clone();
-    Mat gray;
-    cvtColor(rm, gray, COLOR_BGRA2GRAY); //转为灰度图
-    imwrite("/storage/emulated/0/gray.jpg", gray);
-    qm=gray.clone();
-    optimizeGgain = false;
-    // 最大阀值限定在 40 - 100 之间查找卡号，超过了还没找到就结束识别
-    filterRect(gray,30,number);
+        float r_area = boundRect[i].width * boundRect[i].height;
+        if((boundRect[i].height<c_bitwis.rows/2&&boundRect[i].height>c_bitwis.rows*1/5)){
+            area_filter.push_back(boundRect[i]);
+        } else{
+            drawContours(c_bitwis,contours,i,Scalar(0),1);
+        }
+    }
+    if (area_filter.size()<=0){
+        c_bitwis.release();
+        filterBackCard(qm,number);
+        return;
+    }
+    //排序 过滤
+    Rect swapRect;
+    for (int i = 0; i < area_filter.size() - 1; ++i) {
+        for (int j = 0; j < area_filter.size() - 1 - i; ++j) {
+            if (area_filter[j].x > area_filter[j + 1].x) {
+                swapRect = area_filter[j];
+                area_filter[j] = area_filter[j + 1];
+                area_filter[j + 1] = swapRect;
+            }
+        }
+    }
+    // x坐标被包含 = 矩形重叠过滤
+    for (int i = 0; i < area_filter.size(); ++i) {
+        if(i>0&&area_filter[i].x>area_filter[i-1].x && area_filter[i].x < (area_filter[i-1].x + area_filter[i].width)){
+            area_filter.erase(area_filter.begin()+i);
+        }
+    }
+    // y坐标 过滤
+    for (int i = 0; i < area_filter.size(); ++i) {
+        int x1 = area_filter[i].x;
+        int y1 = area_filter[i].y;
+        int w1 = area_filter[i].width;
+        int h1 = area_filter[i].height;
+        //绘制第i个外接矩形
+        rectangle(qm, Point(x1, y1), Point(x1 + w1, y1 + h1), Scalar(0, 255, 0), 2, 8);
+    }
+    Ptr<ml::SVM> svm = SVM::load("/storage/emulated/0/number_svm.xml");
+
+//    imwrite("/storage/emulated/0/qm.jpg", qm);
+    if (area_filter.size()<10){
+
+        __android_log_print(ANDROID_LOG_ERROR,"num_str-2-","%d",area_filter.size());
+        filterBackCard(qm,number);
+    } else {
+        for (int i = 0; i < area_filter.size(); ++i) {
+
+            Mat split_rect(c_bitwis,area_filter[i]);
+            //缩放
+            int nRows = 11;
+            int nCols = 7;
+            Mat dst(nRows, nCols, split_rect.type());
+            resize(split_rect, dst, dst.size(), 0, 0, INTER_LINEAR);
+            //保存训练模型的数据---（数据采集）--------
+//            char name[50];
+//            sprintf(name,"/storage/emulated/0/dstImg_%d.png",i);
+//            imwrite(name, dst);
+
+            //识别数字-------（数据识别）-----
+            Mat p = dst.reshape(1, 1);
+            p.convertTo(p, CV_32FC1);
+            //float x = svm->predict(p,m);
+            float x = svm->predict(p);
+            if (x==10){
+                number += "x";
+            } else{
+                // float 转string
+                ostringstream buffer;
+                buffer << x;
+                number += buffer.str();
+            }
+        }
+        __android_log_print(ANDROID_LOG_ERROR,"num_str-","%s",number.c_str());
+    }
 }
 
 void filterRect(Mat& gray,int thresh,string& number){
@@ -60,14 +175,22 @@ void filterRect(Mat& gray,int thresh,string& number){
         number = "识别失败，请把卡片放到扫描区域内！";
         return;
     }
-    Mat gg = gray.clone();
+
+    //剪切矩形
+    Rect cR;
+    cR.x = gray.cols / 20;
+    cR.y = gray.rows / 2;
+    cR.width = gray.cols * 18 / 20;
+    cR.height = gray.rows * 3 / 4-cR.y;
+    Mat rm(gray,cR);
+    // 二值化处理
+    Mat gg = rm.clone();
     Mat th;
     threshold(gg, th, thresh, 255, THRESH_BINARY);
-    imwrite("/storage/emulated/0/th.jpg", th);
 
     Mat bitwis;
     bitwise_not(th,bitwis);
-    imwrite("/storage/emulated/0/bitwise_not.jpg",  bitwis);
+//    imwrite("/storage/emulated/0/bitwise_not.jpg",  bitwis);
 
     vector<vector<Point> > contours;
     vector<Vec4i> hierarcy;
@@ -87,7 +210,7 @@ void filterRect(Mat& gray,int thresh,string& number){
         w0 = boundRect[i].width;
         h0 = boundRect[i].height;
         float r_area = w0*h0;
-        if (r_area<m_area/60&&r_area>m_area/250 && (h0<bitwis.rows/2&&h0>bitwis.rows/4)){
+        if(r_area<m_area/60&&r_area>m_area/250 && (h0<bitwis.rows/2&&h0>bitwis.rows/4)){
             filer_area.push_back(boundRect[i]);
         }
     }
@@ -102,7 +225,6 @@ void filterRect(Mat& gray,int thresh,string& number){
         //绘制第i个外接矩形
         rectangle(gg, Point(x1, y1), Point(x1 + w1, y1 + h1), Scalar(0, 255, 0), 2, 8);
     }
-    imwrite("/storage/emulated/0/gg.jpg", gg);
 
     //检测本次扫描的结果是否满足
     if(filer_area.size()<=0||filer_area.size()<16){
