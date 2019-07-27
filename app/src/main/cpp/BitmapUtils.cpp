@@ -97,13 +97,20 @@ void BitmapUtils::findCardArea(const Mat &mat, Rect &card_rect) {
     cvtColor(grad, gray, COLOR_BGRA2GRAY);
     Mat binary;
     threshold(gray, binary, 40, 255, THRESH_BINARY);
-
+    int x0 = 0, y0 = 0, w0 = 0, h0 = 0;
     // 轮廓查找
     vector<vector<Point> > contours;
     findContours(binary, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i) {
         Rect rect = boundingRect(contours[i]);
 //        drawContours(mat,contours,i,Scalar(255, 0, 0),1);
+        x0 = rect.x;
+        y0 = rect.y;
+        w0 = rect.width;
+        h0 = rect.height;
+        //绘制第i个外接矩形
+        rectangle(mat, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+
         __android_log_print(ANDROID_LOG_ERROR, "recr-", "%d", rect.width);
         // 是不是符合规则
         if (rect.width > mat.cols / 2 && rect.width != mat.cols && rect.height > mat.rows / 2) {
@@ -118,6 +125,8 @@ void BitmapUtils::findCardArea(const Mat &mat, Rect &card_rect) {
             card_rect.height = binary.rows;
         }
     }
+
+    imwrite("/storage/emulated/0/mat.jpg", mat);
     // release source
     blur.release();
     grad_x.release();
@@ -203,7 +212,7 @@ void BitmapUtils::findNumber(Mat &srcImg, string &num_str) {
         w0 = boundRect[i].width;
         h0 = boundRect[i].height;
         //绘制第i个外接矩形
-//        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
 
         int area = boundRect[i].area();
         if (h0 < dilate_erodeOut.rows * 2 / 5) {
@@ -215,6 +224,8 @@ void BitmapUtils::findNumber(Mat &srcImg, string &num_str) {
         }
         // TODO : 根据高度和面积 处理腐蚀，伐值化，膨胀 不掉的干扰点。大面积的干扰点。
     }
+
+    imwrite("/storage/emulated/0/dstImg.jpg", dstImg);
     vector<Rect> rr(contours.size());
 
     vector<Rect> split_mat;
@@ -224,7 +235,7 @@ void BitmapUtils::findNumber(Mat &srcImg, string &num_str) {
         y0 = rr[i].y;
         w0 = rr[i].width;
         h0 = rr[i].height;
-        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
+//        rectangle(dstImg, Point(x0, y0), Point(x0 + w0, y0 + h0), Scalar(0, 255, 0), 2, 8);
 
         if (rr[i].area() < dilate_area / 200 || rr[i].width > dilate_erodeOut.cols / 3) {
             continue;

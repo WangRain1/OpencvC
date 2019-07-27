@@ -78,7 +78,7 @@ void findIdCard(Mat& idC,string& number){
 //    imwrite("/storage/emulated/0/c_th.jpg", c_th);
     Mat c_bitwis;
     bitwise_not(c_th,c_bitwis);
-//    imwrite("/storage/emulated/0/c_bitwis.jpg",  c_bitwis);
+    imwrite("/storage/emulated/0/c_bitwis.jpg",  c_bitwis);
     vector<vector<Point> > contours;
     vector<Vec4i> hierarcy;
     findContours(c_bitwis, contours, hierarcy, RETR_TREE, CHAIN_APPROX_NONE); //查找所有轮廓
